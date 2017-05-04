@@ -1,0 +1,81 @@
+link(rel="import" href="/bower_components/polymer/polymer.html")
+
+script.
+  /**
+   * @polymerBehavior Polymer.D4LLogging
+   */
+  Polymer.D4LLogging = {
+    properties: {
+      LogLevel: {
+        type: Object,
+        value: function() {
+          return {
+            ERR: 0,
+            WARN: 1,
+            INFO: 2,
+            VERBOSE: 3,
+            DEBUG: 4,
+            SILLY: 5
+          };
+        }
+      },
+      __disableLogging: {
+        type: Boolean,
+        value: false
+      },
+      logLevel: {
+        type: Number,
+        value: 4
+      }
+    },
+    __assert: function() {
+      console.assert.apply(console, arguments);
+    },
+    __err: function() {
+      if (this.logLevel >= this.LogLevel.ERR) {
+        console.error.apply(console, arguments);
+      }
+    },
+    __warn: function() {
+      if (this.logLevel >= this.LogLevel.WARN) {
+          let args = Array.from(arguments);
+        args.splice(0, 0, `${this.is}: `);
+        console.warn.apply(console, args);
+      }
+    },
+    __info: function() {
+      if (this.__disableLogging === false && this.logLevel >= this.LogLevel.INFO) {
+          let args = Array.from(arguments);
+        args.splice(0, 0, `${this.is}: [info] `);
+        console.log.apply(console, args);
+      }
+    },
+    __verbose: function() {
+      if (this.__disableLogging === false && this.logLevel >= this.LogLevel.VERBOSE) {
+          let args = Array.from(arguments);
+        args.splice(0, 0, `${this.is}: [verbose] `);
+        console.log.apply(console, args);
+      }
+    },
+    __log: function() {
+      if (this.__disableLogging === false && this.logLevel >= this.LogLevel.VERBOSE) {
+          let args = Array.from(arguments);
+        args.splice(0, 0, `${this.is}: [verbose] `);
+        console.log.apply(console, args);
+      }
+    },
+    __debug: function() {
+      if (this.__disableLogging === false && this.logLevel >= this.LogLevel.DEBUG) {
+          let args = Array.from(arguments);
+        args.splice(0, 0, `${this.is}: [debug]`);
+        console.log.apply(console, args);
+      }
+    },
+    __silly: function() {
+      if (this.__disableLogging === false && this.logLevel >= this.LogLevel.SILLY) {
+          let args = Array.from(arguments);
+        args.splice(0, 0, `${this.is}: [silly]`);
+        console.log.apply(console, args);
+      }
+    }
+  }

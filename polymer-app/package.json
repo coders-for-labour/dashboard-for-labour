@@ -1,0 +1,32 @@
+{
+  "name": "dashboard-for-labour",
+  "version": "0.0.1",
+  "description": "Social media tools for activists for #ge17",
+  "author": "Coders for Labour",
+  "private": true,
+  "engines": {
+    "node": "~4.4.x",
+    "npm": "~2.15.x"
+  },
+  "scripts": {
+    "dev": "polymer serve",
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:coders-for-labour/dashboard-for-labour.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^3.3.x",
+    "eslint-config-google": "^0.6.x",
+    "eslint-config-xo": "^0.15.x",
+    "gulp": "^3.9.x",
+    "gulp-clean": "^0.3.x",
+    "gulp-eslint": "^3.0.x",
+    "gulp-html-prettify": "^0.0.1",
+    "gulp-imagemin": "^3.1.1",
+    "gulp-pug": "^3.1.0",
+    "main-bower-files": "^2.13.1"
+  }
+}

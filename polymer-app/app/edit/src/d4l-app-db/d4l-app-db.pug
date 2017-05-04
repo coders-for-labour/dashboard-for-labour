@@ -1,0 +1,17 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="./d4l-data-service.html")
+
+dom-module#d4l-app-db
+  template
+    style.
+      :host {
+        display: none;
+      }
+
+    d4l-data-service#post(route="post", status="{{db.post.status}}", auth="[[auth]]", data="{{db.post.data}}", metadata="{{db.post.metadata}}")
+    d4l-data-service#user(route="user", status="{{db.user.status}}", auth="[[auth]]", data="{{db.user.data}}", metadata="{{db.user.metadata}}")
+
+  script(src="d4l-app-db.js")

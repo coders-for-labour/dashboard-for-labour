@@ -1,0 +1,31 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-dashboard-card
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+  template
+    .card This is a card
+
+  script.
+    Polymer({
+      is: 'd4l-dashboard-card',
+      behaviors: [
+        Polymer.D4LLogging
+      ],
+      properties: {
+        logLevel: {
+          type: Number,
+          value: 3
+        }
+      }
+    });

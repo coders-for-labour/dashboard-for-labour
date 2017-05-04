@@ -1,0 +1,41 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/app-layout/app-header/app-header.html")
+link(rel="import", href="/bower_components/app-layout/app-toolbar/app-toolbar.html")
+link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/paper-icon-button/paper-icon-button.html")
+link(rel="import", href="/bower_components/paper-item/paper-icon-item.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-header
+  style(is="custom-style", include="iron-flex iron-positioning iron-flex-alignment")
+  style(is="custom-style", include="d4l-theme")
+  style.
+    :host {
+    }
+
+    app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      color: var(--text-primary-color);
+      background-color: var(--app-primary-color);
+      z-index: 105;
+    }
+
+  template
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
+    app-header(name="generic-list", mode="list", bg$="[[page]]", effects="waterfall blend-background", fixed, mobile$="[[isMobile]]")
+      app-toolbar
+        iron-image(src="/images/logo-icon.svg", width="42", height="42")
+        div(main-title) {{pageTitle}}
+        img(src="{{auth.user.profiles.0.images.profile}}", width=42,height=42, style="width: 42px; height; 42px; border-radius:50%;")
+
+  script(src="d4l-header.js")

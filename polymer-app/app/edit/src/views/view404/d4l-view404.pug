@@ -1,0 +1,41 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/paper-button/paper-button.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-view404
+  template
+    style(include="d4l-theme")
+    style(include="shared-styles").
+      :host {
+        display: block;
+
+        padding: 10px 20px;
+      }
+      
+      a,a:visited {
+        text-decoration: none;
+      }
+
+      paper-button {
+        background: var(--app-color-primary-grey);
+        margin: 15px 10px;
+        padding: 9px 15px;
+        align-self: flex-start;
+        --paper-button: {
+          @apply(--d4l-font-common-base);
+          @apply(--d4l-font-small-button);
+          color: white;
+          border-radius: 30px;
+        }
+      }
+
+    div Whoops, we couldn't find the page you are looking for!
+    a(href="javascript:history.back()")
+      paper-button Go back
+
+  script.
+    Polymer({
+      is: 'd4l-view404'
+    });

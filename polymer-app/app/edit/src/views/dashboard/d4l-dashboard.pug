@@ -1,0 +1,95 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+link(rel="import", href="/bower_components/iron-list/iron-list.html")
+link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
+link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
+
+link(rel="import", href="/src/d4l-header/d4l-header.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+link(rel="import", href="./d4l-dashboard-card.html")
+
+script(src="/bower_components/sugar/dist/sugar.min.js")
+
+dom-module#d4l-dashboard
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+  style(include="shared-styles")
+  style(include="shared-layout-styles").
+    :host {
+      display: block;
+
+      padding: var(--default-page-padding);
+      padding-top: 95px;
+    }
+
+    .page-sidebar, .page-content {
+      width: 100%;
+    }
+
+    .page-sidebar:not([mobile]) {
+      width: 25%;
+      padding-right: 30px;
+      box-sizing: border-box;
+    }
+    .page-content:not([mobile]) {
+      width: 75%;
+    }
+
+    .card {
+      margin-bottom: 30px;
+    }
+    .card.flex{
+      flex: none;
+      width: 100%;
+    }
+    .card.flex:not([mobile]) {
+      flex: 1;
+    }
+    .card-group > .card {
+      margin-right: 30px;
+    }
+    .card-group > .card:last-child {
+      margin-right: 0px;
+    }
+
+  template
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
+    d4l-header(
+      auth="[[auth]]",
+      db="{{db}}",
+      page="Dashboard",
+      page-title="[[__pageTitle]]",
+      page-mode="[[__pageMode]]",
+      header="{{header}}",
+    )
+
+    .layout.horizontal.wrap
+      .page-sidebar(mobile$="[[isMobile]]")
+        .layout.horizontal.wrap.card-group
+          d4l-dashboard-card.card.flex
+
+      .page-content(mobile$="[[isMobile]]")
+        .layout.horizontal.wrap.card-group
+          d4l-dashboard-card.card.flex
+
+      .page-sidebar(mobile$="[[isMobile]]")
+        .layout.horizontal.wrap.card-group
+          d4l-dashboard-card.card.flex
+
+      .page-content(mobile$="[[isMobile]]")
+        .layout.horizontal.wrap.card-group
+          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
+          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
+
+  script(src="d4l-dashboard.js")

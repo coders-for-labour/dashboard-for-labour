@@ -1,0 +1,14 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+script(src="/bower_components/socket.io-client/dist/socket.io.min.js")
+
+dom-module#d4l-app
+  template
+    style.
+      :host {
+        display: none;
+      }
+
+  script(src="d4l-socket-io.js")

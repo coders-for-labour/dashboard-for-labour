@@ -1,0 +1,47 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/paper-styles/shadow.html")
+
+link(rel="import", href="./d4l-theme.html")
+
+//- shared styles for all views
+dom-module(id="shared-styles")
+  template
+    style.
+      h1 {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-primary-title);
+      }
+      h2 {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-secondary-title);
+      }
+
+dom-module(id="shared-card-styles")
+  template
+    style.
+      .card {
+        padding: 16px;
+        background-color: #fff;
+        margin: 0px;
+      }
+
+      h1 {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-small-card-primary-title);
+        color: var(--text-dark-primary-color);
+        /*margin-bottom:10px;*/
+      }
+      p, .third-line ::content span {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-small-card-primary-text);
+        color: var(--text-dark-primary-color);
+      }
+      p.secondary, p[secondary], .third-line ::content span.secondary, .third-line ::content span[secondary] {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-small-card-secondary-text);
+        color: var(--text-dark-secondary-color);
+      }
+
+dom-module(id="shared-layout-styles")
+  template
+    style.

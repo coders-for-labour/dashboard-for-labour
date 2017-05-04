@@ -1,0 +1,140 @@
+//-@license
+  Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+  This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+  The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+  The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+  Code distributed by Google as part of the polymer project is also
+  subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/app-layout/app-drawer/app-drawer.html")
+link(rel="import", href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html")
+link(rel="import", href="/bower_components/app-layout/app-header/app-header.html")
+link(rel="import", href="/bower_components/app-layout/app-header-layout/app-header-layout.html")
+link(rel="import", href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html")
+link(rel="import", href="/bower_components/app-layout/app-toolbar/app-toolbar.html")
+link(rel="import", href="/bower_components/app-layout/demo/sample-content.html")
+link(rel="import", href="/bower_components/app-route/app-location.html")
+link(rel="import", href="/bower_components/app-route/app-route.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
+link(rel="import", href="/bower_components/iron-image/iron-image.html")
+//-link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-icons/social-icons.html")
+link(rel="import", href="/bower_components/iron-icons/communication-icons.html")
+link(rel="import", href="/bower_components/paper-input/paper-input.html")
+link(rel="import", href="/bower_components/paper-item/paper-icon-item.html")
+link(rel="import", href="/bower_components/paper-icon-button/paper-icon-button.html")
+link(rel="import", href="/bower_components/paper-toast/paper-toast.html")
+link(rel="import", href="/bower_components/paper-styles/typography.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="/src/d4l-auth/d4l-auth.html")
+link(rel="import", href="/src/d4l-app-db/d4l-app-db.html")
+link(rel="import", href="/src/d4l-app-db/d4l-realtime-db-behaviors.html")
+link(rel="import", href="/src/d4l-socket-io/d4l-socket-io.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
+
+dom-module#d4l-app
+  template
+    style(is="custom-style", include="iron-flex iron-positioning iron-flex-alignment")
+    style(is="custom-style", include="d4l-theme")
+    style.
+      :host {
+        --app-primary-color: var(--default-primary-color);
+        --app-secondary-color: black;
+
+        display: block;
+        background-color: var(--default-background-color);
+
+        min-height: 100vh;
+      }
+
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
+    app-location(route="{{route}}")
+    app-route(
+      route="{{route}}",
+      pattern="/:page",
+      data="{{routeData}}",
+      tail="{{subroute}}"
+    )
+    app-route(
+      route="{{subroute}}",
+      pattern="/:id",
+      data="{{subrouteData}}"
+      tail="{{subrouteAction}}"
+    )
+    app-route(
+      route="{{subrouteAction}}",
+      pattern="/:action",
+      data="{{subrouteActionData}}",
+      tail="{{subrouteActionId}}"
+    )
+    app-route(
+      route="{{subrouteActionId}}",
+      pattern="/:id",
+      data="{{subrouteActionIdData}}"
+    )
+    d4l-socket-io#chat(
+      auth="[[auth]]",
+      endpoint="{{io.endpoint}}",
+      connected="{{io.connected}}",
+      tx="{{io.tx}}",
+      rx-events="{{io.rxEvents}}",
+      rx="{{io.rx}}",
+      on-rx-event="__rxEvent"
+    )
+    d4l-socket-io#db(
+      auth="[[auth]]",
+      endpoint="{{iodb.endpoint}}",
+      connected="{{iodb.connected}}",
+      rx-events="{{iodb.rxEvents}}",
+      rx="{{iodb.rx}}",
+      on-rx-event="__dbRxEvent"
+    )
+    d4l-auth-service#authService(
+      status="{{authStatus}}",
+      auth="{{auth}}",
+      login-details="[[loginDetails]]"
+    )
+    d4l-app-db#db(
+      status="{{dbStatus}}",
+      auth="[[auth]]",
+      db="{{db}}",
+      on-error="__dataServiceError"
+    )
+
+    iron-pages(attr-for-selected="name", selected="{{mode}}")
+      section(name="authenticating")
+      section(name="authenticate")
+        d4l-auth(auth="[[auth]]")
+      section(name="application")
+
+        iron-pages#app-pages(
+          selected="[[page]]",
+          attr-for-selected="name",
+          fallback-selection="view404",
+          role="main"
+          mobile$="[[isMobile]]"
+          on-toggle-nav-drawer="__toggleNavDrawer",
+          on-toggle-chat-drawer="__toggleChatDrawer"
+        )
+          d4l-dashboard(
+            name="dashboard",
+            title="Dashboard For Labour",
+            auth="[[auth]]",
+            doc="{{db.post}}",
+            db="{{db}}",
+            mobile="[[isMobile]]"
+          )
+          d4l-view404(
+            name="view404"
+          )
+
+  script(src="d4l-app.js")
