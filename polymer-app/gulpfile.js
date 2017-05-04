@@ -15,6 +15,7 @@ const Paths = {
   DEST: 'app/serve',
   DEST_SRC: 'app/serve/src',
   DEST_IMAGES: 'app/serve/images',
+  DEST_VIDEOS: 'app/serve/videos'
 };
 
 const Globs = {
@@ -24,6 +25,7 @@ const Globs = {
   MARKUP: [`${Paths.SOURCE}/src/**/*.html`,`${Paths.SOURCE}/*.html`,`${Paths.SOURCE}/*.pug`,`${Paths.SOURCE}/src/**/*.pug`],
   BOWER_JSON: [`${Paths.SOURCE}/bower.json`],
   JSON: [`${Paths.SOURCE}/*.json`],
+  MP4: [`${Paths.SOURCE}/videos/**/*.mp4`],
   PNG: [`${Paths.SOURCE}/images/**/*.png`],
   JPG: [`${Paths.SOURCE}/images/**/*.jpg`],
   SVG: [`${Paths.SOURCE}/images/**/*.svg`],
@@ -90,6 +92,18 @@ gulp.task('images', function() {
 });
 
 //
+// videos
+//
+gulp.task('mp4', function() {
+  return gulp.src(Globs.MP4)
+    .pipe(gulp.dest(Paths.DEST_VIDEOS));
+});
+
+gulp.task('videos', function() {
+  return gulp.start(['mp4']);
+});
+
+//
 // Static resources
 //
 gulp.task('json', function() {
@@ -121,12 +135,13 @@ gulp.task('clean', function() {
 });
 
 gulp.task('build', ['clean'], function() {
-  return gulp.start(['resources', 'scripts', 'images', 'markup']);
+  return gulp.start(['resources', 'scripts', 'images', 'videos', 'markup']);
 });
 
 gulp.task('watch', ['build'], function() {
   gulp.watch(Globs.SCRIPTS, ['scripts']);
-  gulp.watch(Globs.IMAGES, ['images']);
+  gulp.watch(Globs.MP4, ['MP4']);
+  gulp.watch(Globs.VIDEOS, ['videos']);
   gulp.watch(Globs.MARKUP, ['markup']);
   gulp.watch(Globs.BOWER_JSON, ['bower-files']);
   gulp.watch(Globs.JSON, ['json']);
