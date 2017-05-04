@@ -13,8 +13,7 @@
 const Config = require('./config');
 const Rhizome = require('rhizome-api-js');
 const Auth = require('./auth');
-const Cache = require('./cache');
-const Logging = require('./logging');
+// const Logging = require('./logging');
 
 /* ************************************************************
  *
@@ -28,11 +27,10 @@ const _installApp = app => {
     appToken: Config.auth.rhizome.appToken
   });
 
-  Cache.Manager.create(Cache.Constants.Type.TEAM);
+  // Cache.Manager.create(Cache.Constants.Type.TEAM);
   Auth.init(app);
 
   const tasks = [
-    Rhizome.User.getAll().then(Logging.Promise.logDebug('Users'))
   ];
 
   return Promise.all(tasks);

@@ -12,7 +12,7 @@ Polymer({
   attached: function() {
   },
   login: function() {
-    location.href = "/auth/google";
+    location.href = "/auth/twitter";
   }
 
 });

@@ -50,7 +50,7 @@ const _recurseVars = (env, root) => {
 /**
  * @param  {Object} env - environment variables
  */
-const __parse = (object) => {
+const __parse = object => {
   if (object instanceof Object === false) {
     return;
   }

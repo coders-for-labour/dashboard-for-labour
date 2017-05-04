@@ -13,64 +13,49 @@
 const Logging = require('./logging');
 const Config = require('./config');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
 const Rhizome = require('rhizome-api-js');
-const Cache = require('./cache');
+// const Cache = require('./cache');
 
 module.exports.init = app => {
-  passport.use(new GoogleStrategy({
-    clientID: Config.auth.google.clientId,
-    clientSecret: Config.auth.google.clientSecret,
-    callbackURL: `/auth/google/callback`
+  passport.use(new TwitterStrategy({
+    consumerKey: Config.auth.twitter.consumerKey,
+    consumerSecret: Config.auth.twitter.consumerSecret,
+    callbackURL: `/auth/twitter/callback`
   }, (accessToken, refreshToken, profile, cb) => {
     const user = {
-      app: 'google',
+      app: 'twitter',
       id: profile.id,
       token: accessToken,
       name: profile.displayName,
-      email: profile.emails[0].value,
-      profileUrl: profile._json.url,
-      profileImgUrl: profile._json.image.url,
-      bannerImgUrl: profile._json.cover ? profile._json.cover.coverPhoto.url : ''
+      username: profile.username,
+      profileUrl: `https://twitter.com/${profile.username}`,
+      profileImgUrl: profile.photos[0].value,
+      bannerImgUrl: profile._json.profile_background_image_url ? profile._json.profile_background_image_url : ''
     };
 
     Logging.logSilly(user);
 
-    let cache = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
-    cache.getData()
-      .then(users => {
-        let authenticated = users.find(u => u.email === user.email);
-        let authentication;
-        if (authenticated) {
-          Logging.logSilly(authenticated);
-          authentication = {
-            authLevel: authenticated.authLevel,
-            domains: ["http://dashboard.forlabour.com"],
-            permissions: [
-              {route: "user/*", permission: "*"},
-              {route: "person/*", permission: "*"},
-              {route: "post/*", permission: "*"}
-            ]
-          };
-          user.orgRole = authenticated.orgRole;
-          user.teamName = authenticated.teamName;
-          user.teamRole = authenticated.teamRole;
-        } else {
-          Logging.logError(new Error(`Unknown User: ${user.email}`));
-          cb(new Error(`Unknown User: ${user.email}`), null);
-          return;
-        }
+    let authentication = {
+      authLevel: 1,
+      domains: [`${Config.app.protocol}://${Config.app.dashboard}.${Config.app.domain}`],
+      permissions: [
+        {route: "user/*", permission: "*"},
+        {route: "person/*", permission: "*"},
+        {route: "post/*", permission: "*"}
+      ]
+    };
 
-        Logging.logSilly(authentication);
+    Logging.logSilly(authentication);
 
-        Rhizome.Auth
-          .findOrCreateUser(user, authentication)
-          .then(Logging.Promise.logSilly("RhizomeUser"))
-          .then(rhizomeUser => {
-            cb(null, rhizomeUser);
-          })
-          .catch(Logging.Promise.logError());
-      });
+    Rhizome.Auth
+      .findOrCreateUser(user, authentication)
+      .then(Logging.Promise.logSilly("RhizomeUser"))
+      .then(rhizomeUser => {
+        cb(null, rhizomeUser);
+      })
+      .catch(Logging.Promise.logError());
   }));
 
   passport.serializeUser((user, done) => {
@@ -128,13 +113,11 @@ module.exports.init = app => {
   });
 
   const AUTH_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/userinfo.email'
   ];
-  app.get('/auth/google', passport.authenticate(
-    'google', {
+  app.get('/auth/twitter', passport.authenticate(
+    'twitter', {
       scope: AUTH_SCOPE.join(' ')
     }
   ));
-  app.get('/auth/google/callback', passport.authenticate('google', {successRedirect: '/', failureRedirect: '/'}));
+  app.get('/auth/twitter/callback', passport.authenticate('twitter', {successRedirect: '/', failureRedirect: '/'}));
 };

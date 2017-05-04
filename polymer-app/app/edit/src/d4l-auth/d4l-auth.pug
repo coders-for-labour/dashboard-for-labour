@@ -49,6 +49,12 @@ dom-module#d4l-auth
         height: 100vh;
       }
 
+      .twitter-icon{
+        width: 45px;
+        height: 45px;
+        margin-left: 20px;
+      }
+
       .page-background {
         position: fixed;
         top:0px;
@@ -93,7 +99,7 @@ dom-module#d4l-auth
         h1 Dashboard for Labour
         .layout.horizontal
           p Login with Twitter
-          iron-icon(src="d4l-social-icons:twitter")
+          iron-icon.twitter-icon(icon="d4l-social-icons:twitter")
 
     .page-background
       .full-video
@@ -102,7 +108,7 @@ dom-module#d4l-auth
 
     .footer-group.layout.horizontal
       .icon.flex
-        iron-icon(src="d4l-icons:c4l")
+        iron-icon(icon="d4l-icons:c4l")
       .volunteers.flex Made by Volunteers
       
 
