@@ -125,7 +125,7 @@ Polymer.D4LViewList = {
   },
 
   __tryLoadData: function () {
-    this.__silly(this.doc);
+    this.__silly('__tryLoadData', 'doc', this.doc);
     if (this.get('doc.status') === 'done') {
       this.__loadMode = 'loaded';
     }
@@ -140,7 +140,7 @@ Polymer.D4LViewList = {
     }
     this.__loadMode = 'loaded';
 
-    this.__silly(this.__pageMode);
+    this.__silly('__docStatus', '__pageMode', this.__pageMode);
     if (this.__pageMode === 'detail') {
       this.__assert(this.subrouteData.id);
       this.__selectedItemIndex = this.__indexFromId(this.get('subrouteData.id'));
@@ -234,7 +234,7 @@ Polymer.D4LViewList = {
       return;
     }
     let clone = Object.assign({}, this.__editItem);
-    this.__silly(clone);
+    this.__silly('__itemCommitted', 'clone', clone);
     if (this.__mode === 'add') {
       this.push('doc.data', clone);
     } else {
