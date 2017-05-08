@@ -1,5 +1,6 @@
 #IDE
 .idea
+node-app/nginx
 
 # Logs
 logs
