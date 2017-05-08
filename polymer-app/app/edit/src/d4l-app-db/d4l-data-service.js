@@ -45,7 +45,7 @@ Polymer({
     urlPrefix: {
       type: String,
       value: function() {
-        return '';
+        return 'http://dev.rhizome.com/api/v1';
       }
     },
     vectorBaseUrl: {
