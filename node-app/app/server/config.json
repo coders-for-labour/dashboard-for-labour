@@ -10,8 +10,10 @@
     "D4L_RHIZOME_DEV_URL": "",
     "D4L_RHIZOME_PROD_URL": "",
     "D4L_RHIZOME_TEST_URL": "",
-    "D4L_TWITTER_CONSUMER_KEY": "",
-    "D4L_TWITTER_CONSUMER_SECRET": "",
+    "D4L_TW_CONSUMER_KEY": "",
+    "D4L_TW_CONSUMER_SECRET": "",
+    "D4L_TW_ACCESS_TOKEN": "",
+    "D4L_TW_ACCESS_TOKEN_SECRET": "",
     "D4L_SESSION_SECRET": ""
   },
   "global": {
@@ -19,7 +21,7 @@
     "app": {
       "title": "Dashboard for Labour",
       "description": "Application server for Dashboard for Labour.",
-      "code": "d4la",
+      "code": "d4l",
       "version": "v0.0.1",
       "protocol": "http",
       "subdomain": "dashboard",
@@ -47,27 +49,29 @@
         }
       },
       "twitter": {
-        "consumerKey": "%D4L_TWITTER_CONSUMER_KEY%",
-        "consumerSecret": "%D4L_TWITTER_CONSUMER_SECRET%"
+        "accessToken": "%D4L_TW_ACCESS_TOKEN%",
+        "accessTokenSecret": "%D4L_TW_ACCESS_TOKEN_SECRET%",
+        "consumerKey": "%D4L_TW_CONSUMER_KEY%",
+        "consumerSecret": "%D4L_TW_CONSUMER_SECRET%"
       }
     }
   },
   "local": {
     "workstation1": {
       "logPath": {
-        "dev":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/dev",
-        "prod":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/prod",
-        "test":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/test"
+        "dev":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/dev",
+        "prod":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/prod",
+        "test":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "prod": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "test": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data/test"
+        "dev": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data",
+        "prod": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data",
+        "test": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data/test"
       },
       "listenPort": {
-        "dev": 6031,
-        "prod": 6030,
-        "test": 6032
+        "dev": 6041,
+        "prod": 6040,
+        "test": 6042
       }
     },
     "workstation2": {
