@@ -53,6 +53,10 @@ Polymer({
     Polymer.updateStyles();
   },
 
+  __viewHome: function(){
+    this.fire('view-entity', '/');
+  },
+
   __computeResponsivePageTitle: function(title, isMobile) {
     return !isMobile ? Sugar.String.truncate(title, 35) : Sugar.String.truncate(title, 17);
   }
