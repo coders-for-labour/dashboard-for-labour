@@ -35,15 +35,18 @@ module.exports.init = app => {
       bannerImgUrl: profile._json.profile_background_image_url ? profile._json.profile_background_image_url : ''
     };
 
-    Logging.logSilly(user);
+    Logging.log(user);
 
     let authentication = {
       authLevel: 1,
       domains: [`${Config.app.protocol}://${Config.app.dashboard}.${Config.app.domain}`],
       permissions: [
-        {route: "user/*", permission: "*"},
-        {route: "person/*", permission: "*"},
-        {route: "post/*", permission: "*"}
+        {route: "user/simplified", permission: "list"},
+        {route: "campaign", permission: "list"},
+        {route: "post", permission: "list"},
+        {route: "post", permission: "read"},
+        {route: "post", permission: "add"},
+        {route: "post", permission: "write"}
       ]
     };
 
