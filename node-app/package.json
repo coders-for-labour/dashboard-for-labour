@@ -33,6 +33,8 @@
     "proxyquire": "~1.7.x",
     "readline": "^1.3.0",
     "restler": "^3.4.0",
+    "rhizome-api-js": "~0.0.x",
+    "socket.io": "^1.7.2",
     "sugar": "^2.0.4",
     "winston": "~2.2.x",
     "winston-logrotate": "~1.0.x"
