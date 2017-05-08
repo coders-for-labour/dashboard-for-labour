@@ -129,8 +129,19 @@ dom-module#d4l-app
             name="dashboard",
             title="Dashboard For Labour",
             auth="[[auth]]",
-            doc="{{db.post}}",
             db="{{db}}",
+            mobile="[[isMobile]]"
+          )
+          d4l-twibbyn(
+            name="twibbyn",
+            title="Twibbyn",
+            db="{{db}}",
+            doc="{{db.campaign}}",
+            auth="[[auth]]",
+            route="[[route]]",
+            route-data="[[routeData]]",
+            subroute="[[subroute]]",
+            subroute-data="[[subrouteData]]",
             mobile="[[isMobile]]"
           )
           d4l-view404(
