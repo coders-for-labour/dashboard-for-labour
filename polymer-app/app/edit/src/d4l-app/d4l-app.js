@@ -51,7 +51,7 @@ Polymer({
       type: Object,
       value: function() {
         return {
-          endpoint: '',
+          endpoint: 'http://dev.rhizome.com',
           connected: false,
           rxEvents: [
             'db-activity'

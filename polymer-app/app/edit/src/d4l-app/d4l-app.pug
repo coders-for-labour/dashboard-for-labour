@@ -81,15 +81,6 @@ dom-module#d4l-app
       pattern="/:id",
       data="{{subrouteActionIdData}}"
     )
-    d4l-socket-io#chat(
-      auth="[[auth]]",
-      endpoint="{{io.endpoint}}",
-      connected="{{io.connected}}",
-      tx="{{io.tx}}",
-      rx-events="{{io.rxEvents}}",
-      rx="{{io.rx}}",
-      on-rx-event="__rxEvent"
-    )
     d4l-socket-io#db(
       auth="[[auth]]",
       endpoint="{{iodb.endpoint}}",

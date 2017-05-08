@@ -14,7 +14,6 @@ const express = require('express');
 const app = module.exports = express();
 
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
 
 const session = require('express-session');
 const LevelStore = require('level-session-store')(session);
@@ -83,7 +82,7 @@ configureApp(app.get('env'));
  *
  */
 Bootstrap
-  .app(app, io)
+  .app(app)
   .then(() => {
     Logging.logInfo(`${Config.app.title} ${Config.app.version} listening on port ${app.get('port')} in ${app.settings.env} mode.`); // eslint-disable-line max-len
     app.server = server.listen(app.set('port'));
