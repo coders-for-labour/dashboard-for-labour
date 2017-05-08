@@ -43,6 +43,7 @@ module.exports.init = app => {
       permissions: [
         {route: "user/simplified", permission: "list"},
         {route: "campaign", permission: "list"},
+        {route: "campaign/:id/metadata/:key?", permission: "read"},
         {route: "post", permission: "list"},
         {route: "post", permission: "read"},
         {route: "post", permission: "add"},
