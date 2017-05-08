@@ -62,6 +62,10 @@ dom-module#d4l-dashboard
       margin-right: 0px;
     }
 
+    .members-stat {
+      font-size: 50px;
+    }
+
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
@@ -77,19 +81,43 @@ dom-module#d4l-dashboard
     .layout.horizontal.wrap
       .page-sidebar(mobile$="[[isMobile]]")
         .layout.horizontal.wrap.card-group
-          d4l-dashboard-card.card.flex
+          d4l-dashboard-card.card.flex(background="members")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-icons:member")
+              h1 Members
+            h2.members-stat 21647
 
       .page-content(mobile$="[[isMobile]]")
         .layout.horizontal.wrap.card-group
-          d4l-dashboard-card.card.flex
+          d4l-dashboard-card.card.flex(background="find-mp")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-icons:location")
+              h1 Find your MP
+            paper-input(label="Enter your postcode here")
 
       .page-sidebar(mobile$="[[isMobile]]")
         .layout.horizontal.wrap.card-group
-          d4l-dashboard-card.card.flex
+          d4l-dashboard-card.card.flex(background="twibbyn")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-social-icons:social")
+              h1 Twibbyns
+            p Show your support with social media avatars
+            paper-button Get Started
 
       .page-content(mobile$="[[isMobile]]")
         .layout.horizontal.wrap.card-group
-          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
-          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
+          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-social-icons:thunderclap")
+              h1 Thunderclap
+            p Rally together to show your suppport for Labour
+            paper-button Get Started
+
+          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-social-icons:meme")
+              h1 Latest Memes
+            p Create your own, or post existing memes on social media
+            paper-button Get Started
 
   script(src="d4l-dashboard.js")
