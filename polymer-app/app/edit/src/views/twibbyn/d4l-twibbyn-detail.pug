@@ -8,6 +8,7 @@ link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
@@ -21,6 +22,7 @@ link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-card.html")
+link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
 
 script(src="/bower_components/sugar/dist/sugar.min.js")
 
@@ -30,14 +32,46 @@ dom-module#d4l-twibbyn-detail
   style(include="shared-layout-styles").
     :host {
       display: block;
+    }
 
-      padding: var(--default-page-padding);
-      padding-top: 95px;
+    d4l-twibbyn-overlay {
+      width: 250px;
+      height: 250px;
     }
 
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    h1 [[campaign.name]]
+    iron-ajax#ajaxSaveTwibbyn(
+      auto,
+      handleAs="json",
+      content-type="application/json",
+      url="[[__twibbynSaveUrl]]",
+      method="PUT",
+      body="[[__twibbynSaveBody]]"
+      on-response="__saveResponce",
+      on-error="__ajaxError",
+      last-response="{{rqResponse}}"
+    )
+
+    .layout.horizontal.center
+      .flex.text-right
+        paper-button(on-tap="__prevTwibbyn") Prev
+      d4l-twibbyn-overlay(
+        image="[[auth.user.profiles.0.images.profile]]",
+        twibbyn="[[__selectedTwibbyn]]"
+      )
+      .flex.text-left
+        paper-button(on-tap="__nextTwibbyn") Next
+    .layout.horizontal.center
+      .flex
+      .layout.vertical.center
+        h1 Your Avatar
+        p Choose your social media platform
+        .layout.horizontal.center
+          paper-icon-button(icon="d4l-social-icons:twitter", on-tap="__saveTwitter")
+          paper-icon-button(icon="d4l-social-icons:facebook", on-tap="__saveFacebook")
+      .flex
+
 
   script(src="d4l-twibbyn-detail.js")

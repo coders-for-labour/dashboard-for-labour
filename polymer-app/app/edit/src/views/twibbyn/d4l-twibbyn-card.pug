@@ -16,17 +16,9 @@ dom-module#d4l-twibbyn-card
       display: block;
     }
 
-    .card {
-      position: relative;
-      -webkit-background-size: cover;
-      background-size: cover;
-      padding: 10px 20px 40px;
-      color: var(--text-light-primary-color);
-    }
-
   template
-    .card(background$="[[background]]", disabled$="[[disabled]]")
-      h1 Twibbyn
+    .card
+      img(src="[[__twibbynEndpoint]][[twibbyn]]")
 
   script.
     Polymer({
@@ -39,13 +31,12 @@ dom-module#d4l-twibbyn-card
           type: Number,
           value: 3
         },
-        background: {
-          type: String,
-          notify: true
+        twibbyn:{
+          type: String
         },
-        disabled: {
+        __twibbynEndpoint: {
           type: String,
-          notify: true
+          value: 'http://cdn.forlabour.com/'
         }
       }
     });

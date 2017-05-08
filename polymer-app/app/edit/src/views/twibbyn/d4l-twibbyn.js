@@ -7,7 +7,7 @@ Polymer({
   properties: {
     logLevel: {
       type: Number,
-      value: 6
+      value: 3
     },
     db: {
       type: Object,

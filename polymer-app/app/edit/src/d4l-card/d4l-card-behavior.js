@@ -14,13 +14,13 @@ Polymer.D4LCardBehavior = {
     'tap': '__tap'
   },
 
-  __mouseEnter: function(ev) {
+  __mouseEnter: function() {
     this.__showButtons = true;
   },
-  __mouseLeave: function(ev) {
+  __mouseLeave: function() {
     this.__showButtons = false;
   },
-  __tap: function(ev) {
+  __tap: function() {
     this.__showButtons = !this.__showButtons;
   }
 
