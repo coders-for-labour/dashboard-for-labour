@@ -42,6 +42,47 @@ dom-module(id="shared-card-styles")
         color: var(--text-dark-secondary-color);
       }
 
+      .footer.tray {
+        background: var(--app-color-primary-grey);
+        color: var(--text-light-primary-color);
+      }
+      .footer.tray paper-icon-button {
+        color: var(--app-color-secondary-grey);
+      }
+
 dom-module(id="shared-layout-styles")
   template
     style.
+      .page-sidebar, .page-content {
+        width: 100%;
+      }
+      .page-sidebar:not([mobile]) {
+        padding-right: 30px;
+      }
+      /*.page-content:not([mobile]) {*/
+        /*width: 75%;*/
+      /*}*/
+
+      .card {
+        margin-bottom: 30px;
+      }
+      .card.flex {
+        flex: none;
+        width: 100%;
+      }
+      .card.flex:not([mobile]) {
+        flex: 1;
+      }
+      .card-group > .card {
+        margin-right: 30px;
+      }
+      .card-group > .card:last-child {
+        margin-right: 0px;
+      }
+      .card-group.group-2 > .card {
+        width: 49%;
+        margin-right: 2%;
+      }
+      .card-group.group-2 > .card:nth-child(2n) {
+        margin-right: 0px;
+      }
