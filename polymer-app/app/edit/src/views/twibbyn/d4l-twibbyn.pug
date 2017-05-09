@@ -67,13 +67,12 @@ dom-module#d4l-twibbyn
         )
           div(name="list", mobile$="[[isMobile]]")
             .layout.horizontal.wrap
-              .page-sidebar.flex(mobile$="[[isMobile]]")
-                .layout.horizontal.wrap.card-group
-                  d4l-dashboard-card.card.flex(background="members")
-                    .layout.horizontal.center
-                      iron-icon(icon="d4l-social-icons:social")
-                      h1 Twibbyns
-                    p Show your suppport with social media avatars
+              .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+                d4l-dashboard-card.card.flex(background="members")
+                  .layout.horizontal.center
+                    iron-icon(icon="d4l-social-icons:social")
+                    h1 Twibbyns
+                  p Show your suppport with social media avatars
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2

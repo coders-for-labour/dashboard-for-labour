@@ -101,13 +101,13 @@ dom-module#d4l-app
       on-error="__dataServiceError"
     )
 
-    iron-pages(attr-for-selected="name", selected="{{mode}}")
+    iron-pages.fullbleed(attr-for-selected="name", selected="{{mode}}")
       section(name="authenticating")
       section(name="authenticate")
         d4l-auth(auth="[[auth]]")
-      section(name="application")
+      section.fullbleed(name="application")
 
-        iron-pages#app-pages(
+        iron-pages.fullbleed#app-pages(
           selected="[[page]]",
           attr-for-selected="name",
           fallback-selection="view404",
@@ -116,14 +116,14 @@ dom-module#d4l-app
           on-toggle-nav-drawer="__toggleNavDrawer",
           on-toggle-chat-drawer="__toggleChatDrawer"
         )
-          d4l-dashboard(
+          d4l-dashboard.fullbleed.layout.vertical(
             name="dashboard",
             title="Dashboard For Labour",
             auth="[[auth]]",
             db="{{db}}",
             mobile="[[isMobile]]"
           )
-          d4l-twibbyn(
+          d4l-twibbyn.fullbleed.layout.vertical(
             name="twibbyn",
             title="Twibbyn",
             db="{{db}}",
