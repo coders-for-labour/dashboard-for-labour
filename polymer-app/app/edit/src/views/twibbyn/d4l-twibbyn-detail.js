@@ -75,9 +75,8 @@ Polymer({
     this.__debug(ev);
   },
   __ajaxError: function(ev){
-
+    this.__err(ev);
   },
-
 
   __nextTwibbyn: function() {
     const selected = this.get('__selectedTwibbyn');
@@ -85,7 +84,7 @@ Polymer({
     let twibbynIndex = twibbyns.findIndex(t => t === selected);
 
     if (twibbynIndex >= (twibbyns.length - 1)) {
-      twibbynIndex = (twibbyns.length - 1);
+      twibbynIndex = 0
     } else {
       twibbynIndex++;
     }
@@ -98,10 +97,8 @@ Polymer({
     const twibbyns = this.get('twibbyns');
     let twibbynIndex = twibbyns.findIndex(t => t === selected);
 
-    this.__warn(twibbynIndex);
-
     if (twibbynIndex < 1) {
-      twibbynIndex = 0;
+      twibbynIndex = (twibbyns.length - 1);
     } else {
       twibbynIndex--;
     }
@@ -122,7 +119,16 @@ Polymer({
   },
 
   __computeCampaignTwibbyns: function(){
-    return this.get('metadata.images');
+    const twibbyns = this.get('twibbyns');
+    const metaImages = this.get('metadata.images');
+
+    if (twibbyns !== metaImages) {
+      if (metaImages && metaImages.length > 0) {
+        this.set('__selectedTwibbyn', metaImages[0]);
+      }
+    }
+
+    return metaImages;
   }
 
 });
