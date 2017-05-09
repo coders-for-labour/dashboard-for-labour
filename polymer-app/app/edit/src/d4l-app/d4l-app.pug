@@ -40,6 +40,8 @@ link(rel="import", href="/src/d4l-socket-io/d4l-socket-io.html")
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 
+script(src="/src/polyfill/object-assign.js")
+
 dom-module#d4l-app
   template
     style(is="custom-style", include="iron-flex iron-positioning iron-flex-alignment")
@@ -49,10 +51,27 @@ dom-module#d4l-app
         --app-primary-color: var(--default-primary-color);
         --app-secondary-color: black;
 
+        position: relative;
         display: block;
         background-color: var(--default-background-color);
 
         min-height: 100vh;
+      }
+
+      .footer-group {
+        position: fixed;
+        bottom: 5px;
+        width: 100%;
+      }
+      .footer-group > div {
+        padding: 0px 20px;
+      }
+      .footer-group .c4l-icon{
+        color: var(--app-color-primary-red);
+      }
+
+      .footer-group .volunteers {
+        text-align: right;
       }
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
@@ -101,13 +120,13 @@ dom-module#d4l-app
       on-error="__dataServiceError"
     )
 
-    iron-pages(attr-for-selected="name", selected="{{mode}}")
+    iron-pages.fullbleed(attr-for-selected="name", selected="{{mode}}")
       section(name="authenticating")
       section(name="authenticate")
         d4l-auth(auth="[[auth]]")
-      section(name="application")
+      section.fullbleed(name="application")
 
-        iron-pages#app-pages(
+        iron-pages.fullbleed#app-pages(
           selected="[[page]]",
           attr-for-selected="name",
           fallback-selection="view404",
@@ -116,14 +135,14 @@ dom-module#d4l-app
           on-toggle-nav-drawer="__toggleNavDrawer",
           on-toggle-chat-drawer="__toggleChatDrawer"
         )
-          d4l-dashboard(
+          d4l-dashboard.fullbleed.layout.vertical(
             name="dashboard",
             title="Dashboard For Labour",
             auth="[[auth]]",
             db="{{db}}",
             mobile="[[isMobile]]"
           )
-          d4l-twibbyn(
+          d4l-twibbyn.fullbleed.layout.vertical(
             name="twibbyn",
             title="Twibbyn",
             db="{{db}}",
@@ -138,5 +157,10 @@ dom-module#d4l-app
           d4l-view404(
             name="view404"
           )
+
+    .footer-group.layout.horizontal.center
+      .icon.flex
+        iron-icon.c4l-icon(icon="d4l-icons:c4l")
+      .volunteers.flex Made by Volunteers
 
   script(src="d4l-app.js")

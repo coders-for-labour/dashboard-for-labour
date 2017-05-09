@@ -21,12 +21,14 @@ link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-card.html")
+link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-campaign-card.html")
 link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-detail.html")
 
 script(src="/bower_components/sugar/dist/sugar.min.js")
 
 dom-module#d4l-twibbyn
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+  style(include="d4l-theme")
   style(include="shared-styles")
   style(include="shared-layout-styles").
     :host {
@@ -67,13 +69,12 @@ dom-module#d4l-twibbyn
         )
           div(name="list", mobile$="[[isMobile]]")
             .layout.horizontal.wrap
-              .page-sidebar.flex(mobile$="[[isMobile]]")
-                .layout.horizontal.wrap.card-group
-                  d4l-dashboard-card.card.flex(background="members")
-                    .layout.horizontal.center
-                      iron-icon(icon="d4l-social-icons:social")
-                      h1 Twibbyns
-                    p Show your suppport with social media avatars
+              .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+                d4l-dashboard-card.card.flex(background="members")
+                  .layout.horizontal.center
+                    iron-icon(icon="d4l-social-icons:social")
+                    h1 Twibbyns
+                  p Show your suppport with social media avatars
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2

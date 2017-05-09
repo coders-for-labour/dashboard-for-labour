@@ -9,6 +9,7 @@ const pug = require('gulp-pug');
 const htmlPrettify = require('gulp-html-prettify');
 const bowerFiles = require('main-bower-files');
 const imagemin = require('gulp-imagemin');
+const babel = require('gulp-babel');
 
 const Paths = {
   SOURCE: 'app/edit',
@@ -40,6 +41,9 @@ gulp.task('js', function() {
   return gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
 		.pipe(eslint())
 		.pipe(eslint.format())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
 		.pipe(gulp.dest(Paths.DEST));
 });
 

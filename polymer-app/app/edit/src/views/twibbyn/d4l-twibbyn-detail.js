@@ -33,6 +33,17 @@ Polymer({
       notify: true
     },
 
+    __savingAvatar: {
+      type: Boolean,
+      notify: true,
+      value: false
+    },
+
+    __twibbynEndpoint: {
+      type: String,
+      value: 'http://cdn.forlabour.com/'
+    },
+
     __twitterSaveUrlPrefix: {
       type: String,
       value: '/twibbyn/twitter/save'
@@ -72,12 +83,19 @@ Polymer({
   },
 
   __saveResponce: function(ev){
-    this.__debug(ev);
+    setTimeout(() => {
+      this.set('__savingAvatar', false);
+    }, 25000);
   },
   __ajaxError: function(ev){
     this.__err(ev);
   },
 
+  __selectTwibbyn: function (ev) {
+    const twibbyn = ev.model.get('twibbyn');
+
+    this.set('__selectedTwibbyn', twibbyn);
+  },
   __nextTwibbyn: function() {
     const selected = this.get('__selectedTwibbyn');
     const twibbyns = this.get('twibbyns');
@@ -91,7 +109,6 @@ Polymer({
 
     this.set('__selectedTwibbyn', this.get(`twibbyns.${twibbynIndex}`));
   },
-
   __prevTwibbyn: function() {
     const selected = this.get('__selectedTwibbyn');
     const twibbyns = this.get('twibbyns');
@@ -109,6 +126,7 @@ Polymer({
   __saveTwitter: function(){
     const selected = this.get('__selectedTwibbyn');
 
+    this.set('__savingAvatar', true);
     this.set('__twibbynSaveUrl', this.get('__twitterSaveUrlPrefix'));
     this.set('__twibbynSaveBody', {
       file: selected

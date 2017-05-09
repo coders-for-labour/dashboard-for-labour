@@ -16,6 +16,12 @@ dom-module(id="shared-styles")
         @apply(--d4l-font-secondary-title);
       }
 
+      d4l-dashboard-card h1,
+      d4l-dashboard-card h2,
+      d4l-dashboard-card h3 {
+        color: var(--text-light-primary-color);
+      }
+
       .text-left {
         text-align: left;
       }
@@ -66,15 +72,19 @@ dom-module(id="shared-card-styles")
 dom-module(id="shared-layout-styles")
   template
     style.
-      .page-sidebar, .page-content {
-        width: 100%;
+      .page-sidebar {
+        margin-bottom:30px;
+      }
+
+      .page-content:not([mobile]) {
+        width: 70%;
+        margin-left: 30%;
       }
       .page-sidebar:not([mobile]) {
-        padding-right: 30px;
+        position: fixed;
+        width: 28%;
+        height: 88%;
       }
-      /*.page-content:not([mobile]) {*/
-        /*width: 75%;*/
-      /*}*/
 
       .card {
         margin-bottom: 30px;
@@ -86,7 +96,12 @@ dom-module(id="shared-layout-styles")
       .card.flex:not([mobile]) {
         flex: 1;
       }
-      .card-group > .card {
+      .card-group[mobile] {
+        display: block;
+        flex: none;
+        width: 100%;
+      }
+      .card-group:not([mobile]) > .card {
         margin-right: 30px;
       }
       .card-group > .card:last-child {
