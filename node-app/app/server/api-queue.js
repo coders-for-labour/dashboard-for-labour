@@ -13,43 +13,42 @@
 const Logging = require('./logging');
 const Config = require('./config');
 const Twitter = require('twitter');
-const _ = require('underscore');
-require('sugar');
+const Sugar = require('sugar');
 
-var Constants = null;
 /**
  *
  * @type {{INTERVAL: number, App: {TWITTER: string, FACEBOOK: string}}}
  */
-module.exports.Constants = Constants = {
+const Constants = {
   INTERVAL: 30000,
   App: {
     TWITTER: 'twitter',
     FACEBOOK: 'facebook'
   }
 };
+module.exports.Constants = Constants;
 
 /**
  * @param {object} qi - Queue Item: All parameters necessary to execute an API call
  * @return {Promise} - resolves with the queue item (results populated)
  * @private
  */
-var _twitterAPITask = qi => {
-  var twitter = new Twitter({
-    consumer_key: Config.D4L_TWITTER_CONSUMER_KEY,
-    consumer_secret: Config.D4L_TWITTER_CONSUMER_SECRET,
-    access_token_key: qi.token,
-    access_token_secret: qi.tokenSecret
+const _twitterAPITask = qi => {
+  const twitter = new Twitter({
+    consumer_key: Config.auth.twitter.consumerKey, // eslint-disable-line camelcase
+    consumer_secret: Config.auth.twitter.consumerSecret, // eslint-disable-line camelcase
+    access_token_key: qi.token, // eslint-disable-line camelcase
+    access_token_secret: qi.tokenSecret // eslint-disable-line camelcase
   });
 
   return new Promise((resolve, reject) => {
-    var methods = {
+    const methods = {
       GET: 'get',
       POST: 'post'
     };
 
     twitter[methods[qi.method]](qi.api, qi.params, function(error, data, response) {
-      Logging.log(data, Logging.Constants.LogLevel.SILLY);
+      Logging.logSilly(data);
       if (error) {
         resolve(qi);
         return;
@@ -61,7 +60,7 @@ var _twitterAPITask = qi => {
   });
 };
 
-var _appTasks = {
+const _appTasks = {
   [Constants.App.TWITTER]: _twitterAPITask,
   [Constants.App.FACEBOOK]: null
 };
@@ -73,7 +72,14 @@ class APIQueueManager {
   constructor() {
     this._rateLimiter = {};
     this._queue = [];
-    setInterval(_.bind(this._flush, this), Constants.INTERVAL);
+  }
+
+  /**
+   * @description Start processing the queue
+   * @param {object} app - express instance
+   */
+  init(app) {
+    this._flush();
   }
 
   /**
@@ -101,22 +107,22 @@ class APIQueueManager {
    * @private
    */
   _isRateLimited(qi) {
-    var uid = `${qi.app}.${qi.token}.${qi.api}`;
-    if (!this._rateLimiter[uid] || Date.create().isAfter(this._rateLimiter[uid].windowEnds)) {
-      Logging.log(`FIRST CALL IN WINDOW: ${uid}`, Logging.Constants.LogLevel.DEBUG);
+    const uid = `${qi.app}.${qi.token}.${qi.api}`;
+    if (!this._rateLimiter[uid] || Sugar.Date.isAfter(Sugar.Date.create(), this._rateLimiter[uid].windowEnds)) {
+      Logging.logDebug(`FIRST CALL IN WINDOW: ${uid}`);
       this._rateLimiter[uid] = {
         calls: 1,
-        windowEnds: Date.create().advance('15 minutes')
+        windowEnds: Sugar.Date.advance(Sugar.Date.create(), '15 minutes')
       };
       return false;
     }
 
     if (this._rateLimiter[uid].calls >= 15) {
-      Logging.log(`RATE LIMITING: ${uid}`, Logging.Constants.LogLevel.DEBUG);
+      Logging.logDebug(`RATE LIMITING: ${uid}`);
       return true;
     }
 
-    Logging.log(`ADDING CALL FOR: ${uid}`, Logging.Constants.LogLevel.DEBUG);
+    Logging.logDebug(`ADDING CALL FOR: ${uid}`);
     this._rateLimiter[uid].calls++;
     return false;
   }
@@ -126,22 +132,25 @@ class APIQueueManager {
    * @private
    */
   _flush() {
+    Logging.logVerbose(`Queue Manager: ${this._queue.length}`);
     if (this._queue.length === 0) {
+      setTimeout(() => this._flush(), Constants.INTERVAL);
       return;
     }
 
-    var tasks = this._queue.filter(qi => {
+    let tasks = this._queue.filter(qi => {
       return this._isRateLimited(qi) === false;
     }).map(qi => _appTasks[qi.app](qi));
 
-    Logging.log(`Attempting ${tasks.length} Twitter`, Logging.Constants.LogLevel.DEBUG);
+    Logging.logDebug(`Attempting ${tasks.length} Twitter`);
     Promise.all(tasks)
       .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
       .then(qis => {
         this._queue = this._queue.filter(qi => qi.completed !== true);
       })
+      .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
       .catch(err => Logging.log(err));
   }
 }
 
-module.exports.manager = new APIQueueManager();
+module.exports.Manager = new APIQueueManager();
