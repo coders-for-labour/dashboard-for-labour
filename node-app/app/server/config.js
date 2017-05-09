@@ -48,7 +48,7 @@ const _recurseVars = (env, root) => {
 };
 
 /**
- * @param  {Object} env - environment variables
+ * @param  {Object} object - environment variables
  */
 const __parse = object => {
   if (object instanceof Object === false) {
@@ -100,20 +100,22 @@ class Config {
       }
     }
 
-    let global = __parse(settings.global);
-
     let local = settings.local[process.env.D4L_SERVER_ID];
     if (!local) {
       throw new Error(`Missing local environment settings for process.env.D4L_SERVER_ID: ${process.env.D4L_SERVER_ID}`); // eslint-disable-line max-len
     }
-    for (variable in local) {
-      if (!local.hasOwnProperty(variable)) {
-        continue;
-      }
-      if (local[variable] instanceof Object && local[variable][_map[_env]]) {
-        local[variable] = local[variable][_map[_env]];
-      }
-    }
+
+    // for (variable in local) {
+    //   if (!local.hasOwnProperty(variable)) {
+    //     continue;
+    //   }
+    //   if (local[variable] instanceof Object && local[variable][_map[_env]]) {
+    //     local[variable] = local[variable][_map[_env]];
+    //   }
+    // }
+
+    __parse(settings.global);
+    __parse(local);
 
     _recurseVars(settings.environment, settings.global);
     _recurseVars(settings.environment, local);
