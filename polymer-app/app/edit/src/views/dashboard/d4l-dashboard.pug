@@ -52,7 +52,7 @@ dom-module#d4l-dashboard
       header="{{header}}",
     )
 
-    .flex.self-strech.layout.vertical(mobile$="[[isMobile]]")
+    .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
       .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(background="members")
           .layout.horizontal.center
