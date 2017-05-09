@@ -33,6 +33,11 @@ Polymer({
       notify: true
     },
 
+    __twibbynEndpoint: {
+      type: String,
+      value: 'http://cdn.forlabour.com/'
+    },
+
     __twitterSaveUrlPrefix: {
       type: String,
       value: '/twibbyn/twitter/save'
@@ -78,6 +83,11 @@ Polymer({
     this.__err(ev);
   },
 
+  __selectTwibbyn: function (ev) {
+    const twibbyn = ev.model.get('twibbyn');
+
+    this.set('__selectedTwibbyn', twibbyn);
+  },
   __nextTwibbyn: function() {
     const selected = this.get('__selectedTwibbyn');
     const twibbyns = this.get('twibbyns');
@@ -91,7 +101,6 @@ Polymer({
 
     this.set('__selectedTwibbyn', this.get(`twibbyns.${twibbynIndex}`));
   },
-
   __prevTwibbyn: function() {
     const selected = this.get('__selectedTwibbyn');
     const twibbyns = this.get('twibbyns');
