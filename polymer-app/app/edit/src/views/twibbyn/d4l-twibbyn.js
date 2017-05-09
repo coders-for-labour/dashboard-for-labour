@@ -25,7 +25,7 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Twibbyn',
+      value: 'Twibbyn for Labour',
       computed: '__computePageTitle(__selectedItem)'
     },
 
@@ -48,9 +48,7 @@ Polymer({
   },
 
   __computePageTitle: function (campaign) {
-    let title = 'Twibbyn';
-
-    this.__warn(campaign);
+    let title = 'Twibbyn for Labour';
 
     if (campaign && campaign.name) {
       title = `${title} - ${campaign.name}`

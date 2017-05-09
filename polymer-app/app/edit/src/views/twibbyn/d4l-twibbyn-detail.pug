@@ -84,6 +84,9 @@ dom-module#d4l-twibbyn-detail
           .layout.horizontal.center
             paper-icon-button(icon="d4l-social-icons:twitter", on-tap="__saveTwitter")
             paper-icon-button(icon="d4l-social-icons:facebook", on-tap="__saveFacebook")
+          .layout.vertical.center(hidden$="[[!__savingAvatar]]")
+            p Updating your avatar
+            paper-spinner(active)
 
     .page-content.flex-2(mobile$="[[isMobile]]")
       iron-selector(attr-for-selected="name", selected="{{__selectedTwibbyn}}")
