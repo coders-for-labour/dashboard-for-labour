@@ -88,24 +88,4 @@ dom-module#d4l-dashboard-card
       .card-content
         content
 
-  script.
-    Polymer({
-      is: 'd4l-dashboard-card',
-      behaviors: [
-        Polymer.D4LLogging
-      ],
-      properties: {
-        logLevel: {
-          type: Number,
-          value: 3
-        },
-        background: {
-          type: String,
-          notify: true
-        },
-        disabled: {
-          type: String,
-          notify: true
-        }
-      }
-    });
+  script(src="./d4l-dashboard-card.js")

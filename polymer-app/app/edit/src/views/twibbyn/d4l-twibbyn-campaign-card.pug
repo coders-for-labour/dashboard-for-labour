@@ -7,7 +7,7 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
-dom-module#d4l-twibbyn-overlay
+dom-module#d4l-twibbyn-campaign-card
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
   style(include="d4l-theme")
   style(include="shared-styles")
@@ -15,22 +15,28 @@ dom-module#d4l-twibbyn-overlay
     :host {
       display: block;
     }
-    .twibbyn-wrapper {
+
+    .card {
       position: relative;
+      -webkit-background-size: cover;
+      background-size: cover;
+      padding: 10px 20px 10px;
+      color: var(--text-light-primary-color);
     }
-    .twibbyn-wrapper > img.overlay {
-      position: absolute;
-      top: 0px;
-      left: 0px;
+    .footer.tray{
+      margin: 10px -20px -10px;
     }
-    .twibbyn-wrapper > img {
-      max-width: 100%;
-      min-width: 100%;
+    .footer.tray paper-icon-button {
+      color: var(--app-color-secondary-grey);
     }
 
   template
-    .twibbyn-wrapper
-      img.overlay(hidden$="[[!__hasTwibbyn]]", src="[[__twibbynImage]]")
-      img(src="[[__originalImage]]")
+    .card
+      h1 [[campaign.name]]
+      p [[campaign.description]]
+      .footer.tray(hidden$="[[!__showButtons]]")
+        .layout.horizontal.center
+          paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTwibbyn")
 
-  script(src="./d4l-twibbyn-overlay.js")
+
+  script(src="./d4l-twibbyn-campaign-card.js")
