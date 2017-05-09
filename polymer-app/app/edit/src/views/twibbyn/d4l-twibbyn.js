@@ -40,6 +40,9 @@ Polymer({
     return {
       type: {
         $eq: 'twibbyn'
+      },
+      status: {
+        $eq: 'published'
       }
     }
   },
