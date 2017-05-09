@@ -23,6 +23,12 @@ Polymer({
       type: Array
     },
 
+    __pageTitle: {
+      type: String,
+      value: 'Twibbyn',
+      computed: '__computePageTitle(__selectedItem)'
+    },
+
     __campaignsQuery: {
       type: Object,
       computed: '__computeCampaignsQuery(db.campaign.data.*)'
@@ -36,6 +42,18 @@ Polymer({
         $eq: 'twibbyn'
       }
     }
+  },
+
+  __computePageTitle: function (campaign) {
+    let title = 'Twibbyn';
+
+    this.__warn(campaign);
+
+    if (campaign && campaign.name) {
+      title = `${title} - ${campaign.name}`
+    }
+
+    return title;
   }
 
 });

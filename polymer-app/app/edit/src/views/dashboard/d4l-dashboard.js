@@ -13,6 +13,11 @@ Polymer({
       type: Object
     },
 
+    __pageTitle: {
+      type: String,
+      value: 'Dashboard for Labour'
+    },
+
     __users: {
       type: Array
     },

@@ -44,10 +44,12 @@ dom-module#d4l-twibbyn
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
-      page="Dashboard",
+      page="Twibbyn",
       page-title="[[__pageTitle]]",
       page-mode="[[__pageMode]]",
       header="{{header}}",
+      allow-back,
+      on-back-button-clicked="__navBack"
     )
 
     iron-pages(

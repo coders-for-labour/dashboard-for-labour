@@ -36,7 +36,7 @@ Polymer({
       type: Object,
       notify: true
     },
-    overflowDropdownOpen: {
+    allowBack: {
       type: Boolean,
       value: false
     },
@@ -57,7 +57,12 @@ Polymer({
     this.fire('view-entity', '/');
   },
 
+  __back: function() {
+    this.fire('back-button-clicked');
+  },
+
   __computeResponsivePageTitle: function(title, isMobile) {
+    this.__warn('__computeResponsivePageTitle', title);
     return !isMobile ? Sugar.String.truncate(title, 35) : Sugar.String.truncate(title, 17);
   }
 
