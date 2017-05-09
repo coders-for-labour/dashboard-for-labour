@@ -31,7 +31,7 @@ dom-module#d4l-twibbyn-overlay
   template
     .twibbyn-wrapper
       img.overlay(hidden$="[[!__hasTwibbyn]]", src="[[__twibbynImage]]")
-      img(src="[[image]]")
+      img(src="[[__originalImage]]")
 
   script.
     Polymer({
@@ -46,6 +46,10 @@ dom-module#d4l-twibbyn-overlay
         },
         image: {
           type: String
+        },
+        __originalImage: {
+          type: String,
+          computed: '__computeOriginalImage(image)'
         },
         twibbyn:{
           type: String,
@@ -64,6 +68,11 @@ dom-module#d4l-twibbyn-overlay
           type: String,
           computed: '__computeTwibbynImage(twibbyn)'
         }
+      },
+
+      __computeOriginalImage: function(image){
+        const imageSize = /_normal/i;
+        return image.replace(imageSize, '');
       },
 
       __computeTwibbynImage: function(twibbyn){
