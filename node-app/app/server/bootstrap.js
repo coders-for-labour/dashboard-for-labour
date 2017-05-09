@@ -11,8 +11,11 @@
  */
 
 const Config = require('./config');
+const Helpers = require('./helpers');
 const Rhizome = require('rhizome-api-js');
 const Auth = require('./auth');
+const Twibbyn = require('./twibbyn');
+const Queue = require('./api-queue');
 // const Logging = require('./logging');
 
 /* ************************************************************
@@ -27,10 +30,12 @@ const _installApp = app => {
     appToken: Config.auth.rhizome.appToken
   });
 
-  // Cache.Manager.create(Cache.Constants.Type.TEAM);
   Auth.init(app);
+  Twibbyn.init(app);
+  Queue.Manager.init(app);
 
   const tasks = [
+    Helpers.AppData.createFolder('/image_cache')
   ];
 
   return Promise.all(tasks);

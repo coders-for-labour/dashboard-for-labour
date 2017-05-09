@@ -26,19 +26,20 @@ module.exports.updateProfile = (user, imgBuffer) => {
     return false;
   }
 
-  Logging.logInfo(`Scheduling Profile Update task for user : ${user.id}.`);
+  Logging.logInfo(`Scheduling Profile Update task for user : ${user.username}.`);
 
-  Queue.manager.add({
+  Queue.Manager.add({
     app: Queue.Constants.App.TWITTER,
     username: user.username,
     method: 'POST',
     api: 'account/update_profile_image.json',
     params: {
       image: imgBuffer.toString('base64'),
-      include_entities: false,
-      skip_statuses: true
+      include_entities: false, // eslint-disable-line camelcase
+      skip_statuses: true // eslint-disable-line camelcase
     },
-    token: user.token
+    token: user.token,
+    tokenSecret: user.tokenSecret
   });
 
   Logging.logDebug(imgBuffer);

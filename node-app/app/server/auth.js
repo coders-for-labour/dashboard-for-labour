@@ -23,11 +23,12 @@ module.exports.init = app => {
     consumerKey: Config.auth.twitter.consumerKey,
     consumerSecret: Config.auth.twitter.consumerSecret,
     callbackURL: `/auth/twitter/callback`
-  }, (accessToken, refreshToken, profile, cb) => {
+  }, (token, tokenSecret, profile, cb) => {
     const user = {
       app: 'twitter',
       id: profile.id,
-      token: accessToken,
+      token: token,
+      tokenSecret: tokenSecret,
       name: profile.displayName,
       username: profile.username,
       profileUrl: `https://twitter.com/${profile.username}`,
@@ -39,7 +40,7 @@ module.exports.init = app => {
 
     let authentication = {
       authLevel: 1,
-      domains: [`${Config.app.protocol}://${Config.app.dashboard}.${Config.app.domain}`],
+      domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
       permissions: [
         {route: "user/simplified", permission: "list"},
         {route: "campaign", permission: "list"},
