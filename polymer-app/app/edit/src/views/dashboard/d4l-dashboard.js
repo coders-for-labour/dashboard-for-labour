@@ -13,6 +13,14 @@ Polymer({
       type: Object
     },
 
+    __users: {
+      type: Array
+    },
+    __userQuery: {
+      type: String,
+      computed: '__computeUserQuery(db.user.data.*)'
+    },
+
     __post: {
       type: Object,
       value: function () { return {}; }
@@ -21,6 +29,12 @@ Polymer({
 
   attached: function() {
 
+  },
+
+  __computeUserQuery: function(){
+    return {
+      // Fetch all records
+    }
   },
 
   __viewTwibbyn: function () {
