@@ -34,7 +34,7 @@ Polymer({
       type: Object,
       value: function() {
         return {
-          endpoint: '',
+          endpoint: 'http://dashboard.forlabour.com',
           connected: false,
           tx: [],
           rxEvents: [
