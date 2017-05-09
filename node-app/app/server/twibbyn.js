@@ -10,76 +10,107 @@
  *
  */
 
-// const fs = require('fs');
-const path = require('path');
+const fs = require('fs');
+// const path = require('path');
 
+const Config = require('./config');
 const Logging = require('./logging');
-// const Config = require('./config');
+const Helpers = require('./helpers');
 const Composer = require('./composer');
-// const Twitter = require('./twitter');
+const Twitter = require('./twitter');
+const rest = require('restler');
 
-var _twibbons = [
-  `${__dirname}/static/images/twibbyn/twibbyn1.png`,
-  `${__dirname}/static/images/twibbyn/twibbyn2.png`,
-  `${__dirname}/static/images/twibbyn/twibbyn3.png`,
-  `${__dirname}/static/images/twibbyn/twibbyn4.png`,
-  `${__dirname}/static/images/twibbyn/twibbyn5.png`,
-  `${__dirname}/static/images/twibbyn/twibbyn6.png`
-];
+const Constants = {
+  CDN_URL: 'http://cdn.forlabour.com'
+};
 
-var _composeTwibbyn = (user, choice, toBuffer) => {
-  Logging.logDebug(`User Profile: ${user.profileImgUrl}`);
-  var imgUrl = user.profileImgUrl.replace('_normal', '');
-
-  var composer = new Composer(500, 500, toBuffer);
+/* ************************************************************
+ *
+ * COMPOSE
+ *
+ **************************************************************/
+const _composeTwibbyn = (rearImgBuffer, frontImgUrl, toBuffer) => {
+  let composer = new Composer(500, 500, toBuffer);
   composer.params('antialias', 'subpixel');
   composer.params('patternQuality', 'best');
-  composer.imageFromUrl(imgUrl, {gravity: 'mid'});
+  composer.imageFromBuffer(rearImgBuffer, {gravity: 'mid'});
   composer.params('globalAlpha', 1);
-  composer.imageFromFile(_twibbons[choice - 1], {
-    width: 1.0, height: 1.0, gravity: 'bottom', cacheFile: true
+  composer.imageFromUrl(frontImgUrl, {
+    width: 1.0, height: 1.0, gravity: 'bottom'
   });
 
   return composer.render();
 };
 
-// var _saveTwibbyn = (req, res) => {
-//   if (!req.user) {
-//     res.sendStatus(403);
-//     return;
-//   }
-//   var imgUrl = req.user.profileImgUrl.replace('_normal', '');
-//   rest.get(imgUrl)
-//     .on('success', (data, response) => {
-//       var pathname = `${Config.userDataPath}/twibbyn/${req.user.rhizomeId}_avatar_backup`;
-//       fs.writeFileSync(`${Config.userDataPath}/twibbyn/${_genPathname(pathname)}`, response.raw);
-//     })
-//     .on('error', err => {
-//       Logging.log(err, Logging.Constants.LogLevel.ERR);
-//     });
-//
-//   Logging.log('Saving Twibbyn', Logging.Constants.LogLevel.DEBUG);
-//
-//   _composeTwibbyn(req.user, req.params.choice, true)
-//     .then(imageBuffer => {
-//       Logging.log('Got Twibbyn', Logging.Constants.LogLevel.DEBUG);
-//       res.send(Twitter.updateProfile(req.user, imageBuffer));
-//       res.sendStatus(200);
-//     });
-// };
+/* ************************************************************
+ *
+ * SAVE
+ *
+ **************************************************************/
+const _hasBackup = (req, res) => {
+  if (!req.user) {
+    res.sendStatus(403);
+    return;
+  }
+  // let pathname = `${Config.appDataPath}/user_data/${req.user.rhizomeId}_twibbyn_twitter_avatar_backup`;
+  return res.json(false);
+};
+
+const _restoreBackup = (req, res) => {
+  if (!req.user) {
+    res.sendStatus(403);
+    return;
+  }
+  // let pathname = `${Config.appDataPath}/user_data/${req.user.rhizomeId}_twibbyn_twitter_avatar_backup`;
+  return res.json(false);
+};
+
+/* ************************************************************
+ *
+ * SAVE
+ *
+ **************************************************************/
+const _saveTwibbyn = (req, res) => {
+  if (!req.user) {
+    res.sendStatus(403);
+    return;
+  }
+
+  const twAuth = req.user.auth.find(a => a.app === 'twitter');
+  if (!twAuth) {
+    res.send(400);
+    return;
+  }
+  Logging.logDebug(twAuth.images);
+
+  let imgUrl = twAuth.images.profile.replace('_normal', '');
+  rest.get(imgUrl)
+    .on('success', (data, response) => {
+      let pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
+      fs.writeFile(pathname, response.raw, err => {
+        if (err) {
+          throw err;
+        }
+        Logging.logDebug('Saving Twibbyn');
+        Logging.logDebug(req.body);
+
+        _composeTwibbyn(response.raw, `${Constants.CDN_URL}/${req.body.file}`, true)
+          .then(imageBuffer => {
+            Logging.logDebug('Got Twibbyn');
+            res.send(Twitter.updateProfile(twAuth, imageBuffer));
+            res.sendStatus(200);
+          });
+      });
+    })
+    .on('error', err => {
+      Logging.log(err, Logging.Constants.LogLevel.ERR);
+    });
+};
 
 module.exports.init = app => {
-  app.get(`/twibbyn/:choice([1-${_twibbons.length}])`, (req, res) => {
-    _composeTwibbyn(req.user, req.params.choice)
-      .then(readStream => {
-        res.type('png');
-        readStream.pipe(res);
-      });
-  });
+  Helpers.AppData.createFolder('/user_data');
 
-  app.get('/twibbyn/overlay', (req, res) => {
-    res.json(_twibbons.map(t => path.basename(t)));
-  });
-
-  // app.post(`/twibbyn/save/:choice([1-${_twibbons.length}])`, _saveTwibbyn);
+  app.put('/twibbyn/twitter/save', _saveTwibbyn);
+  app.put(`/twibbyn/twitter/restore`, _restoreBackup);
+  app.get(`/twibbyn/twitter/hasbackup`, _hasBackup);
 };
