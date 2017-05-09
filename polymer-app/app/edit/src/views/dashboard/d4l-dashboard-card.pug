@@ -1,0 +1,91 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-dashboard-card
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="d4l-theme")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+    .card {
+      position: relative;
+      -webkit-background-size: cover;
+      background-size: cover;
+      padding: 10px 20px 40px;
+      color: var(--text-light-primary-color);
+      width: 100%;
+      height: 100%;
+
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .card-content {
+      position: relative;
+    }
+    .card:before {
+      content: ' ';
+      position: absolute;
+      background: rgba(0, 0, 0, 0.6);
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+    }
+    .card[disabled]:after {
+      content: ' ';
+      position: absolute;
+      background: rgba(100, 100, 100, 0.5);
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+    }
+    .card[background="members"]:before {
+      background: rgba(255, 0, 0, 0.6);
+    }
+    .card[background="members"] {
+      background-image: url('/images/cards/card-members.png');
+    }
+    .card[background="find-mp"] {
+      background-image: url('/images/cards/card-find-mp.png');
+    }
+    .card[background="twibbyn"] {
+      background-image: url('/images/cards/card-twibbyn.jpg');
+    }
+    .card[background="thunderclap"] {
+      background-image: url('/images/cards/card-thunderclap.jpg');
+    }
+    .card[background="meme"] {
+      background-image: url('/images/cards/card-meme.jpg');
+    }
+
+    :host ::content h1, :host ::content h2, :host ::content h3{
+      color: var(--text-light-primary-color);
+    }
+    :host ::content iron-icon{
+      width: 35px;
+      height: 35px;
+      margin-right: 15px;
+      color: var(--text-light-primary-color);
+    }
+    :host ::content paper-input{
+      color: var(--text-light-primary-color);
+    }
+    :host ::content paper-button{
+      @apply(--d4l-button-primary);
+    }
+
+  template
+    .card(background$="[[background]]", disabled$="[[disabled]]")
+      .card-content
+        content
+
+  script(src="./d4l-dashboard-card.js")

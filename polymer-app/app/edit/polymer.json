@@ -1,0 +1,16 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/d4l-app/d4l-app.html",
+  "fragments": [
+    "src/views/d4l-view404.html"
+  ],
+  "sourceGlobs": [
+   "src/**/*",
+   "images/**/*",
+   "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
