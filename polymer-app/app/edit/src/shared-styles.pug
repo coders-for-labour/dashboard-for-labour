@@ -66,15 +66,15 @@ dom-module(id="shared-card-styles")
 dom-module(id="shared-layout-styles")
   template
     style.
-      .page-sidebar, .page-content {
-        width: 100%;
+      .page-content:not([mobile]) {
+        width: 75%;
+        margin-left: 30%;
       }
       .page-sidebar:not([mobile]) {
-        padding-right: 30px;
+        position: fixed;
+        width: 28%;
+        height: 90%;
       }
-      /*.page-content:not([mobile]) {*/
-        /*width: 75%;*/
-      /*}*/
 
       .card {
         margin-bottom: 30px;
