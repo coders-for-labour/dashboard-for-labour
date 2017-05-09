@@ -63,14 +63,7 @@ Polymer({
       }
     },
     request: {
-      type: Object,
-      value: {
-        url: this.vectorBaseUrl,
-        contentType: '',
-        response: [],
-        entityId: '',
-        body: {}
-      }
+      type: Object
     },
     rqEntityId: String,
     rqUrl: String,
@@ -85,6 +78,16 @@ Polymer({
     '__metadataChanged(metadata.*)',
     '__auth(route, auth.user)'
   ],
+
+  attached: function(){
+    this.set('request', {
+      url: this.get('vectorBaseUrl'),
+      contentType: '',
+      response: [],
+      entityId: '',
+      body: {}
+    });
+  },
 
   __auth: function() {
     this.__silly(`data:${this.route}:${this.status}`);
