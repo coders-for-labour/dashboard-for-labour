@@ -20,52 +20,12 @@ Polymer({
             data: [],
             metadata: {}
           },
-          company: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
           user: {
             status: 'uninitialised',
             data: [],
             metadata: {}
           },
           campaign: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
-          contactList: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
-          call: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
-          notification: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
-          task: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
-          appointment: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
-          contract: {
-            status: 'uninitialised',
-            data: [],
-            metadata: {}
-          },
-          document: {
             status: 'uninitialised',
             data: [],
             metadata: {}

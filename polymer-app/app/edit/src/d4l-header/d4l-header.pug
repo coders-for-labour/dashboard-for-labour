@@ -1,5 +1,6 @@
 link(rel="import", href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/app-layout/app-header/app-header.html")
+link(rel="import", href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html")
 link(rel="import", href="/bower_components/app-layout/app-toolbar/app-toolbar.html")
 link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
@@ -11,6 +12,8 @@ link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
+
+script(src="/bower_components/sugar/dist/sugar.min.js")
 
 dom-module#d4l-header
   style(is="custom-style", include="iron-flex iron-positioning iron-flex-alignment")
@@ -27,17 +30,30 @@ dom-module#d4l-header
       color: var(--text-dark-primary-color);
       z-index: 105;
     }
+    .header-toolbar {
+      width: 100%;
+    }
+    .header-logo {
+      margin-right: 15px;
+    }
+    .header-menu > paper-icon-button {
+      width: 50px;
+      height: 50px;
+    }
 
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     app-header(name="generic-list", mode="list", bg$="[[page]]", effects="waterfall blend-background", fixed, mobile$="[[isMobile]]")
       app-toolbar
-        iron-image(src="/images/logo-icon.svg", width="42", height="42", on-tap="__viewHome")
-        div(main-title) [[pageTitle]]
-        .layout.horizontal.center.header-menu
-          paper-icon-button(icon="d4l-icons:local")
-          paper-icon-button(icon="d4l-icons:national")
-        img(src="{{auth.user.profiles.0.images.profile}}", width=42,height=42, style="width: 42px; height; 42px; border-radius:50%;")
+        .layout.horizontal.center.header-toolbar
+          paper-icon-button(icon="d4l-icons:arrow-back", hidden$="[[!allowBack]]", on-click="__back")
+          iron-image.header-logo(src="/images/logo-icon.svg", width="42", height="42", hidden$="[[allowBack]]", on-tap="__viewHome")
+          div(main-title) [[responsivePageTitle]]
+          .flex
+            .layout.horizontal.center-center.header-menu
+              paper-icon-button(icon="d4l-icons:local")
+              paper-icon-button(icon="d4l-icons:national")
+          img(src="{{auth.user.profiles.0.images.profile}}", width=42,height=42, style="width: 42px; height; 42px; border-radius:50%;")
 
   script(src="d4l-header.js")

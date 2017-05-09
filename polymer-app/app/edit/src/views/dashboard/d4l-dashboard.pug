@@ -12,6 +12,8 @@ link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
+link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
+
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 
 link(rel="import", href="/src/d4l-theme.html")
@@ -39,6 +41,8 @@ dom-module#d4l-dashboard
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
+    d4l-app-db-query(db="[[db]]", doc="[[db.user]]", query="[[__userQuery]]", find-all="{{__users}}")
+
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
@@ -54,7 +58,7 @@ dom-module#d4l-dashboard
           .layout.horizontal.center
             iron-icon(icon="d4l-icons:member")
             h1 Members
-          h2.members-stat 21647
+          h2.members-stat [[__users.length]]
 
         d4l-dashboard-card.card.flex(background="find-mp", disabled)
           .layout.horizontal.center
@@ -74,14 +78,14 @@ dom-module#d4l-dashboard
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:thunderclap")
             h1 Thunderclap
-          p Rally together to show your suppport for Labour
-          paper-button Get Started
+          p Rally together to show your support for Labour
+          paper-button(on-tap="__viewThunderclap") Get Started
 
         d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme", disabled)
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:meme")
             h1 Latest Memes
           p Create your own, or post existing memes on social media
-          paper-button Get Started
+          paper-button(on-tap="__viewMemes") Get Started
 
   script(src="d4l-dashboard.js")
