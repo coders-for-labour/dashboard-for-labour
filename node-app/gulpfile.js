@@ -55,25 +55,25 @@ gulp.task('build', ['clean'], function() {
 });
 
 gulp.task('bump-major', function() {
-  return gulp.src(['./bower.json', './package.json', './README.md', 'app/server/config.json'])
+  return gulp.src(['./package.json', './README.md', 'app/server/config.json'])
     .pipe(bump({type: 'major'}))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump-minor', function() {
-  return gulp.src(['./bower.json', './package.json', './README.md', 'app/server/config.json'])
+  return gulp.src(['./package.json', './README.md', 'app/server/config.json'])
     .pipe(bump({type: 'minor'}))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump-patch', function() {
-  return gulp.src(['./bower.json', './package.json', './README.md', 'app/server/config.json'])
+  return gulp.src(['./package.json', './README.md', 'app/server/config.json'])
     .pipe(bump({type: 'patch'}))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump-prerelease', function() {
-  return gulp.src(['./bower.json', './package.json', './README.md', 'app/server/config.json'])
+  return gulp.src(['./package.json', './README.md', 'app/server/config.json'])
     .pipe(bump({type: 'prerelease'}))
     .pipe(gulp.dest('./'));
 });
