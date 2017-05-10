@@ -67,7 +67,7 @@ Polymer({
       return;
     }
 
-    let metaData = this.get(['db.campaign.metadata', campaignId])
+    let metaData = this.get(['db.campaign.metadata', campaignId]);
     if (!metaData) {
       this.__silly('__campaignChanged', 'Init default metadata for', campaignId);
       const metaDefault = Object.assign({}, {
