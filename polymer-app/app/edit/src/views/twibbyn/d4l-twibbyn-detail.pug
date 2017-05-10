@@ -1,0 +1,101 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+link(rel="import", href="/bower_components/iron-list/iron-list.html")
+link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
+link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
+link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
+
+link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
+
+link(rel="import", href="/src/d4l-header/d4l-header.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
+link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-card.html")
+link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
+
+script(src="/bower_components/sugar/dist/sugar.min.js")
+
+dom-module#d4l-twibbyn-detail
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+  style(include="d4l-theme")
+  style(include="shared-styles")
+  style(include="shared-layout-styles").
+    :host {
+      display: block;
+    }
+
+    .card {
+      position: relative;
+      -webkit-background-size: cover;
+      background-size: cover;
+      padding: 10px 20px 10px;
+      background: var(--text-light-primary-color);
+    }
+    .card.iron-selected {
+      background: #e0e0e0;
+    }
+
+    d4l-twibbyn-overlay {
+      width: 250px;
+      height: 250px;
+    }
+
+  template
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
+    iron-ajax#ajaxSaveTwibbyn(
+      auto,
+      handleAs="json",
+      content-type="application/json",
+      url="[[__twibbynSaveUrl]]",
+      method="PUT",
+      body="[[__twibbynSaveBody]]"
+      on-response="__saveResponce",
+      on-error="__ajaxError",
+      last-response="{{rqResponse}}"
+    )
+
+    .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+      .layout.horizontal.center
+        .flex.text-right
+          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__prevTwibbyn") Prev
+        d4l-twibbyn-overlay(
+          image="[[auth.user.profiles.0.images.profile]]",
+          twibbyn="[[__selectedTwibbyn]]"
+        )
+        .flex.text-left
+          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__nextTwibbyn", style="transform: rotate(180deg);") Next
+      .layout.horizontal.center
+        .flex.layout.vertical.center
+          h1 Your Avatar
+          p Choose your social media platform
+          .layout.horizontal.center
+            paper-icon-button(icon="d4l-social-icons:twitter", on-tap="__saveTwitter")
+            paper-icon-button(icon="d4l-social-icons:facebook", on-tap="__saveFacebook")
+          .layout.vertical.center(hidden$="[[!__savingAvatar]]")
+            p Updating your avatar
+            paper-spinner(active)
+
+    .page-content.flex-2(mobile$="[[isMobile]]")
+      iron-selector(attr-for-selected="name", selected="{{__selectedTwibbyn}}")
+        template(is="dom-repeat", items="[[twibbyns]]" as="twibbyn")
+          img.card(
+            src="[[__twibbynEndpoint]]/[[twibbyn]]",
+            name="[[twibbyn]]",
+            width="250px",
+            height="250px"
+          )
+
+  script(src="d4l-twibbyn-detail.js")

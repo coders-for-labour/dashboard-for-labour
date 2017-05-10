@@ -1,0 +1,36 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-card/d4l-card-behaviors.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-twibbyn-overlay
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="d4l-theme")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+    .twibbyn-wrapper {
+      position: relative;
+    }
+    .twibbyn-wrapper > img.overlay {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+    .twibbyn-wrapper > img {
+      max-width: 100%;
+      min-width: 100%;
+    }
+
+  template
+    .twibbyn-wrapper
+      img.overlay(hidden$="[[!__hasTwibbyn]]", src="[[__twibbynImage]]")
+      img(src="[[__originalImage]]")
+
+  script(src="./d4l-twibbyn-overlay.js")

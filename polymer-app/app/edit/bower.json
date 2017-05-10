@@ -1,0 +1,167 @@
+{
+  "name": "dashboard-for-labour",
+  "authors": [
+    "Coders for Labour"
+  ],
+  "private": true,
+  "dependencies": {
+    "app-layout": "PolymerElements/app-layout#^0.10.0",
+    "app-route": "PolymerElements/app-route#^0.9.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "iron-icon": "PolymerElements/iron-icon#^1.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "iron-icons": "^1.2.0",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^1.0.0",
+    "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.0",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
+    "iron-pages": "PolymerElements/iron-pages#^1.0.0",
+    "iron-selector": "PolymerElements/iron-selector#^1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#~1.1.0",
+    "polymer": "Polymer/polymer#^1.7.0",
+    "paper-button": "^1.0.14",
+    "paper-fab": "^1.2.1",
+    "paper-dialog": "^1.1.0",
+    "iron-form": "^1.1.4",
+    "paper-input": "^1.1.22",
+    "app-storage": "^0.9.7",
+    "paper-dropdown-menu": "^1.4.2",
+    "paper-menu": "^1.2.2",
+    "paper-item": "^1.2.1",
+    "neon-animation": "^1.2.4",
+    "iron-image": "^1.2.5",
+    "paper-toast": "^1.3.0",
+    "paper-spinner": "^1.2.1",
+    "socket-io": "^1.0.0",
+    "sugar": "^2.0.4",
+    "iron-a11y-keys": "^1.0.6",
+    "iron-scroll-target-behavior": "^1.1.1",
+    "paper-checkbox": "^1.4.2",
+    "paper-toggle-button": "^1.2.1",
+    "paper-slider": "^1.0.12",
+    "iron-list": "^1.3.15",
+    "paper-badge": "^1.1.4",
+    "paper-date-picker": "polymer-paper-date-picker#^1.2.0",
+    "socket.io-client": "^1.7.2",
+    "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.3",
+    "google-apis": "^1.1.7"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.0.0"
+  },
+  "overrides": {
+    "google-apis": {
+      "main": [
+        "./**/*.html",
+        "./**/*.js"
+      ]
+    },
+    "webcomponentsjs": {
+      "main": [
+        "webcomponents-lite.min.js"
+      ]
+    },
+    "web-animations-js": {
+      "main": [
+        "./web-animations-next-lite.min.js"
+      ]
+    },
+    "promise-polyfill": {
+      "main": [
+        "./**/*.html",
+        "./**/*.js"
+      ]
+    },
+    "app-layout": {
+      "main": "./**/*.html"
+    },
+    "app-route": {
+      "main": "./**/*.html"
+    },
+    "app-storage": {
+      "main": [
+        "./**/*.html",
+        "./**/*.js"
+      ]
+    },
+    "iron-ajax": {
+      "main": "./**/*.html"
+    },
+    "iron-dropdown": {
+      "main": "./**/*.html"
+    },
+    "iron-flex-layout": {
+      "main": "./**/*.html"
+    },
+    "iron-icons": {
+      "main": "./**/*.html"
+    },
+    "iron-overlay-behavior": {
+      "main": "./**/*.html"
+    },
+    "iron-selector": {
+      "main": "./**/*.html"
+    },
+    "moment": {
+      "main": "./**/*.js"
+    },
+    "moment-element": {
+      "main": "./**/*.html"
+    },
+    "neon-animation": {
+      "main": "./**/*.html"
+    },
+    "paper-date-picker": {
+      "main": "./**/*.html"
+    },
+    "paper-dialog-behavior": {
+      "main": "./**/*.html"
+    },
+    "paper-styles": {
+      "main": "./**/*.html"
+    },
+    "paper-spinner": {
+      "main": "./**/*.html"
+    },
+    "paper-material": {
+      "main": "./**/*.html"
+    },
+    "paper-behaviors": {
+      "main": "./**/*.html"
+    },
+    "paper-dropdown-menu": {
+      "main": "./**/*.html"
+    },
+    "paper-menu": {
+      "main": "./**/*.html"
+    },
+    "paper-menu-button": {
+      "main": "./**/*.html"
+    },
+    "paper-item": {
+      "main": "./**/*.html"
+    },
+    "paper-tooltip": {
+      "main": "./**/*.html"
+    },
+    "socket-io": {
+      "main": [
+        "./**/*.html",
+        "./**/*.js"
+      ]
+    },
+    "socket.io-client": {
+      "main": [
+        "./dist/*.map",
+        "./dist/*.js"
+      ]
+    },
+    "sugar": {
+      "main": [
+        "./dist/sugar.min.js"
+      ]
+    }
+  },
+  "resolutions": {
+    "paper-date-picker": "^1.2.0"
+  }
+}

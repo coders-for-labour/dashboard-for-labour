@@ -1,0 +1,126 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
+link(rel="import", href="/bower_components/iron-image/iron-image.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/paper-button/paper-button.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-auth-service
+  template
+    style(inculde="shared-styles").
+      :host {
+        display: none;
+      }
+
+    iron-ajax#authenticated(
+      url="/authenticated",
+      headers='{"Accept":"application/json"}'
+      handleAs="json",
+      on-response="onAjaxResponse",
+      on-error="onAjaxError"
+    )
+
+  script(src="d4l-auth-service.js")
+
+dom-module#d4l-auth
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment ")
+    style(include="shared-styles").
+      :host {
+        min-width: 40%;
+        color: var(--text-light-primary-color);
+      }
+
+      h1{
+        color: var(--text-light-primary-color);
+        font-weight: 700;
+      }
+
+      .page-group {
+        position: relative;
+        z-index: 5;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .auth-icon{
+        width: 175px;
+        height: 175px;
+      }
+      .twitter-icon{
+        width: 45px;
+        height: 45px;
+        margin-left: 20px;
+      }
+      .c4l-icon{
+        width: 35px;
+        height: 35px;
+      }
+
+      .page-background {
+        position: fixed;
+        top:0px;
+        left:0px;
+      }
+      .page-background > .full-video {
+        position: relative;
+      }
+      .page-background > .full-video .overlay {
+        position: absolute;
+        background: rgba(225, 0, 0, 0.6);
+
+        z-index: 2;
+
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .page-background > .full-video .video {
+        position: absolute;
+
+        z-index: 1;
+
+        min-height: 100vh;
+        min-width: 100vw;
+      }
+
+      .footer-group {
+        position: fixed;
+        bottom: 10px;
+        width: 100vw;
+      }
+      .footer-group > div {
+        padding: 0px 20px;
+      }
+      .footer-group .volunteers {
+        text-align: right;
+      }
+    .page-group.layout.horizontal.center-justified
+      .layout.vertical.center-center(on-click="login")
+        iron-icon.auth-icon(icon="d4l-icons:c4l")
+        h1 Dashboard for Labour
+        .layout.horizontal.center
+          p Login with Twitter
+          iron-icon.twitter-icon(icon="d4l-social-icons:twitter")
+
+    .page-background
+      .full-video
+        .overlay
+        video.video(muted, loop, autoplay)
+          source(
+            src="/videos/bg.mp4",
+            type="video/mp4"
+          )
+
+    .footer-group.layout.horizontal.center
+      .icon.flex
+        iron-icon.c4l-icon(icon="d4l-icons:c4l")
+      .volunteers.flex Made by Volunteers
+      
+
+  script(src="d4l-auth.js")

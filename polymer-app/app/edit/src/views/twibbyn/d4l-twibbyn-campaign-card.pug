@@ -1,0 +1,42 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-card/d4l-card-behaviors.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-twibbyn-campaign-card
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(include="d4l-theme")
+  style(include="shared-styles")
+  style(include="shared-card-styles").
+    :host {
+      display: block;
+    }
+
+    .card {
+      position: relative;
+      -webkit-background-size: cover;
+      background-size: cover;
+      padding: 10px 20px 10px;
+      color: var(--text-light-primary-color);
+    }
+    .footer.tray{
+      margin: 10px -20px -10px;
+    }
+    .footer.tray paper-icon-button {
+      color: var(--app-color-secondary-grey);
+    }
+
+  template
+    .card
+      h1 [[campaign.name]]
+      p [[campaign.description]]
+      .footer.tray(hidden$="[[!__showButtons]]")
+        .layout.horizontal.center
+          paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTwibbyn")
+
+
+  script(src="./d4l-twibbyn-campaign-card.js")

@@ -1,0 +1,91 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+link(rel="import", href="/bower_components/iron-list/iron-list.html")
+link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
+link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
+
+link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
+
+link(rel="import", href="/src/d4l-header/d4l-header.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+link(rel="import", href="./d4l-dashboard-card.html")
+
+script(src="/bower_components/sugar/dist/sugar.min.js")
+
+dom-module#d4l-dashboard
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+  style(include="shared-styles")
+  style(include="shared-layout-styles").
+    :host {
+      display: block;
+
+      padding: var(--default-page-padding);
+      padding-top: 95px;
+    }
+
+    .members-stat {
+      font-size: 50px;
+    }
+
+  template
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
+    d4l-app-db-query(db="[[db]]", doc="[[db.user]]", query="[[__userQuery]]", find-all="{{__users}}")
+
+    d4l-header(
+      auth="[[auth]]",
+      db="{{db}}",
+      page="Dashboard",
+      page-title="[[__pageTitle]]",
+      page-mode="[[__pageMode]]",
+      header="{{header}}",
+    )
+
+    .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
+      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
+        d4l-dashboard-card.card.flex(background="members")
+          .layout.horizontal.center
+            iron-icon(icon="d4l-icons:member")
+            h1 Members
+          h2.members-stat [[__users.length]]
+
+        d4l-dashboard-card.card.flex(background="find-mp", disabled)
+          .layout.horizontal.center
+            iron-icon(icon="d4l-icons:location")
+            h1 Find your MP
+          paper-input(label="Enter your postcode here")
+
+      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
+        d4l-dashboard-card.card.flex(background="twibbyn")
+          .layout.horizontal.center
+            iron-icon(icon="d4l-social-icons:social")
+            h1 Twibbyns
+          p Show your support with social media avatars
+          paper-button(on-tap="__viewTwibbyn") Get Started
+
+        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap", disabled)
+          .layout.horizontal.center
+            iron-icon(icon="d4l-social-icons:thunderclap")
+            h1 Thunderclap
+          p Rally together to show your support for Labour
+          paper-button(on-tap="__viewThunderclap") Get Started
+
+        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme", disabled)
+          .layout.horizontal.center
+            iron-icon(icon="d4l-social-icons:meme")
+            h1 Latest Memes
+          p Create your own, or post existing memes on social media
+          paper-button(on-tap="__viewMemes") Get Started
+
+  script(src="d4l-dashboard.js")
