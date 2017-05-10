@@ -59,19 +59,29 @@ dom-module#d4l-app
       }
 
       .footer-group {
+        background-color: var(--default-background-color);
         position: fixed;
-        bottom: 5px;
+        bottom: 0px;
+        font-size: 14px;
         width: 100%;
+        padding: 5px 0px;
+      }
+      .footer-group[mobile] {
+        flex-direction: column;
       }
       .footer-group > div {
         padding: 0px 20px;
       }
-      .footer-group .c4l-icon{
-        color: var(--app-color-primary-red);
+      .footer-group > .info a {
+        color: inherit;
+        font-size: 14px;
+        text-decoration: none;
+        margin-right: 10px;
       }
 
-      .footer-group .volunteers {
-        text-align: right;
+      .footer-group .c4l-icon{
+        color: var(--app-color-primary-red);
+        margin-right: 10px;
       }
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
@@ -158,9 +168,14 @@ dom-module#d4l-app
             name="view404"
           )
 
-    .footer-group.layout.horizontal.center
-      .icon.flex
-        iron-icon.c4l-icon(icon="d4l-icons:c4l")
-      .volunteers.flex Made by Volunteers
+        .footer-group.layout.horizontal.center(mobile$="[[isMobile]]")
+          .flex.text-left.info
+            .layout.horizontal.center
+              a(href="http://codersforlabour.com" target="_BLANK")
+                .layout.horizontal.center
+                  iron-icon.c4l-icon(icon="d4l-icons:c4l")
+                  .flex Coders for Labour
+              a(href="http://www.codersforlabour.com/privacy-policy" target="_BLANK") Privacy Policy
+          .flex.text-right Made by Volunteers
 
   script(src="d4l-app.js")
