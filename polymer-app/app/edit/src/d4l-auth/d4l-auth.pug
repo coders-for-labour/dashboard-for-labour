@@ -62,6 +62,10 @@ dom-module#d4l-auth
         height: 35px;
       }
 
+      .login-group{
+        cursor: pointer;
+      }
+
       .page-background {
         position: fixed;
         top:0px;
@@ -91,17 +95,32 @@ dom-module#d4l-auth
 
       .footer-group {
         position: fixed;
-        bottom: 10px;
+        bottom: 0px;
         width: 100vw;
+        padding: 5px 0px;
+        z-index: 500;
+      }
+      .footer-group[mobile] {
+        flex-direction: column;
       }
       .footer-group > div {
         padding: 0px 20px;
       }
-      .footer-group .volunteers {
-        text-align: right;
+
+      .footer-group > .info a {
+        color: inherit;
+        text-decoration: none;
+        margin-right: 10px;
       }
+      .footer-group .c4l-icon {
+        color: var(--text-primary-color);
+        margin-right: 10px;
+      }
+
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
     .page-group.layout.horizontal.center-justified
-      .layout.vertical.center-center(on-click="login")
+      .layout.vertical.center-center.login-group(on-click="login")
         iron-icon.auth-icon(icon="d4l-icons:c4l")
         h1 Dashboard for Labour
         .layout.horizontal.center
@@ -117,10 +136,14 @@ dom-module#d4l-auth
             type="video/mp4"
           )
 
-    .footer-group.layout.horizontal.center
-      .icon.flex
-        iron-icon.c4l-icon(icon="d4l-icons:c4l")
-      .volunteers.flex Made by Volunteers
-      
+    .footer-group.layout.horizontal.center(mobile$="[[isMobile]]")
+      .flex.text-left.info
+        .layout.horizontal.center
+          a(href="http://codersforlabour.com" target="_BLANK")
+            .layout.horizontal.center
+              iron-icon.c4l-icon(icon="d4l-icons:c4l")
+              .flex Coders for Labour
+          a(href="http://www.codersforlabour.com/privacy-policy" target="_BLANK") Privacy Policy
+      .flex.text-right Made by Volunteers
 
   script(src="d4l-auth.js")
