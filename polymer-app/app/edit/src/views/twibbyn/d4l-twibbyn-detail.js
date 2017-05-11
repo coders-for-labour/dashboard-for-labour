@@ -85,7 +85,7 @@ Polymer({
   __saveResponce: function(ev){
     setTimeout(() => {
       this.set('__savingAvatar', false);
-    }, 25000);
+    }, 2000);
   },
   __ajaxError: function(ev){
     this.__err(ev);
