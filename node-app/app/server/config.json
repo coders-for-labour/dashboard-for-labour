@@ -54,6 +54,9 @@
         "consumerKey": "%D4L_TW_CONSUMER_KEY%",
         "consumerSecret": "%D4L_TW_CONSUMER_SECRET%"
       }
+    },
+    "cdn": {
+      "twibbyn": "http://cdn.forlabour.com"
     }
   },
   "local": {
