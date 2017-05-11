@@ -20,10 +20,6 @@ const Composer = require('./composer');
 const Twitter = require('./twitter');
 const rest = require('restler');
 
-const Constants = {
-  CDN_URL: 'http://cdn.forlabour.com'
-};
-
 /* ************************************************************
  *
  * COMPOSE
@@ -127,7 +123,7 @@ const _saveTwibbyn = (req, res) => {
   _getAvatar(pathname, imgUrl)
     .then(avatarBuffer => {
       Logging.logDebug('Composing Twibbyn');
-      _composeTwibbyn(avatarBuffer, `${Constants.CDN_URL}/${req.body.file}`, true)
+      _composeTwibbyn(avatarBuffer, `${Config.cdn.twibbyn}/${req.body.file}`, true)
         .then(imageBuffer => {
           Logging.logDebug('Got Twibbyn');
           res.send(Twitter.updateProfile(twAuth, imageBuffer));
