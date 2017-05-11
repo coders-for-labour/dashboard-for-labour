@@ -34,7 +34,7 @@
     "proxyquire": "~1.7.x",
     "readline": "^1.3.0",
     "restler": "^3.4.0",
-    "rhizome-api-js": "~0.0.x",
+    "rhizome-api-js": "~1.0.x",
     "sugar": "^2.0.4",
     "twitter": "^1.7.0",
     "winston": "~2.2.x",
