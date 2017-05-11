@@ -93,19 +93,19 @@
     },
     "yubaba": {
       "logPath": {
-        "dev":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/dev",
-        "prod":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/prod",
-        "test":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/test"
+        "dev":"/home/chris/apps/d4l/node-app/logs/dev",
+        "prod":"/home/chris/apps/d4l/node-app/logs/prod",
+        "test":"/home/chris/apps/d4l/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "prod": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "test": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data/test"
+        "dev": "/home/chris/apps/d4l/node-app/app_data",
+        "prod": "/home/chris/apps/d4l/node-app/app_data",
+        "test": "/home/chris/apps/d4l/node-app/app_data/test"
       },
       "listenPort": {
-        "dev": 6021,
-        "prod": 6020,
-        "test": 6022
+        "dev": 6041,
+        "prod": 6040,
+        "test": 6042
       }
     }
   }
