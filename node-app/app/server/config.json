@@ -22,7 +22,7 @@
       "title": "Dashboard for Labour",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
-      "version": "0.8.2",
+      "version": "0.8.3",
       "protocol": "http",
       "subdomain": "dashboard",
       "domain": "forlabour.com"
