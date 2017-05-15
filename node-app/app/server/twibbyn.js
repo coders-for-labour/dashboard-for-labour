@@ -25,11 +25,11 @@ const rest = require('restler');
  * COMPOSE
  *
  **************************************************************/
-const _composeTwibbyn = (rearImgBuffer, frontImgUrl, toBuffer) => {
+const _composeTwibbyn = (rearImgBuffer, rearImgBufferUid, frontImgUrl, toBuffer) => {
   let composer = new Composer(500, 500, toBuffer);
   composer.params('antialias', 'subpixel');
   composer.params('patternQuality', 'best');
-  composer.imageFromBuffer(rearImgBuffer, {gravity: 'mid'});
+  composer.imageFromBuffer(rearImgBuffer, rearImgBufferUid, {gravity: 'mid'});
   composer.params('globalAlpha', 1);
   composer.imageFromUrl(frontImgUrl, {
     width: 1.0, height: 1.0, gravity: 'bottom'
@@ -123,7 +123,7 @@ const _saveTwibbyn = (req, res) => {
   _getAvatar(pathname, imgUrl)
     .then(avatarBuffer => {
       Logging.logDebug('Composing Twibbyn');
-      _composeTwibbyn(avatarBuffer, `${Config.cdn.twibbyn}/${req.body.file}`, true)
+      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn.twibbyn}/${req.body.file}`, true)
         .then(imageBuffer => {
           Logging.logDebug('Got Twibbyn');
           res.send(Twitter.updateProfile(twAuth, imageBuffer));

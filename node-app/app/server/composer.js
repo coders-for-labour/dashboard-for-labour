@@ -84,10 +84,15 @@ class Composer {
     let file = options.cacheFile ? _memCache.load(imgFile) : fs.readFileSync(imgFile);
     this._id += imgFile;
 
-    return this.imageFromBuffer(file, options);
+    return this.__imageFromBuffer(file, options);
   }
 
-  imageFromBuffer(imgBuffer, options) {
+  imageFromBuffer(imgBuffer, uid, options) {
+    this._id += uid;
+    return this.__imageFromBuffer(imgBuffer, options);
+  }
+
+  __imageFromBuffer(imgBuffer, options) {
     let o = this._options(options);
 
     this._renderQueue.push(context => {
