@@ -20,26 +20,60 @@ const Composer = require('./composer');
 const Twitter = require('./twitter');
 const rest = require('restler');
 
-const Constants = {
-  CDN_URL: 'http://cdn.forlabour.com'
-};
-
 /* ************************************************************
  *
  * COMPOSE
  *
  **************************************************************/
-const _composeTwibbyn = (rearImgBuffer, frontImgUrl, toBuffer) => {
+const _composeTwibbyn = (rearImgBuffer, rearImgBufferUid, frontImgUrl, toBuffer) => {
   let composer = new Composer(500, 500, toBuffer);
   composer.params('antialias', 'subpixel');
   composer.params('patternQuality', 'best');
-  composer.imageFromBuffer(rearImgBuffer, {gravity: 'mid'});
+  composer.imageFromBuffer(rearImgBuffer, rearImgBufferUid, {gravity: 'mid'});
   composer.params('globalAlpha', 1);
   composer.imageFromUrl(frontImgUrl, {
     width: 1.0, height: 1.0, gravity: 'bottom'
   });
 
   return composer.render();
+};
+
+const _getAvatar = (pathname, imgUrl) => {
+  return new Promise((resolve, reject) => {
+    fs.access(pathname, 'r', err => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          Logging.logDebug('Fetching twitter user avatar');
+          rest.get(imgUrl)
+            .on('success', (data, response) => {
+              fs.writeFile(pathname, response.raw, err => {
+                if (err) {
+                  throw err;
+                }
+                resolve(response.raw);
+              });
+            })
+            .on('error', err => {
+              Logging.log(err, Logging.Constants.LogLevel.ERR);
+              reject(err);
+            });
+        } else {
+          Logging.log(err, Logging.Constants.LogLevel.ERR);
+          reject(err);
+        }
+      } else {
+        Logging.logDebug('Fetching local user avatar');
+        fs.readFile(pathname, (err, data) => {
+          if (err) {
+            Logging.log(err, Logging.Constants.LogLevel.ERR);
+            reject(err);
+            return;
+          }
+          resolve(data);
+        });
+      }
+    });
+  });
 };
 
 /* ************************************************************
@@ -83,27 +117,18 @@ const _saveTwibbyn = (req, res) => {
   }
   Logging.logDebug(twAuth.images);
 
-  let imgUrl = twAuth.images.profile.replace('_normal', '');
-  rest.get(imgUrl)
-    .on('success', (data, response) => {
-      let pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
-      fs.writeFile(pathname, response.raw, err => {
-        if (err) {
-          throw err;
-        }
-        Logging.logDebug('Saving Twibbyn');
-        Logging.logDebug(req.body);
+  const imgUrl = twAuth.images.profile.replace('_normal', '');
+  const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
 
-        _composeTwibbyn(response.raw, `${Constants.CDN_URL}/${req.body.file}`, true)
-          .then(imageBuffer => {
-            Logging.logDebug('Got Twibbyn');
-            res.send(Twitter.updateProfile(twAuth, imageBuffer));
-            res.sendStatus(200);
-          });
-      });
-    })
-    .on('error', err => {
-      Logging.log(err, Logging.Constants.LogLevel.ERR);
+  _getAvatar(pathname, imgUrl)
+    .then(avatarBuffer => {
+      Logging.logDebug('Composing Twibbyn');
+      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn.twibbyn}/${req.body.file}`, true)
+        .then(imageBuffer => {
+          Logging.logDebug('Got Twibbyn');
+          res.send(Twitter.updateProfile(twAuth, imageBuffer));
+          res.sendStatus(200);
+        });
     });
 };
 

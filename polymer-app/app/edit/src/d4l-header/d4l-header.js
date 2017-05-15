@@ -62,7 +62,6 @@ Polymer({
   },
 
   __computeResponsivePageTitle: function(title, isMobile) {
-    this.__warn('__computeResponsivePageTitle', title);
     return !isMobile ? Sugar.String.truncate(title, 35) : Sugar.String.truncate(title, 17);
   }
 

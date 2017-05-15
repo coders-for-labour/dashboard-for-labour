@@ -22,7 +22,7 @@
       "title": "Dashboard for Labour",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
-      "version": "0.8.0",
+      "version": "0.8.3",
       "protocol": "http",
       "subdomain": "dashboard",
       "domain": "forlabour.com"
@@ -54,6 +54,9 @@
         "consumerKey": "%D4L_TW_CONSUMER_KEY%",
         "consumerSecret": "%D4L_TW_CONSUMER_SECRET%"
       }
+    },
+    "cdn": {
+      "twibbyn": "http://cdn.forlabour.com"
     }
   },
   "local": {
@@ -93,19 +96,19 @@
     },
     "yubaba": {
       "logPath": {
-        "dev":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/dev",
-        "prod":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/prod",
-        "test":"/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/test"
+        "dev":"/home/chris/apps/d4l/node-app/logs/dev",
+        "prod":"/home/chris/apps/d4l/node-app/logs/prod",
+        "test":"/home/chris/apps/d4l/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "prod": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "test": "/home/chris/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data/test"
+        "dev": "/home/chris/apps/d4l/node-app/app_data",
+        "prod": "/home/chris/apps/d4l/node-app/app_data",
+        "test": "/home/chris/apps/d4l/node-app/app_data/test"
       },
       "listenPort": {
-        "dev": 6021,
-        "prod": 6020,
-        "test": 6022
+        "dev": 6041,
+        "prod": 6040,
+        "test": 6042
       }
     }
   }
