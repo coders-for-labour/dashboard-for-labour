@@ -15,15 +15,52 @@ const Config = require('./config');
 const passport = require('passport');
 // const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const Rhizome = require('rhizome-api-js');
 // const Cache = require('./cache');
 
+/* ************************************************************
+ *
+ * RHIZOME AUTHENTICATION
+ *
+ **************************************************************/
+const __authenticateRihzomeUser = (appAuth, existingUser) => {
+  let authentication = {
+    authLevel: 1,
+    domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
+    permissions: [
+      {route: "user/simplified", permission: "list"},
+      {route: "campaign", permission: "list"},
+      {route: "campaign/:id/metadata/:key?", permission: "read"},
+      {route: "post", permission: "list"},
+      {route: "post", permission: "read"},
+      {route: "post", permission: "add"},
+      {route: "post", permission: "write"}
+    ]
+  };
+
+  if (existingUser) {
+    Logging.logDebug(`Adding App (${appAuth.app}) To User: ${existingUser.id}`);
+    return Rhizome.Auth.addAuthToUser(existingUser.id, appAuth);
+  }
+
+  Logging.logDebug(`Authenticating User`);
+  return Rhizome.Auth.findOrCreateUser(appAuth, authentication);
+};
+
 module.exports.init = app => {
+  /* ************************************************************
+   *
+   * TWITTER
+   *
+   **************************************************************/
   passport.use(new TwitterStrategy({
     consumerKey: Config.auth.twitter.consumerKey,
     consumerSecret: Config.auth.twitter.consumerSecret,
     callbackURL: `/auth/twitter/callback`
   }, (token, tokenSecret, profile, cb) => {
+    Logging.logSilly('AUTHENTICATE: Strategy');
+
     const user = {
       app: 'twitter',
       id: profile.id,
@@ -36,33 +73,40 @@ module.exports.init = app => {
       bannerImgUrl: profile._json.profile_background_image_url ? profile._json.profile_background_image_url : ''
     };
 
-    Logging.log(user);
-
-    let authentication = {
-      authLevel: 1,
-      domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
-      permissions: [
-        {route: "user/simplified", permission: "list"},
-        {route: "campaign", permission: "list"},
-        {route: "campaign/:id/metadata/:key?", permission: "read"},
-        {route: "post", permission: "list"},
-        {route: "post", permission: "read"},
-        {route: "post", permission: "add"},
-        {route: "post", permission: "write"}
-      ]
-    };
-
-    Logging.logSilly(authentication);
-
-    Rhizome.Auth
-      .findOrCreateUser(user, authentication)
-      .then(Logging.Promise.logSilly("RhizomeUser"))
-      .then(rhizomeUser => {
-        cb(null, rhizomeUser);
-      })
-      .catch(Logging.Promise.logError());
+    cb(null, user);
   }));
 
+  /* ************************************************************
+   *
+   * FACEBOOK
+   *
+   **************************************************************/
+  passport.use(new FacebookStrategy({
+    clientID: Config.auth.facebook.appId,
+    clientSecret: Config.auth.facebook.appSecret,
+    callbackURL: '/auth/facebook/callback',
+    profileFields: ['id', 'displayName', 'name', 'cover', 'picture', 'email']
+  }, (token, refreshToken, profile, cb) => {
+    const p = profile._json;
+    const user = {
+      app: 'facebook',
+      id: p.id,
+      token: token,
+      name: p.name,
+      email: p.email,
+      profileImgUrl: p.picture.data.url,
+      bannerImgUrl: p.cover.source
+    };
+
+    Logging.log(user);
+    cb(null, user);
+  }));
+
+  /* ************************************************************
+   *
+   * SERIALISE / DESERIALISE
+   *
+   **************************************************************/
   passport.serializeUser((user, done) => {
     Logging.logVerbose('Auth Serialise User');
     Logging.logSilly(user);
@@ -75,6 +119,11 @@ module.exports.init = app => {
     done(null, user);
   });
 
+  /* ************************************************************
+   *
+   * AUTHENTICATED
+   *
+   **************************************************************/
   app.get('/authenticated', (req, res) => {
     if (!req.user) {
       res.json(null);
@@ -88,9 +137,6 @@ module.exports.init = app => {
         res.json({
           user: {
             id: req.user.rhizomeId,
-            orgRole: user.orgRole,
-            teamName: user.teamName,
-            teamRole: user.teamRole,
             profiles: req.user.auth.map(function(a) {
               return {
                 app: a.app,
@@ -117,12 +163,60 @@ module.exports.init = app => {
     res.redirect('/');
   });
 
-  const AUTH_SCOPE = [
+  /* ************************************************************
+   *
+   * ROUTES
+   *
+   **************************************************************/
+  const TW_AUTH_SCOPE = [
   ];
-  app.get('/auth/twitter', passport.authenticate(
-    'twitter', {
-      scope: AUTH_SCOPE.join(' ')
+  app.get('/auth/twitter', (req, res, next) => {
+    Logging.logSilly("AUTHENTICATE: /auth/twitter");
+    passport.authenticate(
+      'twitter', {
+        scope: TW_AUTH_SCOPE.join(' ')
+      }
+    )(req, res, next);
+  });
+  app.get('/auth/twitter/callback', (req, res, next) => {
+    Logging.logSilly("AUTHENTICATE: /auth/twitter/callback");
+    passport.authenticate('twitter', (err, appAuth, info) => {
+      Logging.logSilly("AUTHENTICATE: Authenticated");
+      if (err) throw err;
+
+      __authenticateRihzomeUser(appAuth, req.user)
+        .then(user => {
+          Logging.logDebug(user);
+          req.login(user, err => {
+            if (err) throw err;
+            res.redirect('/');
+          });
+        })
+        .catch(Logging.Promise.logError());
+    })(req, res, next);
+  });
+
+  const FB_AUTH_SCOPE = [
+    'public_profile', 'email'
+  ];
+  app.get('/auth/facebook', passport.authenticate(
+    'facebook', {
+      scope: FB_AUTH_SCOPE
     }
   ));
-  app.get('/auth/twitter/callback', passport.authenticate('twitter', {successRedirect: '/', failureRedirect: '/'}));
+  app.get('/auth/facebook/callback', (req, res, next) => {
+    passport.authenticate('facebook', (err, appAuth, info) => {
+      if (err) throw err;
+
+      __authenticateRihzomeUser(appAuth, req.user)
+        .then(user => {
+          Logging.logDebug(user);
+          req.login(user, err => {
+            if (err) throw err;
+            res.redirect('/');
+          });
+        })
+        .catch(Logging.Promise.logError());
+    })(req, res, next);
+  });
 };
