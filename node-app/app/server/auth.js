@@ -13,11 +13,9 @@
 const Logging = require('./logging');
 const Config = require('./config');
 const passport = require('passport');
-// const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const Rhizome = require('rhizome-api-js');
-// const Cache = require('./cache');
 
 /* ************************************************************
  *
@@ -98,7 +96,7 @@ module.exports.init = app => {
       bannerImgUrl: p.cover.source
     };
 
-    Logging.log(user);
+    Logging.logSilly(user);
     cb(null, user);
   }));
 
@@ -139,6 +137,7 @@ module.exports.init = app => {
             id: req.user.rhizomeId,
             profiles: req.user.auth.map(function(a) {
               return {
+                id: a.appId,
                 app: a.app,
                 email: a.email,
                 url: a.profileUrl,
@@ -172,6 +171,10 @@ module.exports.init = app => {
   ];
   app.get('/auth/twitter', (req, res, next) => {
     Logging.logSilly("AUTHENTICATE: /auth/twitter");
+
+    req.session.returnPath = req.get('Referer');
+    Logging.logSilly(req.session.returnPath);
+
     passport.authenticate(
       'twitter', {
         scope: TW_AUTH_SCOPE.join(' ')
@@ -180,6 +183,7 @@ module.exports.init = app => {
   });
   app.get('/auth/twitter/callback', (req, res, next) => {
     Logging.logSilly("AUTHENTICATE: /auth/twitter/callback");
+
     passport.authenticate('twitter', (err, appAuth, info) => {
       Logging.logSilly("AUTHENTICATE: Authenticated");
       if (err) throw err;
@@ -189,7 +193,9 @@ module.exports.init = app => {
           Logging.logDebug(user);
           req.login(user, err => {
             if (err) throw err;
-            res.redirect('/');
+            let rp = req.session.returnPath;
+            req.session.returnPath = '';
+            res.redirect(rp ? rp : '/');
           });
         })
         .catch(Logging.Promise.logError());
@@ -199,21 +205,28 @@ module.exports.init = app => {
   const FB_AUTH_SCOPE = [
     'public_profile', 'email'
   ];
-  app.get('/auth/facebook', passport.authenticate(
-    'facebook', {
-      scope: FB_AUTH_SCOPE
-    }
-  ));
+  app.get('/auth/facebook', (req, res, next) => {
+    req.session.returnPath = req.get('Referer');
+    Logging.logSilly(req.session.returnPath);
+
+    passport.authenticate(
+      'facebook', {
+        scope: FB_AUTH_SCOPE
+      }
+    )(req, res, next);
+  });
   app.get('/auth/facebook/callback', (req, res, next) => {
     passport.authenticate('facebook', (err, appAuth, info) => {
       if (err) throw err;
 
       __authenticateRihzomeUser(appAuth, req.user)
         .then(user => {
-          Logging.logDebug(user);
+          Logging.logSilly(user);
           req.login(user, err => {
             if (err) throw err;
-            res.redirect('/');
+            let rp = req.session.returnPath;
+            req.session.returnPath = '';
+            res.redirect(rp ? rp : '/');
           });
         })
         .catch(Logging.Promise.logError());
