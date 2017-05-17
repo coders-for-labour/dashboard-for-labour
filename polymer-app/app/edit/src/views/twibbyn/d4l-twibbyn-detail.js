@@ -232,13 +232,13 @@ Polymer({
   __saveFbResponse: function(ev){
     this.__debug(ev.detail.response);
     FB.api('/me/photos', 'post', {
-      url: `http://cdn.forlabour.com/c/${ev.detail.response.file}.png`,
+      url: `http://cdn.forlabour.com/c/${ev.detail.response.file}`,
       no_story: true
     }, response => {
       this.set('__uploadStatus', 'uploaded');
       if (!response.id) {
         this.__debug(response);
-        this.__error('Failed to upload photo to Facebook');
+        this.__err('Failed to upload photo to Facebook');
         return;
       }
 
