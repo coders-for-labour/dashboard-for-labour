@@ -14,7 +14,8 @@
     "Sugar": true,
     "io": true,
     "gapi": true,
-    "google": true
+    "google": true,
+    "FB": true
   },
   "rules": {
     "no-this-before-super": "warn",

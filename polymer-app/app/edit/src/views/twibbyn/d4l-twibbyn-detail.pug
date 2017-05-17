@@ -36,6 +36,14 @@ dom-module#d4l-twibbyn-detail
       display: block;
     }
 
+    h1, h2 {
+      text-align: center;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
     .card {
       position: relative;
       -webkit-background-size: cover;
@@ -62,34 +70,73 @@ dom-module#d4l-twibbyn-detail
       url="[[__twibbynSaveUrl]]",
       method="PUT",
       body="[[__twibbynSaveBody]]"
-      on-response="__saveResponce",
-      on-error="__ajaxError",
-      last-response="{{rqResponse}}"
-    )
+      on-response="__saveTwResponse",
+      on-error="__ajaxError")
+
+    iron-ajax#ajaxGetFbTwibbyn(
+      handleAs="json",
+      content-type="application/json",
+      url="[[__fbGetTwibbynUrl]]",
+      method="GET",
+      on-response="__saveFbResponse",
+      on-error="__ajaxError")
 
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+      h1 Platform
+      .layout.horizontal.center
+        .flex.layout.vertical.center
+          .layout.horizontal.center
+            paper-icon-button(hidden$="[[__twitterConnected]]", src="/images/social/tw-not-connected.svg", on-tap="__connectTwitter")
+            paper-icon-button(hidden$="[[__facebookConnected]]", src="/images/social/fb-not-connected.svg", on-tap="__connectFacebook")
+            div(hidden$="[[!__twitterConnected]]")
+              paper-icon-button(hidden$="[[__twitterSelected]]", , src="/images/social/tw-not-selected.svg", on-tap="__selectTwitter")
+              paper-icon-button(hidden$="[[!__twitterSelected]]", src="/images/social/tw-selected.svg")
+            div(hidden$="[[!__facebookConnected]]")
+              paper-icon-button(hidden$="[[__facebookSelected]]", src="/images/social/fb-not-selected.svg", on-tap="__selectFacebook")
+              paper-icon-button(hidden$="[[!__facebookSelected]]", src="/images/social/fb-selected.svg")
+
+      h1 Avatar
       .layout.horizontal.center
         .flex.text-right
           paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__prevTwibbyn") Prev
         d4l-twibbyn-overlay(
-          image="[[auth.user.profiles.0.images.profile]]",
-          twibbyn="[[__selectedTwibbyn]]"
-        )
+          image="[[__selectedProfileImg]]",
+          twibbyn="[[__selectedTwibbyn]]")
         .flex.text-left
           paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__nextTwibbyn", style="transform: rotate(180deg);") Next
-      .layout.horizontal.center
-        .flex.layout.vertical.center
-          h1 Your Avatar
-          p Choose your social media platform
-          .layout.horizontal.center
-            paper-icon-button(icon="d4l-social-icons:twitter", on-tap="__saveTwitter")
-            paper-icon-button(icon="d4l-social-icons:facebook", on-tap="__saveFacebook")
-          .layout.vertical.center(hidden$="[[!__savingAvatar]]")
-            p Updating your avatar
-            p This could take a couple of minutes to appear on twitter
+
+
+      iron-pages(attr-for-selected="name", selected="{{__selectedPlatform}}")
+        div(name="facebook")
+          .layout.vertical.center(hidden$="[[__hideReady]]")
+            h2 Tap Save to upload your new avatar to Facebook.
+            paper-button(on-tap="__saveFacebook") Save
+
+          .layout.vertical.center(hidden$="[[__hideUploading]]")
+            h2 Uploading your avatar to Facebook
             paper-spinner(active)
 
-    .page-content.flex-2(mobile$="[[isMobile]]")
+          .layout.vertical.center(hidden$="[[__hideUploaded]]")
+            h2 Tap Set as Profile then select 'Options' (at the bottom right of the photo) and then 'Make Profile Picture'.
+            a(href="[[__configureFacebookUrl]]", target="__blank")
+              paper-button() Set as Profile
+            paper-button(on-tap="__finishedUpload") Finished
+
+        div(name="twitter")
+          .layout.vertical.center(hidden$="[[__hideReady]]")
+            h2 Tap Save to automatically update your Twitter profile.
+            paper-button(on-tap="__saveTwitter") Save
+
+          .layout.vertical.center(hidden$="[[__hideUploading]]")
+            h2 Adding your Twitter request to the queue...
+            paper-spinner(active)
+
+          .layout.vertical.center(hidden$="[[__hideUploaded]]")
+            h2 It can take several minutes for your new avatar appear on Twitter.
+            paper-button(on-tap="__finishedUpload") Finished
+
+
+    .page-content.flex-2(hidden$="[[isMobile]]", mobile$="[[isMobile]]")
       iron-selector(attr-for-selected="name", selected="{{__selectedTwibbyn}}")
         template(is="dom-repeat", items="[[twibbyns]]" as="twibbyn")
           img.card(
