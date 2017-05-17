@@ -120,12 +120,15 @@ dom-module#d4l-auth
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     .page-group.layout.horizontal.center-justified
-      .layout.vertical.center-center.login-group(on-click="login")
+      .layout.vertical.center-center
         iron-icon.auth-icon(icon="d4l-icons:c4l")
         h1 Dashboard for Labour
-        .layout.horizontal.center
+        .layout.horizontal.center.login-group(on-click="loginTwitter")
           p Login with Twitter
           iron-icon.twitter-icon(icon="d4l-social-icons:twitter")
+        .layout.horizontal.center.login-group(on-click="loginFacebook")
+          p Login with Facebook
+          iron-icon.facebook-icon(icon="d4l-social-icons:facebook")
 
     .page-background
       .full-video
