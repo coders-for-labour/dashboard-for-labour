@@ -232,8 +232,7 @@ Polymer({
   __saveFbResponse: function(ev){
     this.__debug(ev.detail.response);
     FB.api('/me/photos', 'post', {
-      // url: `http://cdn.forlabour.com/c/${ev.detail.response.file}.png`,
-      url: `http://cdn-forlabour-com.wearelightenclients.co.uk/c/${ev.detail.response.file}`,
+      url: `http://cdn.forlabour.com/c/${ev.detail.response.file}.png`,
       no_story: true
     }, response => {
       this.set('__uploadStatus', 'uploaded');
