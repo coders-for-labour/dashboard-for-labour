@@ -71,9 +71,7 @@ dom-module#d4l-twibbyn-detail
       method="PUT",
       body="[[__twibbynSaveBody]]"
       on-response="__saveTwResponse",
-      on-error="__ajaxError",
-      last-response="{{rqResponse}}"
-    )
+      on-error="__ajaxError")
 
     iron-ajax#ajaxGetFbTwibbyn(
       handleAs="json",
@@ -81,9 +79,7 @@ dom-module#d4l-twibbyn-detail
       url="[[__fbGetTwibbynUrl]]",
       method="GET",
       on-response="__saveFbResponse",
-      on-error="__ajaxError",
-      last-response="{{rqResponse}}"
-    )
+      on-error="__ajaxError")
 
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
       h1 Platform
