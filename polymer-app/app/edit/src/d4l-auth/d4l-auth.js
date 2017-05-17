@@ -11,8 +11,10 @@ Polymer({
   },
   attached: function() {
   },
-  login: function() {
+  loginTwitter: function() {
     location.href = "/auth/twitter";
+  },
+  loginFacebook: function() {
+    location.href = "/auth/facebook";
   }
-
 });

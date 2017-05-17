@@ -84,7 +84,7 @@ configureApp(app.get('env'));
 Bootstrap
   .app(app)
   .then(() => {
-    Logging.logInfo(`${Config.app.title} ${Config.app.version} listening on port ${app.get('port')} in ${app.settings.env} mode.`); // eslint-disable-line max-len
+    Logging.logInfo(`${Config.app.title} v${Config.app.version} listening on port ${app.get('port')} in ${app.settings.env} mode.`); // eslint-disable-line max-len
     app.server = server.listen(app.set('port'));
   })
   .catch(Logging.Promise.logError());

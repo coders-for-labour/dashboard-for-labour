@@ -132,7 +132,7 @@ class APIQueueManager {
    * @private
    */
   _flush() {
-    Logging.logVerbose(`Queue Manager: ${this._queue.length}`);
+    Logging.logSilly(`Queue Manager: ${this._queue.length}`);
     if (this._queue.length === 0) {
       setTimeout(() => this._flush(), Constants.INTERVAL);
       return;
