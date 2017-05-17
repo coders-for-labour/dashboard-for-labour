@@ -153,7 +153,24 @@ class Composer {
     }
 
     Logging.logDebug(`Image From Cache: ${cachedFile}`);
-    return Promise.resolve(this._toBuffer ? fs.readFileSync(cachedFile) : fs.createReadStream(cachedFile));
+    if (this._toBuffer) {
+      return new Promise((resolve, reject) => {
+        fs.readFile(cachedFile, (err, data) => {
+          if (err) throw err;
+          resolve({
+            stream: null,
+            buffer: data,
+            pathName: cachedFile
+          });
+        });
+      });
+    }
+
+    return Promise.resolve({
+      stream: fs.createReadStream(cachedFile),
+      buffer: null,
+      pathName: cachedFile
+    });
   }
 
   _options(options) {
@@ -175,12 +192,27 @@ class Composer {
     let p = Promise.resolve({canvas: canvas, ctx: canvas.getContext('2d')});
 
     this._renderQueue.push(context => {
-      Logging.logDebug('Render');
-
       let buffer = canvas.toBuffer();
-
       let cachedFile = this._cache.addImage(buffer, this._id);
-      return Promise.resolve(this._toBuffer ? fs.readFileSync(cachedFile) : fs.createReadStream(cachedFile));
+      Logging.logDebug(`Outputing: ${cachedFile}`);
+      if (this._toBuffer) {
+        return new Promise((resolve, reject) => {
+          fs.readFile(cachedFile, (err, data) => {
+            if (err) throw err;
+            resolve({
+              stream: null,
+              buffer: data,
+              pathName: cachedFile
+            });
+          });
+        });
+      }
+
+      return Promise.resolve({
+        stream: fs.createReadStream(cachedFile),
+        buffer: null,
+        pathName: cachedFile
+      });
     });
 
     return this._renderQueue.reduce((prev, curr) => {
@@ -263,11 +295,11 @@ class Cache {
   }
 
   addImage(buffer, id) {
-    Logging.logDebug(`Hash Input: ${id}`);
+    Logging.logSilly(`Hash Input: ${id}`);
     let filename = this._genFilename(id);
-    Logging.logDebug(`Hash Output: ${filename}`);
+    Logging.logSilly(`Hash Output: ${filename}`);
     fs.writeFileSync(`${this.__cachePath}/${filename}`, buffer);
-    Logging.logDebug(`Hash Pathname: ${this.__cachePath}/${filename}`);
+    Logging.logSilly(`Hash Pathname: ${this.__cachePath}/${filename}`);
     return `${this.__cachePath}/${filename}`;
   }
 
