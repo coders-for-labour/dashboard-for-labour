@@ -11,7 +11,7 @@
  */
 
 const fs = require('fs');
-// const path = require('path');
+const path = require('path');
 
 const Config = require('./config');
 const Logging = require('./logging');
@@ -43,7 +43,7 @@ const _getAvatar = (pathname, imgUrl) => {
     fs.access(pathname, 'r', err => {
       if (err) {
         if (err.code === 'ENOENT') {
-          Logging.logDebug('Fetching twitter user avatar');
+          Logging.logDebug('Fetching user avatar');
           rest.get(imgUrl)
             .on('success', (data, response) => {
               fs.writeFile(pathname, response.raw, err => {
@@ -124,10 +124,43 @@ const _saveTwibbyn = (req, res) => {
     .then(avatarBuffer => {
       Logging.logDebug('Composing Twibbyn');
       _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn.twibbyn}/${req.body.file}`, true)
-        .then(imageBuffer => {
-          Logging.logDebug('Got Twibbyn');
-          res.send(Twitter.updateProfile(twAuth, imageBuffer));
+        .then(twibbyn => {
+          Logging.logDebug(`Got Twibbyn: ${twibbyn.fileName}`);
+          res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
           res.sendStatus(200);
+        });
+    });
+};
+
+/* ************************************************************
+ *
+ * FACEBOOK
+ *
+ **************************************************************/
+const _getFbTwibbyn = (req, res) => {
+  if (!req.user) {
+    res.sendStatus(403);
+    return;
+  }
+
+  const fbAuth = req.user.auth.find(a => a.app === 'facebook');
+  if (!fbAuth) {
+    res.send(400);
+    return;
+  }
+  Logging.logDebug(fbAuth.images);
+
+  const imgUrl = `https://graph.facebook.com/${fbAuth.appId}/picture?width=500`;
+  const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_facebook_avatar_backup`;
+
+  _getAvatar(pathname, imgUrl)
+    .then(avatarBuffer => {
+      Logging.logDebug(`Composing Twibbyn: ${imgUrl}`);
+      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn.twibbyn}/${req.query.file}`)
+        .then(twibbyn => {
+          Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
+          // twibbyn.stream.pipe(res);
+          res.json({file: path.basename(twibbyn.pathName)});
         });
     });
 };
@@ -135,6 +168,7 @@ const _saveTwibbyn = (req, res) => {
 module.exports.init = app => {
   Helpers.AppData.createFolder('/user_data');
 
+  app.get('/twibbyn/facebook', _getFbTwibbyn);
   app.put('/twibbyn/twitter/save', _saveTwibbyn);
   app.put(`/twibbyn/twitter/restore`, _restoreBackup);
   app.get(`/twibbyn/twitter/hasbackup`, _hasBackup);
