@@ -41,13 +41,13 @@ Polymer({
 
   __computeTwibbynImage: function(twibbyn){
     if (!twibbyn) {
-      return null;
+      return '';
     }
 
     return `${this.get('__twibbynEndpoint')}${twibbyn}`;
   },
 
   __computeHasTwibbyn: function(twibbyn) {
-    return (twibbyn);
+    return twibbyn ? true : false;
   }
 });

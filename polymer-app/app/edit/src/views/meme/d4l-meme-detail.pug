@@ -3,7 +3,7 @@ link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.htm
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
 link(rel="import", href="/bower_components/iron-list/iron-list.html")
-link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
+link(rel="import", href="/bower_components/paper-input/paper-textarea.html")
 link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
@@ -13,21 +13,17 @@ link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-
 link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
-
 link(rel="import", href="/src/d4l-header/d4l-header.html")
+link(rel="import", href="/src/d4l-account-selector/d4l-account-selector.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
-link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-card.html")
 link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
 
-script(src="/bower_components/sugar/dist/sugar.min.js")
-
-dom-module#d4l-twibbyn-detail
+dom-module#d4l-meme-detail
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="d4l-theme")
   style(include="shared-styles")
@@ -57,65 +53,59 @@ dom-module#d4l-twibbyn-detail
 
     d4l-twibbyn-overlay {
       width: 250px;
-      height: 250px;
+    }
+
+    paper-textarea {
+      width: 100%;
+      margin-top: 10px;
     }
 
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    iron-ajax#ajaxSaveTwibbyn(
-      auto,
+    iron-ajax#ajaxTweet(
       handleAs="json",
       content-type="application/json",
-      url="[[__twibbynSaveUrl]]",
-      method="PUT",
-      body="[[__twibbynSaveBody]]"
+      url="/twitter",
+      method="POST",
+      body="[[__tweetBody]]"
       on-response="__saveTwResponse",
-      on-error="__ajaxError")
-
-    iron-ajax#ajaxGetFbTwibbyn(
-      handleAs="json",
-      content-type="application/json",
-      url="[[__fbGetTwibbynUrl]]",
-      method="GET",
-      on-response="__saveFbResponse",
       on-error="__ajaxError")
 
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
       h1 Platform
       d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
 
-      h1 Avatar
-      .layout.horizontal.center
+      h1 Meme
+      .layout.horizontal.center-center
         .flex.text-right
-          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__prevTwibbyn") Prev
+          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__prevMeme") Prev
         d4l-twibbyn-overlay(
-          image="[[__selectedProfileImg]]",
-          twibbyn="[[__selectedTwibbyn]]")
+          image="[[__memeEndpoint]]/[[__selectedMeme]]")
         .flex.text-left
-          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__nextTwibbyn", style="transform: rotate(180deg);") Next
+          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__nextMeme", style="transform: rotate(180deg);") Next
 
 
       iron-pages(attr-for-selected="name", selected="{{__selectedPlatform}}")
         div(name="facebook")
           .layout.vertical.center(hidden$="[[__hideReady]]")
-            h2 Tap Save to upload your new avatar to Facebook.
-            paper-button(on-tap="__saveFacebook") Save
+            paper-textarea#fbPost(char-counter, no-label-float, rows="3", max-rows="5", value="{{__postText.fb}}", placeholder="", autofocus)
+            h2 Tap to post this meme to facebook along with a message.
+            paper-button(on-tap="__saveFacebook") Post
 
           .layout.vertical.center(hidden$="[[__hideUploading]]")
-            h2 Uploading your avatar to Facebook
+            h2 Uploading the meme to Facebook
             paper-spinner(active)
 
           .layout.vertical.center(hidden$="[[__hideUploaded]]")
-            h2 Tap Set as Profile then select 'Options' (at the bottom right of the photo) and then 'Make Profile Picture'.
-            a(href="[[__configureFacebookUrl]]", target="__blank")
-              paper-button() Set as Profile
+            h2 Successfully posted to Facebook!
             paper-button(on-tap="__finishedUpload") Finished
 
         div(name="twitter")
           .layout.vertical.center(hidden$="[[__hideReady]]")
-            h2 Tap Save to automatically update your Twitter profile.
-            paper-button(on-tap="__saveTwitter") Save
+            paper-textarea#twPost(char-counter, no-label-float, rows="3", max-rows="5", value="{{__postText.tw}}", placeholder="", autofocus)
+            h2 Tap Tweet to tweet this meme along with a message
+            paper-button(on-tap="__saveTwitter") Tweet
 
           .layout.vertical.center(hidden$="[[__hideUploading]]")
             h2 Adding your Twitter request to the queue...
@@ -127,13 +117,12 @@ dom-module#d4l-twibbyn-detail
 
 
     .page-content.flex-2(hidden$="[[isMobile]]", mobile$="[[isMobile]]")
-      iron-selector(attr-for-selected="name", selected="{{__selectedTwibbyn}}")
-        template(is="dom-repeat", items="[[twibbyns]]" as="twibbyn")
+      iron-selector(attr-for-selected="name", selected="{{__selectedMeme}}")
+        template(is="dom-repeat", items="[[memes]]" as="meme")
           img.card(
-            src="[[__twibbynEndpoint]]/[[twibbyn]]",
-            name="[[twibbyn]]",
+            src="[[__memeEndpoint]]/[[meme]]",
+            name="[[meme]]",
             width="250px",
-            height="250px"
           )
 
-  script(src="d4l-twibbyn-detail.js")
+  script(src="d4l-meme-detail.js")

@@ -1,6 +1,6 @@
 {
   "name": "dashboard-for-labour",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "description": "Dashboard for Labour",
   "author": "Coders for Labour",
   "private": true,
@@ -30,8 +30,8 @@
     "method-override": "~2.3.x",
     "morgan": "~1.7.x",
     "passport": "~0.3.x",
-    "passport-twitter": "~1.0.0",
     "passport-facebook": "~1.0.0",
+    "passport-twitter": "~1.0.0",
     "proxyquire": "~1.7.x",
     "readline": "^1.3.0",
     "restler": "^3.4.0",

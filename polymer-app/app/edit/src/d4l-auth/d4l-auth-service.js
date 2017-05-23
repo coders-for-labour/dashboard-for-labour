@@ -6,7 +6,11 @@ Polymer({
   properties: {
     logLevel: {
       type: Number,
-      value: 3
+      value: 4
+    },
+    db: {
+      type: Object,
+      notify: true
     },
     status: {
       type: String,
@@ -17,7 +21,8 @@ Polymer({
     auth: {
       type: Object,
       value: {
-        user: null
+        user: null,
+        metadata: null
       },
       notify: true
     }
@@ -30,9 +35,26 @@ Polymer({
       this.status = "done";
       return;
     }
-    this.auth.user = detail.response.user;
-    this.notifyPath('auth.user', this.auth.user);
+    this.set('auth.user', detail.response.user);
     this.status = "done";
+
+    const userId = this.get('auth.user.id');
+    if (!userId) {
+      return;
+    }
+
+    let meta = this.get(['db.user.metadata', userId]);
+    if (!meta) {
+      const metaDefault = Object.assign({}, {
+        __populate__: true,
+        constituencyName: '',
+        membershipNumber: '',
+        postCode: ''
+      });
+      this.set(['db.user.metadata', userId], metaDefault);
+    }
+    this.set('auth.metadata', this.get(['db.user.metadata', userId]));
+    this.linkPaths('auth.metadata', `db.user.metadata.${userId}`);
   },
 
   onAjaxError: function() {

@@ -16,7 +16,8 @@
     "D4L_TW_CONSUMER_SECRET": "",
     "D4L_TW_ACCESS_TOKEN": "",
     "D4L_TW_ACCESS_TOKEN_SECRET": "",
-    "D4L_SESSION_SECRET": ""
+    "D4L_SESSION_SECRET": "",
+    "D4L_TWFY_API_KEY": ""
   },
   "global": {
     "env": "%NODE_ENV%",
@@ -24,7 +25,7 @@
       "title": "Dashboard for Labour",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
-      "version": "0.9.1",
+      "version": "1.0.0",
       "protocol": "http",
       "subdomain": "dashboard",
       "domain": "forlabour.com"
@@ -32,7 +33,8 @@
     "api": {
       "key": "%D4L_TEAM_API_TOTP_KEY%",
       "urls": {
-        "team": "%D4L_TEAM_API_URL%"
+        "team": "%D4L_TEAM_API_URL%",
+        "constituency": "%D4L_TEAM_API_URL%"
       }
     },
     "auth": {
@@ -59,10 +61,11 @@
         "accessTokenSecret": "%D4L_TW_ACCESS_TOKEN_SECRET%",
         "consumerKey": "%D4L_TW_CONSUMER_KEY%",
         "consumerSecret": "%D4L_TW_CONSUMER_SECRET%"
+      },
+      "twfy": {
+        "apiUrl": "https://www.theyworkforyou.com/api",
+        "apiKey": "%D4L_TWFY_API_KEY%"
       }
-    },
-    "cdn": {
-      "twibbyn": "http://cdn.forlabour.com"
     }
   },
   "local": {
@@ -81,6 +84,11 @@
         "dev": 6041,
         "prod": 6040,
         "test": 6042
+      },
+      "cdn": {
+        "dev": "http://cdn-forlabour-com.wearelightenclients.co.uk",
+        "prod": "http://cdn-forlabour-com.wearelightenclients.co.uk",
+        "test": "http://cdn-forlabour-com.wearelightenclients.co.uk"
       }
     },
     "workstation2": {
@@ -115,6 +123,11 @@
         "dev": 6041,
         "prod": 6040,
         "test": 6042
+      },
+      "cdn": {
+        "dev": "http://cdn.forlabour.com",
+        "prod": "http://cdn.forlabour.com",
+        "test": "http://cdn.forlabour.com"
       }
     }
   }
