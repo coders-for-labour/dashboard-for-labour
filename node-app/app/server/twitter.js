@@ -50,6 +50,7 @@ module.exports.updateProfile = (user, imgBuffer) => {
 /**
  *
  * @param {object} user - Authenticated user for whom the media will be uploaded
+ * @param {String} tweet - string representing the message
  * @param {Buffer} imgBuffer - Buffer containing image data for the media
  * @return {boolean} - true if successfully queued the api call
  */
@@ -66,7 +67,7 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
     method: 'POST',
     api: 'media/upload.json',
     params: {
-      media: imgBuffer,
+      media: imgBuffer
     },
     token: user.token,
     tokenSecret: user.tokenSecret
@@ -80,13 +81,13 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
         api: 'statuses/update.json',
         params: {
           status: tweet,
-          media_ids: qi.results.media_id,
+          media_ids: qi.results.media_id, // eslint-disable-line camelcase
           include_entities: false, // eslint-disable-line camelcase
           skip_statuses: true // eslint-disable-line camelcase
         },
         token: user.token,
         tokenSecret: user.tokenSecret
-      })
+      });
     })
     .catch(Logging.Promise.logError());
 

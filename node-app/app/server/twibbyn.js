@@ -191,7 +191,6 @@ const _postTwitter = (req, res) => {
     .on('error', () => res.send(false));
 };
 
-
 module.exports.init = app => {
   Helpers.AppData.createFolder('/user_data');
 
