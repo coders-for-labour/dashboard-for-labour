@@ -27,7 +27,10 @@ const __authenticateRihzomeUser = (appAuth, existingUser) => {
     authLevel: 1,
     domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
     permissions: [
-      {route: "user/simplified", permission: "list"},
+      {route: "user", permission: "list"},
+      {route: "user/me/metadata/:key", permission: "add"},
+      {route: "user/me/metadata/:key", permission: "write"},
+      {route: "user/me/metadata/:key?", permission: "read"},
       {route: "campaign", permission: "list"},
       {route: "campaign/:id/metadata/:key?", permission: "read"},
       {route: "post", permission: "list"},

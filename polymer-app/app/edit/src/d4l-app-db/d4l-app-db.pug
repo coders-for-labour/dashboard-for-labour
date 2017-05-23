@@ -12,7 +12,7 @@ dom-module#d4l-app-db
       }
 
     d4l-data-service#post(route="campaign", status="{{db.campaign.status}}", auth="[[auth]]", data="{{db.campaign.data}}", metadata="{{db.campaign.metadata}}")
-    //d4l-data-service#post(route="post", status="{{db.post.status}}", auth="[[auth]]", data="{{db.post.data}}", metadata="{{db.post.metadata}}")
-    d4l-data-service#user(route="user/simplified", status="{{db.user.status}}", auth="[[auth]]", data="{{db.user.data}}", metadata="{{db.user.metadata}}")
+    d4l-data-service#post(route="post", status="{{db.post.status}}", auth="[[auth]]", data="{{db.post.data}}", metadata="{{db.post.metadata}}")
+    d4l-data-service#user(route="user", status="{{db.user.status}}", auth="[[auth]]", data="{{db.user.data}}", metadata="{{db.user.metadata}}", priority="0")
 
   script(src="d4l-app-db.js")
