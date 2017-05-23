@@ -14,6 +14,7 @@ Polymer({
     },
     constituency: {
       type: Object,
+      value: null,
       notify: true
     },
     mp: {
@@ -50,7 +51,7 @@ Polymer({
   },
 
   __resetConstituency: function() {
-    this.set('metadata.constituencyName', '');
+    this.set('auth.metadata.constituencyName', '');
     this.set('constituency', null);
     this.set('__rqParams.name', '');
     this.set('__rqParams.postcode', '');
