@@ -123,7 +123,7 @@ const _saveTwibbyn = (req, res) => {
   _getAvatar(pathname, imgUrl)
     .then(avatarBuffer => {
       Logging.logDebug('Composing Twibbyn');
-      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn.twibbyn}/${req.body.file}`, true)
+      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn}/${req.body.file}`, true)
         .then(twibbyn => {
           Logging.logDebug(`Got Twibbyn: ${twibbyn.fileName}`);
           res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
@@ -156,7 +156,7 @@ const _getFbTwibbyn = (req, res) => {
   _getAvatar(pathname, imgUrl)
     .then(avatarBuffer => {
       Logging.logDebug(`Composing Twibbyn: ${imgUrl}`);
-      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn.twibbyn}/${req.query.file}`)
+      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn}/${req.query.file}`)
         .then(twibbyn => {
           Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
           // twibbyn.stream.pipe(res);
@@ -165,6 +165,33 @@ const _getFbTwibbyn = (req, res) => {
     });
 };
 
+/* ************************************************************
+ *
+ * POST
+ *
+ **************************************************************/
+const _postTwitter = (req, res) => {
+  if (!req.user) {
+    res.sendStatus(403);
+    return;
+  }
+
+  const twAuth = req.user.auth.find(a => a.app === 'twitter');
+  if (!twAuth) {
+    res.send(400);
+    return;
+  }
+
+  Logging.logDebug(`Tweeting: ${req.body.tweet}, ${Config.cdn}/${req.body.file}`);
+  rest.get(`${Config.cdn}/${req.body.file}`)
+    .on('success', (data, response) => {
+      res.send(Twitter.tweetMedia(twAuth, req.body.tweet, response.raw));
+    })
+    .on('fail', () => res.send(false))
+    .on('error', () => res.send(false));
+};
+
+
 module.exports.init = app => {
   Helpers.AppData.createFolder('/user_data');
 
@@ -172,4 +199,5 @@ module.exports.init = app => {
   app.put('/twibbyn/twitter/save', _saveTwibbyn);
   app.put(`/twibbyn/twitter/restore`, _restoreBackup);
   app.get(`/twibbyn/twitter/hasbackup`, _hasBackup);
+  app.post(`/twitter`, _postTwitter);
 };

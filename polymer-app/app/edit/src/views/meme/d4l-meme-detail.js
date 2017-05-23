@@ -1,5 +1,5 @@
 Polymer({
-  is: 'd4l-twibbyn-detail',
+  is: 'd4l-meme-detail',
   behaviors: [
     Polymer.D4LLogging
   ],
@@ -26,19 +26,35 @@ Polymer({
     },
     __selectedPlatform: {
       type: String,
-      value: ''
+      value: '',
+      observer: '__selectedPlatformChanged'
     },
-    __selectedProfileImg: {
-      type: String,
-      computed: '__computeSelectedProfileImg(auth.user, __selectedPlatform)'
-    },
-    twibbyns: {
+    memes: {
       type: Array,
-      computed: '__computeCampaignTwibbyns(metadata, metadata.images.*)'
+      computed: '__computeCampaignMemes(metadata, metadata.images.*)'
     },
-    __selectedTwibbyn: {
+    __selectedMeme: {
       type: String,
       notify: true
+    },
+    __postText: {
+      type: Object,
+      value: function() {
+        return {
+          fb: '\n#votelabour',
+          tw: '\n#votelabour'
+        }
+      }
+    },
+
+    __tweetBody: {
+      type: Object,
+      value: function() {
+        return {
+          file: '',
+          tweet: ''
+        }
+      }
     },
 
     __uploadStatus: {
@@ -67,26 +83,22 @@ Polymer({
       type: String,
       computed: '__computeConfigureFacebookUrl(__configureFacebookPhotoId)'
     },
-    __twibbynEndpoint: {
+    __memeEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com/'
+      value: 'http://cdn.forlabour.com'
     },
 
-    __twitterSaveUrlPrefix: {
-      type: String,
-      value: '/twibbyn/twitter/save'
-    },
 
-    __twibbynSaveUrl: {
+    __memeSaveUrl: {
       type: String
     },
 
-    __fbGetTwibbynUrl: {
+    __fbGetMemeUrl: {
       type: String,
       computed: '__computeFbGetTwibbynUrl(__selectedTwibbyn)'
     },
 
-    __twibbynSaveBody: {
+    __memeSaveBody: {
       type: Object
     }
 
@@ -115,55 +127,41 @@ Polymer({
     this.linkPaths('metadata', `db.campaign.metadata.${campaignId}`);
   },
 
-  __connectTwitter: function() {
-    window.location = '/auth/twitter';
-  },
-  __connectFacebook: function() {
-    window.location = '/auth/facebook';
+  __selectedPlatformChanged: function(selected) {
+    this.$.fbPost.inputElement.selectionEnd = 0;
+    this.$.twPost.inputElement.selectionEnd = 0;
   },
 
-  __selectTwitter: function() {
-    this.set('__selectedPlatform', 'twitter');
-    this.set('__uploadStatus', 'ready');
-    this.__silly(`Selected: ${this.__selectedPlatform}`);
+  __selectMeme: function (ev) {
+    const meme = ev.model.get('meme');
+
+    this.set('__selectedMeme', meme);
   },
+  __nextMeme: function() {
+    const selected = this.get('__selectedMeme');
+    const memes = this.get('memes');
+    let memeIndex = memes.findIndex(t => t === selected);
 
-  __selectFacebook: function() {
-    this.set('__selectedPlatform', 'facebook');
-    this.set('__uploadStatus', 'ready');
-    this.__silly(`Selected: ${this.__selectedPlatform}`);
-  },
-
-  __selectTwibbyn: function (ev) {
-    const twibbyn = ev.model.get('twibbyn');
-
-    this.set('__selectedTwibbyn', twibbyn);
-  },
-  __nextTwibbyn: function() {
-    const selected = this.get('__selectedTwibbyn');
-    const twibbyns = this.get('twibbyns');
-    let twibbynIndex = twibbyns.findIndex(t => t === selected);
-
-    if (twibbynIndex >= (twibbyns.length - 1)) {
-      twibbynIndex = 0
+    if (memeIndex >= (memes.length - 1)) {
+      memeIndex = 0
     } else {
-      twibbynIndex++;
+      memeIndex++;
     }
 
-    this.set('__selectedTwibbyn', this.get(`twibbyns.${twibbynIndex}`));
+    this.set('__selectedMeme', this.get(`memes.${memeIndex}`));
   },
-  __prevTwibbyn: function() {
-    const selected = this.get('__selectedTwibbyn');
-    const twibbyns = this.get('twibbyns');
-    let twibbynIndex = twibbyns.findIndex(t => t === selected);
+  __prevMeme: function() {
+    const selected = this.get('__selectedMeme');
+    const memes = this.get('memes');
+    let memeIndex = memes.findIndex(t => t === selected);
 
-    if (twibbynIndex < 1) {
-      twibbynIndex = (twibbyns.length - 1);
+    if (memeIndex < 1) {
+      memeIndex = (memes.length - 1);
     } else {
-      twibbynIndex--;
+      memeIndex--;
     }
 
-    this.set('__selectedTwibbyn', this.get(`twibbyns.${twibbynIndex}`));
+    this.set('__selectedMeme', this.get(`memes.${memeIndex}`));
   },
 
   __saveTwitter: function(){
@@ -174,13 +172,12 @@ Polymer({
       return;
     }
 
-    const selected = this.get('__selectedTwibbyn');
-
     this.set('__uploadStatus', 'uploading');
-    this.set('__twibbynSaveUrl', this.get('__twitterSaveUrlPrefix'));
-    this.set('__twibbynSaveBody', {
-      file: selected
+    this.set('__tweetBody', {
+      file: this.get('__selectedMeme'),
+      tweet: this.get('__postText.tw')
     });
+    this.$.ajaxTweet.generateRequest();
   },
   __saveFacebook: function() {
     if (!this.checkAuthApp('facebook')) {
@@ -198,7 +195,34 @@ Polymer({
         return;
       }
 
-      this.$.ajaxGetFbTwibbyn.generateRequest();
+      let cdnUrl = this.get('__memeEndpoint');
+      let image = this.get('__selectedMeme');
+      FB.api('/me/photos', 'post', {
+        url: `${cdnUrl}/${image}`,
+        no_story: true
+      }, response => {
+        this.set('__uploadStatus', 'uploaded');
+        if (!response.id) {
+          this.__debug(response);
+          this.__err('Failed to upload photo to Facebook');
+          return;
+        }
+
+        FB.api('/me/feed', 'post', {
+          message: this.get('__postText.fb'),
+          object_attachment: response.id
+        }, postResponse => {
+          if (!response.id) {
+            this.__debug(response);
+            this.__err('Failed to post to Facebook');
+            return;
+          }
+        });
+
+        this.set('__postText.fb', '');
+      });
+
+
     }, {
       scope: 'publish_actions'
     });
@@ -264,41 +288,22 @@ Polymer({
     return platform === 'facebook';
   },
 
-  __computeCampaignTwibbyns: function(){
-    const twibbyns = this.get('twibbyns');
+  __computeCampaignMemes: function(){
+    const memes = this.get('memes');
     const metaImages = this.get('metadata.images');
 
-    if (twibbyns !== metaImages) {
+    if (memes !== metaImages) {
       if (metaImages && metaImages.length > 0) {
-        this.set('__selectedTwibbyn', metaImages[0]);
+        this.set('__selectedMeme', metaImages[0]);
       }
     }
 
     return metaImages;
   },
 
-  __computeFbGetTwibbynUrl: function(selectedTwibbyn) {
-    return `/twibbyn/facebook?file=${selectedTwibbyn}`;
-  },
-
-  __computeSelectedProfileImg: function(user, platform) {
-    //user.profiles.0.images.profile
-    let profile = user.profiles.find(p => p.app === platform);
-    if (!profile) {
-      return user.profiles[0].images.profile;
-    }
-
-    if (profile.app === 'facebook') {
-      return `https://graph.facebook.com/${profile.id}/picture?width=300`;
-    }
-
-    return profile.images.profile;
-  },
-
   __computeConfigureFacebookUrl: function(photoId) {
     return `https://www.facebook.com/photo.php?fbid=${photoId}`;
   },
-
   __computeHideReady: function(status) {
     return status === 'uploading' || status === 'uploaded';
   },
@@ -307,5 +312,6 @@ Polymer({
   },
   __computeHideUploaded: function(status) {
     return status === 'ready' || status === 'uploading';
-  },
+  }
+
 });
