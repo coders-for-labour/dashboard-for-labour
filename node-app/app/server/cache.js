@@ -30,13 +30,16 @@ const _Constants = {
     team: []
   },
   FUNCTIONS: {
-    team: 'team:list'
+    team: 'team:list',
+    constituency: 'constituency:list'
   },
   URLS: {
-    team: Config.api.urls.team
+    team: Config.api.urls.team,
+    constituency: Config.api.urls.constituency
   },
   URL_PARAMS: {
-    team: {}
+    team: {},
+    constituency: {}
   }
 };
 
@@ -47,7 +50,8 @@ const _Constants = {
  ******************************************************************/
 const Constants = {
   Type: {
-    TEAM: 'team'
+    TEAM: 'team',
+    CONSTITUENCY: 'constituency'
   }
 };
 
@@ -69,6 +73,10 @@ class Cache extends EventEmitter {
 
     if (!type || !_Constants.URLS[type]) {
       throw new Error(`Invalid or missing type ${type}`);
+    }
+
+    if (!Config.api.key) {
+      throw new Error(`Missing api key`);
     }
 
     this._type = type;
@@ -126,6 +134,9 @@ class Cache extends EventEmitter {
           }
 
           Logging.log(`Refreshed Cache ${this._type.toUpperCase()}`, Logging.Constants.LogLevel.INFO);
+          if (data.res === undefined) {
+            throw new Error('Invalid data');
+          }
 
           db.put(this._type, JSON.stringify(data.res), err => {
             if (err) {

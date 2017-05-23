@@ -10,7 +10,8 @@ Polymer({
       value: 3
     },
     auth: {
-      type: Object
+      type: Object,
+      notify: true
     },
 
     __pageTitle: {
@@ -29,7 +30,7 @@ Polymer({
     __post: {
       type: Object,
       value: function () { return {}; }
-    },
+    }
   },
 
   attached: function() {
@@ -49,6 +50,6 @@ Polymer({
     this.fire('view-entity', '/thunderclap');
   },
   __viewMemes: function () {
-    this.fire('view-entity', '/memes');
+    this.fire('view-entity', '/meme');
   }
 });

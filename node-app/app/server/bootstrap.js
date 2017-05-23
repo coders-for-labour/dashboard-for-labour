@@ -16,6 +16,8 @@ const Rhizome = require('rhizome-api-js');
 const Auth = require('./auth');
 const Twibbyn = require('./twibbyn');
 const Queue = require('./api-queue');
+const Cache = require('./cache');
+const Constituency = require('./constituency');
 // const Logging = require('./logging');
 
 /* ************************************************************
@@ -33,6 +35,8 @@ const _installApp = app => {
   Auth.init(app);
   Twibbyn.init(app);
   Queue.Manager.init(app);
+  Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
+  Constituency.init(app);
 
   const tasks = [
     Helpers.AppData.createFolder('/image_cache')

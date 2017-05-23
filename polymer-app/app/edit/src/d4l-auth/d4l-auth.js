@@ -9,8 +9,7 @@ Polymer({
       notify: true
     }
   },
-  attached: function() {
-  },
+
   loginTwitter: function() {
     location.href = "/auth/twitter";
   },

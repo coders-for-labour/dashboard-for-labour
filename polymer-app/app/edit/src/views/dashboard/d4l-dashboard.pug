@@ -2,6 +2,7 @@ link(rel="import", href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-list/iron-list.html")
 link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
 link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
@@ -60,11 +61,7 @@ dom-module#d4l-dashboard
             h1 Members
           h2.members-stat [[__users.length]]
 
-        d4l-dashboard-card.card.flex(background="find-mp", disabled)
-          .layout.horizontal.center
-            iron-icon(icon="d4l-icons:location")
-            h1 Find your MP
-          paper-input(label="Enter your postcode here")
+        d4l-dashboard-constituency-card.card.flex(auth="{{auth}}")
 
       .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(background="twibbyn")
@@ -81,7 +78,7 @@ dom-module#d4l-dashboard
           p Rally together to show your support for Labour
           paper-button(on-tap="__viewThunderclap") Get Started
 
-        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme", disabled)
+        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:meme")
             h1 Latest Memes

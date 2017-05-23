@@ -119,6 +119,7 @@ dom-module#d4l-app
       on-rx-event="__dbRxEvent"
     )
     d4l-auth-service#authService(
+      db="{{db}}",
       status="{{authStatus}}",
       auth="{{auth}}",
       login-details="[[loginDetails]]"
@@ -148,13 +149,25 @@ dom-module#d4l-app
           d4l-dashboard.fullbleed.layout.vertical(
             name="dashboard",
             title="Dashboard For Labour",
-            auth="[[auth]]",
+            auth="{{auth}}",
             db="{{db}}",
             mobile="[[isMobile]]"
           )
           d4l-twibbyn.fullbleed.layout.vertical(
             name="twibbyn",
             title="Twibbyn",
+            db="{{db}}",
+            doc="{{db.campaign}}",
+            auth="[[auth]]",
+            route="[[route]]",
+            route-data="[[routeData]]",
+            subroute="[[subroute]]",
+            subroute-data="[[subrouteData]]",
+            mobile="[[isMobile]]"
+          )
+          d4l-meme.fullbleed.layout.vertical(
+            name="meme",
+            title="Meme",
             db="{{db}}",
             doc="{{db.campaign}}",
             auth="[[auth]]",
