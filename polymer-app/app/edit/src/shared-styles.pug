@@ -114,3 +114,86 @@ dom-module(id="shared-layout-styles")
       .card-group.group-2 > .card:nth-child(2n) {
         margin-right: 0px;
       }
+
+dom-module#d4l-dialog-styles
+  template
+    style(include="d4l-theme")
+    style.
+      h1 {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-popup-primary-title);
+        color: var(--default-primary-color);
+      }
+      h2 {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-popup-secondary-title);
+        color: var(--text-dark-primary-color);
+      }
+      p {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-popup-primary-text);
+        color: var(--text-dark-primary-color);
+      }
+      .dialog-header h2 {
+        @apply(--d4l-font-common-base);
+        @apply(--d4l-font-popup-primary-title);
+        font-weight: 200 !important;
+        color: white;
+      }
+
+      *[secondary] {
+        font-weight: normal;
+        font-size: 0.8em;
+        color: var(--text-dark-secondary-color);
+      }
+
+      form {
+        padding: 0 !important;
+      }
+
+      paper-dialog {
+        margin: 0;
+      }
+      paper-item, paper-icon-item {
+        cursor: pointer;
+      }
+
+      .dialog-header {
+        background-color: var(--app-color-primary-grey);
+        color: white;
+        margin: 0 !important;
+        padding: 4px 8px !important;
+      }
+      .dialog-header h2 {
+        color: white;
+      }
+      paper-icon-button#close {
+        width: 28px;
+        height: 28px;
+      }
+      .dialog-body {
+        margin: 0 0 20px !important;
+        padding: 0 32px !important;
+      }
+      .dialog-footer {
+        margin: 0 0 10px 0 !important;
+        padding: 0 16px !important;
+      }
+
+      button.no-style {
+        -webkit-appearance: none;
+        border: 0;
+        padding: 0;
+        background: transparent;
+      }
+
+      paper-button {
+        background-color: var(--default-primary-color);
+        color: white;
+        border-radius: 15px;
+        padding: 5px 10px;
+      }
+      paper-icon-button#delete {
+        width: 30px;
+        height: 30px;
+      }

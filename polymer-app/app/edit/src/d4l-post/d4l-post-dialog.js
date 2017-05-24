@@ -16,16 +16,30 @@ Polymer({
       type: String,
       value: '',
     },
+    __image: {
+      type: String,
+      value: ''
+    },
+    __hasImage: {
+      type: Boolean,
+      computed: '__computeHasImage(__image)'
+    },
     open: {
       type: Boolean,
       value: false,
       notify: true,
       observer: '__onOpenChanged'
     },
+    __uploadResponse: {
+      type: Object,
+      value: function() {
+        return {};
+      }
+    }
   },
-  listeners: {
-    'rm-document': '__rmDocument'
-  },
+  observers: [
+    '__onUploadResponse(__uploadResponse.response)'
+  ],
 
   __onOpenChanged: function() {
     this.__debug('__onOpenChanged', 'state', this.open);
@@ -33,13 +47,22 @@ Polymer({
       this.$.dialog.open();
     } else {
       this.$.dialog.close();
-      this.__note = '';
     }
   },
 
-  __send: function() {
-    this.fire('send', {
-      post: this.text,
+  __onUploadResponse: function(response) {
+    if (!response) {
+      // this.__warn('Invalid response', response);
+      return;
+    }
+    this.__debug(response);
+    this.__image = response;
+  },
+
+  __save: function() {
+    this.fire('save', {
+      text: this.text,
+      image: this.__image
     });
     this.open = false;
   },
@@ -51,6 +74,11 @@ Polymer({
     if (ev.target === this.$.dialog) {
       this.open = false;
     }
+  },
+
+  __computeHasImage: function(image) {
+    this.__debug('__hasImage');
+    return image ? true : false;
   }
 
 });

@@ -24,6 +24,11 @@ Polymer({
       type: Array
     },
 
+    __openPostDialog: {
+      type: Boolean,
+      value: false
+    },
+
     __pageTitle: {
       type: String,
       value: 'Meme for Labour',
@@ -34,6 +39,20 @@ Polymer({
       type: Object,
       computed: '__computeCampaignsQuery(db.campaign.data.*)'
     }
+  },
+
+  __addUserMeme: function() {
+    this.__openPostDialog = true;
+  },
+
+  __saveUserMeme: function(ev) {
+    this.__debug(ev);
+    this.push('db.post.data', {
+      ownerId: this.get('auth.user.id'),
+      type: 'campaign',
+      text: ev.detail.text,
+      image: ev.detail.image
+    });
   },
 
   __computeCampaignsQuery: function () {
