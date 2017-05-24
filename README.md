@@ -3,7 +3,10 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.0.1
+## version: 1.0.2
+- Fixed Issue #5: Avatar doesn't display if changed in twitter after first dashboard login.
+
+## 1.0.1
 - Fixed Issue #3: Constituency search input is illegible
 - Fixed Issue #4: Selecting a campaign should be more obvious
 - Fixed problem with tweeting memes.
