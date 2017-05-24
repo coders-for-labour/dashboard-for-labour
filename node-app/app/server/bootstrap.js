@@ -18,6 +18,7 @@ const Twibbyn = require('./twibbyn');
 const Queue = require('./api-queue');
 const Cache = require('./cache');
 const Constituency = require('./constituency');
+const Uploads = require('./uploads');
 // const Logging = require('./logging');
 
 /* ************************************************************
@@ -37,9 +38,11 @@ const _installApp = app => {
   Queue.Manager.init(app);
   Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   Constituency.init(app);
+  Uploads.init(app);
 
   const tasks = [
-    Helpers.AppData.createFolder('/image_cache')
+    Helpers.AppData.createFolder('/image_cache'),
+    Helpers.AppData.createFolder('/uploads')
   ];
 
   return Promise.all(tasks);
