@@ -49,7 +49,8 @@ Polymer({
         __populate__: true,
         constituencyName: '',
         membershipNumber: '',
-        postCode: ''
+        postCode: '',
+        postIds: []
       });
       this.set(['db.user.metadata', userId], metaDefault);
     }

@@ -185,7 +185,11 @@ const _postTwitter = (req, res) => {
   Logging.logDebug(`Tweeting: ${req.body.tweet}, ${Config.cdn}/${req.body.file}`);
   rest.get(`${Config.cdn}/${req.body.file}`)
     .on('success', (data, response) => {
-      res.send(Twitter.tweetMedia(twAuth, req.body.tweet, response.raw));
+      Twitter.tweetMedia(twAuth, req.body.tweet, response.raw)
+        .then(results => {
+          res.send(results);
+        })
+
     })
     .on('fail', () => res.send(false))
     .on('error', () => res.send(false));
