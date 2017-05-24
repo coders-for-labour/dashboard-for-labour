@@ -159,7 +159,12 @@ dom-module#d4l-dashboard-constituency-card
       }
 
       paper-input{
-        color: var(--text-light-primary-color);
+        --paper-input-container-color: var(--text-light-primary-color);
+        --paper-input-container-focus-color: var(--text-light-primary-color);
+
+        --paper-input-container-input: {
+          color: var(--text-light-primary-color);
+        };
       }
       paper-button{
         @apply(--d4l-button-primary);
