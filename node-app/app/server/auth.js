@@ -138,7 +138,7 @@ module.exports.init = app => {
         res.json({
           user: {
             id: req.user.rhizomeId,
-            profiles: req.user.auth.map(function(a) {
+            profiles: user.auth.map(function(a) {
               return {
                 id: a.appId,
                 app: a.app,
