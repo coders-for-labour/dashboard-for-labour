@@ -101,7 +101,7 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
       return {
         err: false,
         res: {
-          tweetId: qi.results.id
+          tweetId: qi.results.id_str
         }
       };
     })
