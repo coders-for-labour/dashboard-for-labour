@@ -73,7 +73,8 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
     tokenSecret: user.tokenSecret
   })
     .then(qi => {
-      Logging.logDebug(qi.results.media_id);
+      let mediaId = qi.results.media_id;
+      Logging.logDebug(`Media ID: ${mediaId}`);
       return Queue.Manager.exec({
         app: Queue.Constants.App.TWITTER,
         username: user.username,
@@ -81,13 +82,19 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
         api: 'statuses/update.json',
         params: {
           status: tweet,
-          media_ids: qi.results.media_id, // eslint-disable-line camelcase
+          media_ids: mediaId, // eslint-disable-line camelcase
           include_entities: false, // eslint-disable-line camelcase
           skip_statuses: true // eslint-disable-line camelcase
         },
         token: user.token,
         tokenSecret: user.tokenSecret
       });
+    })
+    .then(qi => {
+      if (!qi.completed) {
+        return;
+      }
+      Logging.log(`Created a tweet: ${qi.results.id}`);
     })
     .catch(Logging.Promise.logError());
 
