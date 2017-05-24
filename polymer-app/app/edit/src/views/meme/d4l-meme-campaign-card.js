@@ -9,11 +9,15 @@ Polymer({
       type: Number,
       value: 3
     },
+    type: {
+      type: String,
+      value: 'meme'
+    },
     campaign: {
       type: Object
     }
   },
   __viewMeme: function(){
-    this.fire('view-entity', `/meme/${this.get('campaign').id}`);
+    this.fire('view-entity', `/${this.type}/${this.get('campaign').id}`);
   }
 });

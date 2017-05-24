@@ -21,7 +21,9 @@ Polymer.D4LCardBehavior = {
     this.__showButtons = false;
   },
   __tap: function() {
-    this.__showButtons = !this.__showButtons;
+    // this.__showButtons = !this.__showButtons;
+    this.fire('view-entity', `/${this.type}/${this.get('campaign').id}`);
+
   }
 
 };

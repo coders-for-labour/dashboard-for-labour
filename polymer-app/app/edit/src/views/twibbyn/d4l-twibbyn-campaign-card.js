@@ -9,6 +9,10 @@ Polymer({
       type: Number,
       value: 3
     },
+    type: {
+      type: String,
+      value: 'twibbyn'
+    },
     campaign: {
       type: Object
     }
