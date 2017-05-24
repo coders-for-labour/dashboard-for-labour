@@ -50,6 +50,7 @@ const _twitterAPITask = qi => {
     twitter[methods[qi.method]](qi.api, qi.params, function(error, data, response) {
       Logging.logSilly(data);
       if (error) {
+        Logging.logError(error);
         resolve(qi);
         return;
       }
