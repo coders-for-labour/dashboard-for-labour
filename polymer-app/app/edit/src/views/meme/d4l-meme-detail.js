@@ -127,7 +127,7 @@ Polymer({
     this.linkPaths('metadata', `db.campaign.metadata.${campaignId}`);
   },
 
-  __selectedPlatformChanged: function(selected) {
+  __selectedPlatformChanged: function() {
     this.$.fbPost.inputElement.selectionEnd = 0;
     this.$.twPost.inputElement.selectionEnd = 0;
   },
@@ -212,22 +212,20 @@ Polymer({
           message: this.get('__postText.fb'),
           object_attachment: response.id
         }, postResponse => {
-          if (!response.id) {
-            this.__debug(response);
+          if (!postResponse.id) {
+            this.__debug(postResponse);
             this.__err('Failed to post to Facebook');
             return;
           }
-        });
 
-        this.set('__postText.fb', '');
+          this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
+        });
       });
 
 
     }, {
       scope: 'publish_actions'
     });
-
-    this.__debug('__saveFacebook');
   },
 
   __saveTwResponse: function(ev){
@@ -241,23 +239,6 @@ Polymer({
 
     this.push('auth.metadata.postIds', {type: 'twitter', id: response.res.tweetId});
     this.set('__uploadStatus', 'uploaded');
-  },
-
-  __saveFbResponse: function(ev){
-    this.__debug(ev.detail.response);
-    FB.api('/me/photos', 'post', {
-      url: `http://cdn.forlabour.com/c/${ev.detail.response.file}`,
-      no_story: true
-    }, response => {
-      this.set('__uploadStatus', 'uploaded');
-      if (!response.id) {
-        this.__debug(response);
-        this.__err('Failed to upload photo to Facebook');
-        return;
-      }
-
-      this.push('auth.metadata.postIds', {type: 'facebook', id: response.id});
-    });
   },
 
   __fbFinishedUpload: function() {

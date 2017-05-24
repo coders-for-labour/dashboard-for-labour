@@ -42,7 +42,7 @@ Polymer({
     '__onUserMetadataChanged(auth.user.metadata.*)'
   ],
 
-  __onUserMetadataChanged: function(cr) {
+  __onUserMetadataChanged: function() {
     if (this.get('constituency') || !this.get('auth.metadata.constituencyName')) {
       return;
     }
