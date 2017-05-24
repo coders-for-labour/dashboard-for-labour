@@ -72,7 +72,7 @@ Polymer({
     this.set('constituency', response);
     this.linkPaths('mp', 'constituency.results.2015.results.0');
     this.set('mp', this.get('constituency.results.2015.results.0'));
-    if (!this.get('auth.metadata.constituencyName')) {
+    if (this.get('auth.metadata.constituencyName')) {
       return;
     }
     this.set('auth.metadata.constituencyName', response.name);
