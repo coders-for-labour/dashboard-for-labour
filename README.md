@@ -3,7 +3,10 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.0.2
+## version: 1.1.0
+- Added ability for users to upload images (for moderation)
+ 
+## 1.0.2
 - Fixed Issue #5: Avatar doesn't display if changed in twitter after first dashboard login.
 
 ## 1.0.1

@@ -13,7 +13,6 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const Config = require('./config');
-const Helpers = require('./helpers');
 
 /* ************************************************************
  *
