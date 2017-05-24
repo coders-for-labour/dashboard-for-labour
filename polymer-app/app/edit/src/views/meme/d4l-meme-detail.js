@@ -231,10 +231,16 @@ Polymer({
   },
 
   __saveTwResponse: function(ev){
-    this.__debug('__saveTwResponse', ev.detail.response);
-    setTimeout(() => {
+    let response = ev.detail.response;
+    this.__debug('__saveTwResponse', response);
+    if (response.err) {
+      this.__warn(response.res);
       this.set('__uploadStatus', 'uploaded');
-    }, 2000);
+      return;
+    }
+
+    this.push('auth.metadata.postIds', {type: 'twitter', id: response.res.tweetId});
+    this.set('__uploadStatus', 'uploaded');
   },
 
   __saveFbResponse: function(ev){
@@ -250,12 +256,18 @@ Polymer({
         return;
       }
 
-      this.set('__configureFacebookPhotoId', response.id);
+      this.push('auth.metadata.postIds', {type: 'facebook', id: response.id});
     });
   },
 
-  __finishedUpload: function() {
+  __fbFinishedUpload: function() {
     this.set('__uploadStatus', 'ready');
+    this.set('__postText.fb', '\n#votelabour');
+  },
+
+  __twFinishedUpload: function() {
+    this.set('__uploadStatus', 'ready');
+    this.set('__postText.tw', '\n#votelabour');
   },
 
   __ajaxError: function(ev){

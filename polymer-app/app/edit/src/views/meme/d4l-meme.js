@@ -14,7 +14,8 @@ Polymer({
       notify: true
     },
     auth: {
-      type: Object
+      type: Object,
+      notify: true
     },
     campaign: {
       type: Object

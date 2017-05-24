@@ -58,16 +58,20 @@ Polymer({
   },
 
   __findConstituency: function() {
-    if (this.get('__rqParams.postcode')) {
-      this.set('auth.metadata.postCode', this.get('__rqParams.postcode'));
+    if (!this.get('__rqParams.postcode')) {
+      return;
     }
 
+    this.set('auth.metadata.postCode', this.get('__rqParams.postcode'));
     this.$.findConstituency.generateRequest();
   },
 
   __onRqResponse: function(response) {
     this.__debug(this.get('auth.user'));
     this.__debug(response);
+    if (!response) {
+      return;
+    }
 
     this.set('constituency', response);
     this.linkPaths('mp', 'constituency.results.2015.results.0');

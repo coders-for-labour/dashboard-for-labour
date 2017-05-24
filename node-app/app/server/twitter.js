@@ -61,7 +61,7 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
 
   Logging.logInfo(`Tweeting media for user : ${user.username}.`);
 
-  Queue.Manager.exec({
+  return Queue.Manager.exec({
     app: Queue.Constants.App.TWITTER,
     username: user.username,
     method: 'POST',
@@ -73,8 +73,8 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
     tokenSecret: user.tokenSecret
   })
     .then(qi => {
-      let mediaId = qi.results.media_id;
-      Logging.logDebug(`Media ID: ${mediaId}`);
+      let mediaId = qi.results.media_id_string;
+      Logging.logDebug(`Media ID: ${mediaId} [${qi.results.image.image_type}], Expires: ${qi.results.expires_after_secs}`);
       return Queue.Manager.exec({
         app: Queue.Constants.App.TWITTER,
         username: user.username,
@@ -92,13 +92,20 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
     })
     .then(qi => {
       if (!qi.completed) {
-        return;
+        return {
+          err: true,
+          res: qi.error
+        };
       }
       Logging.log(`Created a tweet: ${qi.results.id}`);
+      return {
+        err: false,
+        res: {
+          tweetId: qi.results.id
+        }
+      };
     })
     .catch(Logging.Promise.logError());
-
-  return true;
 };
 
 /**
