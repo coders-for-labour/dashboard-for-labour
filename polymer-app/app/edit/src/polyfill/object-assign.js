@@ -1,5 +1,5 @@
 if (typeof Object.assign != 'function') {
-  Object.assign = function(target, varArgs) { // .length of function is 2
+  Object.assign = function(target) { // .length of function is 2
     'use strict';
     if (target == null) { // TypeError if undefined or null
       throw new TypeError('Cannot convert undefined or null to object');

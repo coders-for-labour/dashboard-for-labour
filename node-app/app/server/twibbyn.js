@@ -188,8 +188,7 @@ const _postTwitter = (req, res) => {
       Twitter.tweetMedia(twAuth, req.body.tweet, response.raw)
         .then(results => {
           res.send(results);
-        })
-
+        });
     })
     .on('fail', () => res.send(false))
     .on('error', () => res.send(false));
