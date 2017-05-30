@@ -61,8 +61,6 @@ dom-module#d4l-dashboard
             h1 Members
           h2.members-stat [[__users.length]]
 
-        d4l-dashboard-constituency-card.card.flex(auth="{{auth}}")
-
       .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(background="twibbyn")
           .layout.horizontal.center
@@ -81,7 +79,7 @@ dom-module#d4l-dashboard
         d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:meme")
-            h1 Latest Memes
+            h1 Latest Images
           p Create your own, or post existing memes on social media
           paper-button(on-tap="__viewMemes") Get Started
 
