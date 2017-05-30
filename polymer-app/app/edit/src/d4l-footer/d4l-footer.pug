@@ -32,15 +32,15 @@ dom-module#d4l-footer
       padding: 0px 20px;
     }
 
-    .footer-group > .info a {
+    .footer-group a {
       color: inherit;
       text-decoration: none;
       margin-right: 10px;
     }
 
-    .footer-group .c4l-icon {
-      color: var(--text-primary-color);
+    .footer-group .labour-icon {
       margin-right: 10px;
+      @apply --footer-icon;
     }
 
   template
@@ -49,9 +49,8 @@ dom-module#d4l-footer
         .layout.horizontal.center
           a(href="http://codersforlabour.com" target="_BLANK")
             .layout.horizontal.center
-              iron-icon.c4l-icon(icon="d4l-icons:c4l")
+              iron-icon.labour-icon(icon="d4l-icons:labour")
               .flex Labour
-          a(href="http://www.labour.org.uk/pages/privacy" target="_BLANK") Privacy Policy
-      .flex.text-right Made by Volunteers
+      a.flex.text-right(href="http://www.labour.org.uk/pages/privacy" target="_BLANK") Privacy Policy
 
   script(src="d4l-footer.js")
