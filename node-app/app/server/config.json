@@ -17,7 +17,9 @@
     "D4L_TW_ACCESS_TOKEN": "",
     "D4L_TW_ACCESS_TOKEN_SECRET": "",
     "D4L_SESSION_SECRET": "",
-    "D4L_TWFY_API_KEY": ""
+    "D4L_TWFY_API_KEY": "",
+    "D4L_REDIS_HOST": "127.0.0.1",
+    "D4L_REDIS_PORT": "6397"
   },
   "global": {
     "env": "%NODE_ENV%",
@@ -65,6 +67,10 @@
         "apiUrl": "https://www.theyworkforyou.com/api",
         "apiKey": "%D4L_TWFY_API_KEY%"
       }
+    },
+    "redis": {
+      "host": "%D4L_REDIS_HOST%",
+      "port": "%D4L_REDIS_PORT%"
     }
   },
   "local": {
