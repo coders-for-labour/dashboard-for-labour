@@ -30,28 +30,11 @@ Polymer({
       type: Object,
       notify: true
     },
-    io: {
-      type: Object,
-      value: function() {
-        return {
-          endpoint: 'http://dashboard.forlabour.com',
-          connected: false,
-          tx: [],
-          rxEvents: [
-            'add-user',
-            'message',
-            'chat',
-            'rm-user'
-          ],
-          rx: []
-        };
-      }
-    },
     iodb: {
       type: Object,
       value: function() {
         return {
-          endpoint: 'http://rhizome.codersforlabour.com',
+          endpoint: '%{D4L_RHIZOME_URL}%',
           connected: false,
           rxEvents: [
             'db-activity'

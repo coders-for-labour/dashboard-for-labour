@@ -41,10 +41,9 @@
       "sessionSecret": "%D4L_SESSION_SECRET%",
       "rhizome": {
         "url": {
-          "dev": "%D4L_RHIZOME_DEV_URL%",
-          "prod": "%D4L_RHIZOME_PROD_URL%",
-          "test": "%D4L_RHIZOME_TEST_URL%"
-
+          "dev": "%D4L_RHIZOME_DEV_URL%/api/v1",
+          "prod": "%D4L_RHIZOME_PROD_URL%/api/v1",
+          "test": "%D4L_RHIZOME_TEST_URL%/api/v1"
         },
         "appToken": {
           "dev": "%D4L_RHIZOME_DEV_APP_TOKEN%",
