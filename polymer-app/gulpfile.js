@@ -1,6 +1,7 @@
 //
 // Includes
 //
+'use strict';
 
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
@@ -21,7 +22,7 @@ const Paths = {
 };
 
 const Globs = {
-  SCRIPTS: [`${Paths.SOURCE}/*.js`, `${Paths.SOURCE}/src/**/*.js`, `${Paths.SOURCE}/src/*.js`],
+  SCRIPTS: [`${Paths.SOURCE}/*.js`, `${Paths.SOURCE}/src/*.js`, `${Paths.SOURCE}/src/**/*.js`],
   HTML: [`${Paths.SOURCE}/src/**/*.html`,`${Paths.SOURCE}/*.html`],
   PUG: [`${Paths.SOURCE}/*.pug`,`${Paths.SOURCE}/src/**/*.pug`],
   MARKUP: [`${Paths.SOURCE}/src/**/*.html`,`${Paths.SOURCE}/*.html`,`${Paths.SOURCE}/*.pug`,`${Paths.SOURCE}/src/**/*.pug`],
@@ -35,14 +36,14 @@ const Globs = {
   IMAGES: [`${Paths.SOURCE}/images/**/*.png`,`${Paths.SOURCE}/images/**/*.jpg`,`${Paths.SOURCE}/images/**/*.svg`,`${Paths.SOURCE}/images/**/*.gif`,`${Paths.SOURCE}/images/**/*.ico`]
 };
 
-var Environment = {
+let Environment = {
   NODE_ENV: '',
   D4L_RHIZOME_DEV_URL: '',
   D4L_RHIZOME_PROD_URL: '',
   D4L_RHIZOME_TEST_URL: ''
 };
 
-for (variable in Environment) {
+for (let variable in Environment) {
   if (!process.env[variable]) {
     throw new Error(`You must specify the ${variable} environment variable`);
   }
