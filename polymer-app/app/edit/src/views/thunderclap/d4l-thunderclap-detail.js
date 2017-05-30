@@ -52,6 +52,11 @@ Polymer({
     this.set('metadata', this.get(['db.campaign.metadata', campaignId]));
     this.__silly('__campaignChanged', 'metadata linking path for', campaignId);
     this.linkPaths('metadata', `db.campaign.metadata.${campaignId}`);
-  }
+  },
+
+  __selectedPlatformChanged: function() {
+    // this.$.fbPost.inputElement.selectionEnd = 0;
+    // this.$.twPost.inputElement.selectionEnd = 0;
+  },
 
 });
