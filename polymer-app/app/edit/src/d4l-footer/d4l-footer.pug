@@ -22,6 +22,8 @@ dom-module#d4l-footer
       width: 100vw;
       padding: 5px 0px;
       z-index: 500;
+
+      @apply --footer-background;
     }
 
     .footer-group[mobile] {
@@ -51,6 +53,7 @@ dom-module#d4l-footer
             .layout.horizontal.center
               iron-icon.labour-icon(icon="d4l-icons:labour")
               .flex Labour
-      a.flex.text-right(href="http://www.labour.org.uk/pages/privacy" target="_BLANK") Privacy Policy
+      .flex.text-right
+        a(href="http://www.labour.org.uk/pages/privacy" target="_BLANK") Privacy Policy
 
   script(src="d4l-footer.js")
