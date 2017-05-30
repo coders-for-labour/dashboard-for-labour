@@ -53,26 +53,27 @@ for (let variable in Environment) {
 }
 
 function environmentReplace(stream) {
+  let outStr = null;
   switch (Environment.NODE_ENV) {
     case 'production':
-      stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_PROD_URL));
+      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_PROD_URL));
       break;
     case 'development':
-      stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
+      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
       break;
     case 'test':
-      stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
+      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_TEST_URL));
       break;
   }
 
-  return stream;
+  return outStr;
 }
 
 //
 // Scripts
 //
 gulp.task('js', function() {
-  var content = gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
+  let content = gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
 		.pipe(eslint())
 		.pipe(eslint.format());
 
@@ -96,7 +97,7 @@ gulp.task('html', function() {
 });
 
 gulp.task('pug', function() {
-  var content = gulp.src(Globs.PUG, {base: Paths.SOURCE})
+  let content = gulp.src(Globs.PUG, {base: Paths.SOURCE})
 		.pipe(pug())
     .pipe(htmlPrettify());
 
