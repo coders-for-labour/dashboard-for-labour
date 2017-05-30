@@ -86,7 +86,7 @@ dom-module#d4l-auth
         height: 100vh;
       }
 
-      .page-background > .full-video .video {
+      .page-background > .full-video .image {
         position: absolute;
 
         z-index: 1;
@@ -99,7 +99,7 @@ dom-module#d4l-auth
 
     .page-group.layout.horizontal.center-justified
       .layout.vertical.center-center
-        iron-icon.auth-icon(icon="d4l-icons:c4l")
+        iron-icon.auth-icon(icon="d4l-icons:labour")
         h1 Dashboard for Labour
         .layout.horizontal.center.login-group(on-click="loginTwitter")
           p Login with Twitter
@@ -111,11 +111,12 @@ dom-module#d4l-auth
     .page-background
       .full-video
         .overlay
-        video.video(muted, loop, autoplay)
-          source(
-            src="/videos/bg.mp4",
-            type="video/mp4"
-          )
+        img.image(src="/images/homepage/homepage-01.jpg")
+        //video.video(muted, loop, autoplay)
+        //  source(
+        //    src="/videos/bg.mp4",
+        //    type="video/mp4"
+        //  )
 
     d4l-footer()
 
