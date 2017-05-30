@@ -1,10 +1,10 @@
 {
-  "name": "Dashboard For Labour",
+  "name": "Amplify",
   "short_name": "D4L",
   "start_url": "/?homescreen=1",
   "display": "standalone",
-  "theme_color": "#3f51b5",
-  "background_color": "#3f51b5",
+  "theme_color": "#D30437",
+  "background_color": "#FFF",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",
