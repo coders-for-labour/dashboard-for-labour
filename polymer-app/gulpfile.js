@@ -1,6 +1,7 @@
 //
 // Includes
 //
+'use strict';
 
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
@@ -10,6 +11,7 @@ const htmlPrettify = require('gulp-html-prettify');
 const bowerFiles = require('main-bower-files');
 const imagemin = require('gulp-imagemin');
 const babel = require('gulp-babel');
+const replace = require('gulp-replace');
 
 const Paths = {
   SOURCE: 'app/edit',
@@ -20,7 +22,7 @@ const Paths = {
 };
 
 const Globs = {
-  SCRIPTS: [`${Paths.SOURCE}/*.js`, `${Paths.SOURCE}/src/**/*.js`, `${Paths.SOURCE}/src/*.js`],
+  SCRIPTS: [`${Paths.SOURCE}/*.js`, `${Paths.SOURCE}/src/*.js`, `${Paths.SOURCE}/src/**/*.js`],
   HTML: [`${Paths.SOURCE}/src/**/*.html`,`${Paths.SOURCE}/*.html`],
   PUG: [`${Paths.SOURCE}/*.pug`,`${Paths.SOURCE}/src/**/*.pug`],
   MARKUP: [`${Paths.SOURCE}/src/**/*.html`,`${Paths.SOURCE}/*.html`,`${Paths.SOURCE}/*.pug`,`${Paths.SOURCE}/src/**/*.pug`],
@@ -34,13 +36,48 @@ const Globs = {
   IMAGES: [`${Paths.SOURCE}/images/**/*.png`,`${Paths.SOURCE}/images/**/*.jpg`,`${Paths.SOURCE}/images/**/*.svg`,`${Paths.SOURCE}/images/**/*.gif`,`${Paths.SOURCE}/images/**/*.ico`]
 };
 
+let Environment = {
+  NODE_ENV: '',
+  D4L_RHIZOME_DEV_URL: '',
+  D4L_RHIZOME_PROD_URL: '',
+  D4L_RHIZOME_TEST_URL: ''
+};
+
+for (let variable in Environment) {
+  if (!process.env[variable]) {
+    throw new Error(`You must specify the ${variable} environment variable`);
+  }
+  if (process.env[variable]) {
+    Environment[variable] = process.env[variable];
+  }
+}
+
+function environmentReplace(stream) {
+  let outStr = null;
+  switch (Environment.NODE_ENV) {
+    case 'production':
+      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_PROD_URL));
+      break;
+    case 'development':
+      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
+      break;
+    case 'test':
+      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_TEST_URL));
+      break;
+  }
+
+  return outStr;
+}
+
 //
 // Scripts
 //
 gulp.task('js', function() {
-  return gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
+  let content = gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
 		.pipe(eslint())
-		.pipe(eslint.format())
+		.pipe(eslint.format());
+
+  return environmentReplace(content)
     .pipe(babel({
       presets: ['es2015']
     }))
@@ -60,9 +97,11 @@ gulp.task('html', function() {
 });
 
 gulp.task('pug', function() {
-  return gulp.src(Globs.PUG, {base: Paths.SOURCE})
+  let content = gulp.src(Globs.PUG, {base: Paths.SOURCE})
 		.pipe(pug())
-    .pipe(htmlPrettify())
+    .pipe(htmlPrettify());
+
+  return environmentReplace(content)
 		.pipe(gulp.dest(Paths.DEST));
 });
 

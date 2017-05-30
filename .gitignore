@@ -30,7 +30,7 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 node-app/deploy
 polymer-app/app/serve
-polymer-app/app/build
+polymer-app/build
 
 # Dependency directories
 node-app/node_modules

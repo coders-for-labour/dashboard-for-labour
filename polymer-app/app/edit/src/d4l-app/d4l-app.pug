@@ -79,9 +79,13 @@ dom-module#d4l-app
         margin-right: 10px;
       }
 
-      .footer-group .c4l-icon{
-        color: var(--app-color-primary-red);
-        margin-right: 10px;
+      d4l-footer{
+        --footer-background: {
+          background: var(--default-background-color);
+        }
+        --footer-icon: {
+          color: var(--app-color-primary-red);
+        }
       }
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
@@ -148,7 +152,7 @@ dom-module#d4l-app
         )
           d4l-dashboard.fullbleed.layout.vertical(
             name="dashboard",
-            title="Dashboard For Labour",
+            title="Amplify",
             auth="{{auth}}",
             db="{{db}}",
             mobile="[[isMobile]]"
@@ -167,7 +171,19 @@ dom-module#d4l-app
           )
           d4l-meme.fullbleed.layout.vertical(
             name="meme",
-            title="Meme",
+            title="Images",
+            db="{{db}}",
+            doc="{{db.campaign}}",
+            auth="{{auth}}",
+            route="[[route]]",
+            route-data="[[routeData]]",
+            subroute="[[subroute]]",
+            subroute-data="[[subrouteData]]",
+            mobile="[[isMobile]]"
+          )
+          d4l-thunderclap.fullbleed.layout.vertical(
+            name="thunderclap",
+            title="Thunderclap",
             db="{{db}}",
             doc="{{db.campaign}}",
             auth="{{auth}}",
@@ -181,14 +197,6 @@ dom-module#d4l-app
             name="view404"
           )
 
-        .footer-group.layout.horizontal.center(mobile$="[[isMobile]]")
-          .flex.text-left.info
-            .layout.horizontal.center
-              a(href="http://codersforlabour.com" target="_BLANK")
-                .layout.horizontal.center
-                  iron-icon.c4l-icon(icon="d4l-icons:c4l")
-                  .flex Coders for Labour
-              a(href="http://www.codersforlabour.com/privacy-policy" target="_BLANK") Privacy Policy
-          .flex.text-right Made by Volunteers
+        d4l-footer()
 
   script(src="d4l-app.js")

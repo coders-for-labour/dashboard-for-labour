@@ -1,6 +1,6 @@
 {
   "name": "dashboard-for-labour",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Dashboard for Labour",
   "author": "Coders for Labour",
   "private": true,
@@ -21,6 +21,7 @@
   "dependencies": {
     "body-parser": "~1.15.x",
     "canvas": "^1.4.0",
+    "connect-redis": "^3.3.0",
     "express": "~4.13.x",
     "express-session": "^1.14.2",
     "level": "^1.5.0",
@@ -34,6 +35,7 @@
     "passport-twitter": "~1.0.0",
     "proxyquire": "~1.7.x",
     "readline": "^1.3.0",
+    "redis": "^2.7.1",
     "restler": "^3.4.0",
     "rhizome-api-js": "~1.0.x",
     "sugar": "^2.0.4",

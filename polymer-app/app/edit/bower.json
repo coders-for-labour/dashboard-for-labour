@@ -55,6 +55,11 @@
         "*.html"
       ]
     },
+    "pdfjs-dist": {
+      "main": [
+        "./build/*.js"
+      ]
+    },
     "google-apis": {
       "main": [
         "./**/*.html",

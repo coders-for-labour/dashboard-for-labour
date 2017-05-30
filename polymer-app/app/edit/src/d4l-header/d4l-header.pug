@@ -13,8 +13,6 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
-script(src="/bower_components/sugar/dist/sugar.min.js")
-
 dom-module#d4l-header
   style(is="custom-style", include="iron-flex iron-positioning iron-flex-alignment")
   style(is="custom-style", include="d4l-theme")
@@ -51,7 +49,7 @@ dom-module#d4l-header
       app-toolbar
         .layout.horizontal.center.header-toolbar
           paper-icon-button.header-logo(icon="d4l-icons:arrow-back", hidden$="[[!allowBack]]", on-click="__back")
-          iron-icon.header-logo(icon="d4l-icons:c4l", hidden$="[[allowBack]]", on-tap="__viewHome")
+          iron-icon.header-logo(icon="d4l-icons:labour", hidden$="[[allowBack]]", on-tap="__viewHome")
           div.flex(main-title) [[responsivePageTitle]]
           //.flex
           //  .layout.horizontal.center-center.header-menu

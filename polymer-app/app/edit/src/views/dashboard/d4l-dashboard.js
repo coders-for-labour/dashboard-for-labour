@@ -16,7 +16,7 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Dashboard for Labour'
+      value: 'Amplify'
     },
 
     __users: {

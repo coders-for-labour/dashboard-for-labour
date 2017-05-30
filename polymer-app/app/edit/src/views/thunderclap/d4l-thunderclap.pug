@@ -21,10 +21,10 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
-link(rel="import", href="/src/views/meme/d4l-meme-campaign-card.html")
-link(rel="import", href="/src/views/meme/d4l-meme-detail.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-card.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-detail.html")
 
-dom-module#d4l-meme
+dom-module#d4l-thunderclap
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="d4l-theme")
   style(include="shared-styles")
@@ -36,12 +36,6 @@ dom-module#d4l-meme
       padding-top: 95px;
     }
 
-    paper-fab {
-      position: fixed;
-      bottom: 60px;
-      right: 30px;
-    }
-
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
@@ -50,7 +44,7 @@ dom-module#d4l-meme
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
-      page="Images",
+      page="[[__pageTitle]]",
       page-title="[[__pageTitle]]",
       page-mode="[[__pageMode]]",
       header="{{header}}",
@@ -58,12 +52,10 @@ dom-module#d4l-meme
       on-back-button-clicked="__navBack"
     )
 
-    d4l-post-dialog(title="Add Images", open="{{__openPostDialog}}", on-save="__saveUserMeme")
-
     iron-pages(
-      selected='[[__loadMode]]',
-      attr-for-selected='name',
-      role='loading'
+    selected='[[__loadMode]]',
+    attr-for-selected='name',
+    role='loading'
     )
       div(name="loading", style="height: 90vh;").layout.horizontal.center.center-justified
         paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
@@ -76,26 +68,24 @@ dom-module#d4l-meme
           div(name="list", mobile$="[[isMobile]]")
             .layout.horizontal.wrap
               .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
-                d4l-dashboard-card.card.flex(background="meme")
+                d4l-dashboard-card.card.flex(background="thunderclap")
                   .layout.horizontal.center
-                    iron-icon(icon="d4l-social-icons:social")
-                    h1 Images
-                  p Have some fun, share important messages.
+                    iron-icon(icon="d4l-social-icons:thunderclap")
+                    h1 Thunderclap
+                  p Rally together to show your support for Labour
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2
                   template(is="dom-repeat", items="[[campaigns]]", as="campaign")
-                    d4l-meme-campaign-card.card(
+                    d4l-thunderclap-card.card(
                       campaign="[[campaign]]"
                     )
 
-            paper-fab(icon="add", on-click="__addUserMeme")
-
           div(name="detail", mobile$="[[isMobile]]")
-            d4l-meme-detail(
+            d4l-thunderclap-detail(
               auth="{{auth}}",
               db="{{db}}",
               campaign="[[__selectedItem]]"
             )
 
-  script(src="d4l-meme.js")
+  script(src="d4l-thunderclap.js")
