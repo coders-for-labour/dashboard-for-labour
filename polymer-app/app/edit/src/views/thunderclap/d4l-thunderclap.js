@@ -1,5 +1,5 @@
 Polymer({
-  is: 'd4l-meme',
+  is: 'd4l-thunderclap',
   behaviors: [
     Polymer.D4LLogging,
     Polymer.D4LViewList
@@ -41,22 +41,7 @@ Polymer({
     }
   },
 
-  __addUserMeme: function() {
-    this.__openPostDialog = true;
-  },
-
-  __saveUserMeme: function(ev) {
-    this.__debug(ev);
-    this.push('db.post.data', {
-      ownerId: this.get('auth.user.id'),
-      type: 'campaign',
-      text: ev.detail.text,
-      image: ev.detail.image
-    });
-  },
-
   __computeCampaignsQuery: function () {
-    this.__silly('__computeCampaignsQuery');
     return {
       type: {
         $eq: 'meme'
@@ -68,7 +53,7 @@ Polymer({
   },
 
   __computePageTitle: function (campaign) {
-    let title = 'Images for Labour';
+    let title = 'Thunderclap';
 
     if (campaign && campaign.name) {
       title = `${title} - ${campaign.name}`

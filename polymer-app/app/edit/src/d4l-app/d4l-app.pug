@@ -80,6 +80,9 @@ dom-module#d4l-app
       }
 
       d4l-footer{
+        --footer-background: {
+          background: var(--default-background-color);
+        }
         --footer-icon: {
           color: var(--app-color-primary-red);
         }
@@ -149,7 +152,7 @@ dom-module#d4l-app
         )
           d4l-dashboard.fullbleed.layout.vertical(
             name="dashboard",
-            title="Dashboard For Labour",
+            title="Amplify",
             auth="{{auth}}",
             db="{{db}}",
             mobile="[[isMobile]]"
@@ -168,7 +171,19 @@ dom-module#d4l-app
           )
           d4l-meme.fullbleed.layout.vertical(
             name="meme",
-            title="Meme",
+            title="Images",
+            db="{{db}}",
+            doc="{{db.campaign}}",
+            auth="{{auth}}",
+            route="[[route]]",
+            route-data="[[routeData]]",
+            subroute="[[subroute]]",
+            subroute-data="[[subrouteData]]",
+            mobile="[[isMobile]]"
+          )
+          d4l-thunderclap.fullbleed.layout.vertical(
+            name="thunderclap",
+            title="Thunderclap",
             db="{{db}}",
             doc="{{db.campaign}}",
             auth="{{auth}}",

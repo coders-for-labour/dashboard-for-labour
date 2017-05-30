@@ -253,7 +253,7 @@ Polymer({
       return this.subPageTitle;
     }
     let titles = {
-      'dashboard': 'Dashboard For Labour'
+      'dashboard': 'Amplify'
     };
     if (!page || !titles[page]) {
       return 'Admin';

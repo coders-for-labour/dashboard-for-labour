@@ -23,7 +23,7 @@ link(rel="import", href="/src/shared-styles.html")
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
 
-dom-module#d4l-meme-detail
+dom-module#d4l-thunderclap-detail
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="d4l-theme")
   style(include="shared-styles")
@@ -67,64 +67,8 @@ dom-module#d4l-meme-detail
   template
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    iron-ajax#ajaxTweet(
-      handleAs="json",
-      content-type="application/json",
-      url="/twitter",
-      method="POST",
-      body="[[__tweetBody]]"
-      on-response="__saveTwResponse",
-      on-error="__ajaxError")
-
-    .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+    .flex.layout.vertical.center(mobile$="[[isMobile]]")
       h1 Platform
       d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
 
-      h1 Images
-      .layout.horizontal.center-center
-        .flex.text-right
-          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__prevMeme") Prev
-        d4l-twibbyn-overlay(
-          image="[[__memeEndpoint]]/[[__selectedMeme]]")
-        .flex.text-left
-          paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__nextMeme", style="transform: rotate(180deg);") Next
-
-
-      iron-pages(attr-for-selected="name", selected="{{__selectedPlatform}}")
-        div(name="facebook")
-          .layout.vertical.center(hidden$="[[__hideReady]]")
-            paper-textarea#fbPost(char-counter, no-label-float, rows="3", max-rows="5", value="{{__postText.fb}}", placeholder="", autofocus)
-            paper-button(on-tap="__saveFacebook") Post Image
-
-          .layout.vertical.center(hidden$="[[__hideUploading]]")
-            h2 Uploading the image to Facebook...
-            paper-spinner(active)
-
-          .layout.vertical.center(hidden$="[[__hideUploaded]]")
-            h2 Successfully posted to Facebook!
-            paper-button(on-tap="__fbFinishedUpload") Finished
-
-        div(name="twitter")
-          .layout.vertical.center(hidden$="[[__hideReady]]")
-            paper-textarea#twPost(char-counter, no-label-float, rows="3", max-rows="5", value="{{__postText.tw}}", placeholder="", autofocus)
-            paper-button(on-tap="__saveTwitter") Post Image
-
-          .layout.vertical.center(hidden$="[[__hideUploading]]")
-            h2 Tweeting this image...
-            paper-spinner(active)
-
-          .layout.vertical.center(hidden$="[[__hideUploaded]]")
-            h2 It can take a few seconds for your tweet to appear.
-            paper-button(on-tap="__twFinishedUpload") Finished
-
-
-    .page-content.flex-2(hidden$="[[isMobile]]", mobile$="[[isMobile]]")
-      iron-selector(attr-for-selected="name", selected="{{__selectedMeme}}")
-        template(is="dom-repeat", items="[[memes]]" as="meme")
-          img.card(
-            src="[[__memeEndpoint]]/[[meme]]",
-            name="[[meme]]",
-            width="250px",
-          )
-
-  script(src="d4l-meme-detail.js")
+  script(src="d4l-thunderclap-detail.js")
