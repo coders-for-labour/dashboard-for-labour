@@ -1,0 +1,57 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/d4l-icons.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-footer
+  style(is="custom-style", include="iron-flex iron-positioning iron-flex-alignment")
+  style(is="custom-style", include="d4l-theme")
+  style(is="custom-style", include="shared-styles")
+  style.
+    :host {
+
+    }
+
+    .footer-group {
+      position: fixed;
+      bottom: 0px;
+      width: 100vw;
+      padding: 5px 0px;
+      z-index: 500;
+    }
+
+    .footer-group[mobile] {
+      flex-direction: column;
+    }
+
+    .footer-group > div {
+      padding: 0px 20px;
+    }
+
+    .footer-group > .info a {
+      color: inherit;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .footer-group .c4l-icon {
+      color: var(--text-primary-color);
+      margin-right: 10px;
+    }
+
+  template
+    .footer-group.layout.horizontal.center(mobile$="[[isMobile]]")
+      .flex.text-left.info
+        .layout.horizontal.center
+          a(href="http://codersforlabour.com" target="_BLANK")
+            .layout.horizontal.center
+              iron-icon.c4l-icon(icon="d4l-icons:c4l")
+              .flex Labour
+          a(href="http://www.labour.org.uk/pages/privacy" target="_BLANK") Privacy Policy
+      .flex.text-right Made by Volunteers
+
+  script(src="d4l-footer.js")

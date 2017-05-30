@@ -10,6 +10,8 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
+link(rel="import", href="/src/d4l-footer/d4l-footer.html")
+
 dom-module#d4l-auth-service
   template
     style(inculde="shared-styles").
@@ -93,30 +95,6 @@ dom-module#d4l-auth
         min-width: 100vw;
       }
 
-      .footer-group {
-        position: fixed;
-        bottom: 0px;
-        width: 100vw;
-        padding: 5px 0px;
-        z-index: 500;
-      }
-      .footer-group[mobile] {
-        flex-direction: column;
-      }
-      .footer-group > div {
-        padding: 0px 20px;
-      }
-
-      .footer-group > .info a {
-        color: inherit;
-        text-decoration: none;
-        margin-right: 10px;
-      }
-      .footer-group .c4l-icon {
-        color: var(--text-primary-color);
-        margin-right: 10px;
-      }
-
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     .page-group.layout.horizontal.center-justified
@@ -139,14 +117,6 @@ dom-module#d4l-auth
             type="video/mp4"
           )
 
-    .footer-group.layout.horizontal.center(mobile$="[[isMobile]]")
-      .flex.text-left.info
-        .layout.horizontal.center
-          a(href="http://codersforlabour.com" target="_BLANK")
-            .layout.horizontal.center
-              iron-icon.c4l-icon(icon="d4l-icons:c4l")
-              .flex Coders for Labour
-          a(href="http://www.codersforlabour.com/privacy-policy" target="_BLANK") Privacy Policy
-      .flex.text-right Made by Volunteers
+    d4l-footer()
 
   script(src="d4l-auth.js")
