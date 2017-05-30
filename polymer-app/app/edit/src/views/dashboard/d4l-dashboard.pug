@@ -55,13 +55,6 @@ dom-module#d4l-dashboard
 
     .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
       .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
-        d4l-dashboard-card.card.flex(background="members")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-icons:member")
-            h1 Members
-          h2.members-stat [[__users.length]]
-
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(background="twibbyn")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:social")
@@ -82,5 +75,12 @@ dom-module#d4l-dashboard
             h1 Latest Images
           p Create your own, or post existing memes on social media
           paper-button(on-tap="__viewMemes") Get Started
+
+      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
+        d4l-dashboard-card.card.flex(background="members")
+          .layout.horizontal.center
+            iron-icon(icon="d4l-icons:member")
+            h1 Members
+          h2.members-stat [[__users.length]]
 
   script(src="d4l-dashboard.js")
