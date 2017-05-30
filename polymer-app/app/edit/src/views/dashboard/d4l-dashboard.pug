@@ -22,8 +22,6 @@ link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="./d4l-dashboard-card.html")
 
-script(src="/bower_components/sugar/dist/sugar.min.js")
-
 dom-module#d4l-dashboard
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="shared-styles")
@@ -72,8 +70,8 @@ dom-module#d4l-dashboard
         d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:meme")
-            h1 Latest Images
-          p Create your own, or post existing memes on social media
+            h1 Images
+          p Gorgeous covers, posters and infographics to share
           paper-button(on-tap="__viewMemes") Get Started
 
       .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
