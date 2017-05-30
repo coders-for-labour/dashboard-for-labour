@@ -76,14 +76,14 @@
   "local": {
     "workstation1": {
       "logPath": {
-        "dev":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/dev",
-        "prod":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/prod",
-        "test":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/test"
+        "dev":"/home/chris/Work/Workspaces/WebStorm/amplify/node-app/logs/dev",
+        "prod":"/home/chris/Work/Workspaces/WebStorm/amplify/node-app/logs/prod",
+        "test":"/home/chris/Work/Workspaces/WebStorm/amplify/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data",
-        "prod": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data",
-        "test": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data/test"
+        "dev": "/home/chris/Work/Workspaces/WebStorm/amplify/node-app/app_data",
+        "prod": "/home/chris/Work/Workspaces/WebStorm/amplify/node-app/app_data",
+        "test": "/home/chris/Work/Workspaces/WebStorm/amplify/node-app/app_data/test"
       },
       "listenPort": {
         "dev": 6041,
