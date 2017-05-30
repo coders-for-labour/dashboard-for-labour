@@ -44,7 +44,7 @@ Polymer({
   __computeCampaignsQuery: function () {
     return {
       type: {
-        $eq: 'thunderclap'
+        $eq: 'meme'
       },
       status: {
         $eq: 'published'

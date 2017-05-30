@@ -8,7 +8,7 @@ link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
 dom-module#d4l-thunderclap-card
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="d4l-theme")
   style(include="shared-styles")
   style(include="shared-card-styles").
@@ -20,9 +20,23 @@ dom-module#d4l-thunderclap-card
       position: relative;
       -webkit-background-size: cover;
       background-size: cover;
-      padding: 10px 20px 10px;
+      padding: 0px 0px 0px;
       color: var(--text-light-primary-color);
     }
+
+    .thunderclap-content{
+      background: var(--app-color-primary-red);
+      padding: 10px 20px;
+    }
+
+    .thunderclap-footer {
+      padding: 10px 20px 10px;
+      color: var(--text-dark-secondary-color);
+    }
+    .thunderclap-footer iron-icon {
+      margin-right: 10px;
+    }
+
     .footer.tray{
       margin: 10px -20px -10px;
     }
@@ -32,11 +46,27 @@ dom-module#d4l-thunderclap-card
 
   template
     .card
-      h1 [[campaign.name]]
-      p [[campaign.description]]
-      .footer.tray(hidden$="[[!__showButtons]]")
+      .thunderclap-content
+        div "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at mi viverra, dapibus diam nec, lobortis purus. Nullam scelerisque hendrerit posuere. Pellentesque metus tellus, ultricies non lacus in, rutrum scelerisque velit. Aenean dignissim eget eros nec interdum. Nulla quis mauris arcu."
+        div.text-right Ends: May 31st, 12:00pm
+      .thunderclap-footer
+        .layout.horizontal.wrap
+          h1 [[campaign.name]]
         .layout.horizontal.center
-          paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewThunderclap")
+          .flex-2
+            p [[campaign.description]]
+
+          .flex.layout.horizontal.center
+            iron-icon(icon="d4l-icons:member")
+            div 0
+
+          .flex.layout.horizontal.center
+            iron-icon(icon="d4l-icons:time")
+            div 9 Days
+
+        .footer.tray(hidden$="[[!__showButtons]]")
+          .layout.horizontal.center
+            paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewThunderclap")
 
 
   script(src="./d4l-thunderclap-card.js")
