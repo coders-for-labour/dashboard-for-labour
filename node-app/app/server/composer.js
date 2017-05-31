@@ -21,7 +21,6 @@ const Image = Canvas.Image;
 const Storage = require('@google-cloud/storage');
 const storage = Storage(); // eslint-disable-line new-cap
 
-
 let _cache = null;
 let _memCache = null;
 

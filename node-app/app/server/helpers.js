@@ -12,10 +12,10 @@
 
 const fs = require('fs');
 const Config = require('./config');
-const Storage = require('@google-cloud/storage');
+// const Storage = require('@google-cloud/storage');
 const sb = require('stream-buffers');
 
-const storage = Storage(); // eslint-disable-line new-cap
+// const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
  *
