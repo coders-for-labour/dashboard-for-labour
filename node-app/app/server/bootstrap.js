@@ -121,8 +121,11 @@ const __initMaster = () => {
 const _installApp = app => {
   let p = null;
 
+  const url = `http://${Config.auth.rhizome.url}`;
+  Logging.logDebug(`Attempting to connect to Rhizome using: ${url}`);
+
   Rhizome.init({
-    rhizomeUrl: Config.auth.rhizome.url,
+    rhizomeUrl: url,
     appToken: Config.auth.rhizome.appToken
   });
 
