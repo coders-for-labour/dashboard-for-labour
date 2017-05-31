@@ -69,7 +69,7 @@ Polymer({
     },
     __twibbynEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com/'
+      value: '//%{D4L_CDN_URL}%'
     },
 
     __twitterSaveUrlPrefix: {
@@ -216,7 +216,7 @@ Polymer({
   __saveFbResponse: function(ev){
     this.__debug(ev.detail.response);
     FB.api('/me/photos', 'post', {
-      url: `http://cdn.forlabour.com/c/${ev.detail.response.file}`,
+      url: `http://%{D4L_CDN_URL}%/c/${ev.detail.response.file}`,
       no_story: true
     }, response => {
       this.set('__uploadStatus', 'uploaded');

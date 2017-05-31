@@ -26,7 +26,7 @@ Polymer({
     },
     __twibbynEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com/'
+      value: '//%{D4L_CDN_URL}%'
     },
     __twibbynImage: {
       type: String,
@@ -44,7 +44,7 @@ Polymer({
       return '';
     }
 
-    return `${this.get('__twibbynEndpoint')}${twibbyn}`;
+    return `${this.get('__twibbynEndpoint')}/${twibbyn}`;
   },
 
   __computeHasTwibbyn: function(twibbyn) {

@@ -19,6 +19,7 @@
     "url": "https://github.com/coders-for-labour/dashboard-for-labour.git"
   },
   "dependencies": {
+    "@google-cloud/storage": "^1.1.1",
     "body-parser": "~1.15.x",
     "canvas": "^1.4.0",
     "connect-redis": "^3.3.0",
@@ -38,6 +39,7 @@
     "redis": "^2.7.1",
     "restler": "^3.4.0",
     "rhizome-api-js": "~1.0.x",
+    "stream-buffers": "^3.0.1",
     "sugar": "^2.0.4",
     "twitter": "^1.7.0",
     "uuid": "^3.0.1",
