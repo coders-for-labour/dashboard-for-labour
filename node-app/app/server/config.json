@@ -19,7 +19,8 @@
     "D4L_SESSION_SECRET": "",
     "D4L_TWFY_API_KEY": "",
     "D4L_REDIS_HOST": "127.0.0.1",
-    "D4L_REDIS_PORT": "6397"
+    "D4L_REDIS_PORT": "6397",
+    "D4L_CLUSTER_APP": "primary"
   },
   "global": {
     "env": "%NODE_ENV%",
@@ -68,6 +69,9 @@
         "apiKey": "%D4L_TWFY_API_KEY%"
       }
     },
+    "cluster": {
+      "app": "%D4L_CLUSTER_APP%"
+    },
     "redis": {
       "host": "%D4L_REDIS_HOST%",
       "port": "%D4L_REDIS_PORT%"
@@ -98,19 +102,24 @@
     },
     "workstation2": {
       "logPath": {
-        "dev":"/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/dev",
-        "prod":"/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/prod",
-        "test":"/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/test"
+        "dev":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/logs/dev",
+        "prod":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/logs/prod",
+        "test":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "prod": "/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "test": "/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data/test"
+        "dev": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/app_data",
+        "prod": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/app_data",
+        "test": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/app_data/test"
       },
       "listenPort": {
         "dev": 6021,
         "prod": 6020,
         "test": 6022
+      },
+      "cdn": {
+        "dev": "http://cdn-forlabour-com.wearelightenclients.co.uk",
+        "prod": "http://cdn-forlabour-com.wearelightenclients.co.uk",
+        "test": "http://cdn-forlabour-com.wearelightenclients.co.uk"
       }
     },
     "yubaba": {
