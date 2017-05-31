@@ -34,7 +34,7 @@ Polymer({
       type: Object,
       value: function() {
         return {
-          endpoint: '%{D4L_RHIZOME_URL}%',
+          endpoint: '//%{D4L_RHIZOME_URL}%',
           connected: false,
           rxEvents: [
             'db-activity'
