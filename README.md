@@ -3,7 +3,11 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.1.1
+## version: 1.2.0
+- Small UI Tweaks
+- API Queue is now shared using redis
+
+## 1.1.1
 - Added thunderclap list view
 - Fixed polymer build process
 - Added Labour branding

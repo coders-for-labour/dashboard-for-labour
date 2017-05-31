@@ -10,15 +10,16 @@
  *
  */
 
-const fs = require('fs');
 const path = require('path');
-
 const Config = require('./config');
 const Logging = require('./logging');
 const Helpers = require('./helpers');
 const Composer = require('./composer');
 const Twitter = require('./twitter');
+const Rhizome = require('rhizome-api-js');
 const rest = require('restler');
+const Storage = require('@google-cloud/storage');
+const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
  *
@@ -38,42 +39,38 @@ const _composeTwibbyn = (rearImgBuffer, rearImgBufferUid, frontImgUrl, toBuffer)
   return composer.render();
 };
 
-const _getAvatar = (pathname, imgUrl) => {
-  return new Promise((resolve, reject) => {
-    fs.access(pathname, 'r', err => {
-      if (err) {
-        if (err.code === 'ENOENT') {
-          Logging.logDebug('Fetching user avatar');
-          rest.get(imgUrl)
-            .on('success', (data, response) => {
-              fs.writeFile(pathname, response.raw, err => {
-                if (err) {
-                  throw err;
-                }
-                resolve(response.raw);
-              });
-            })
-            .on('error', err => {
-              Logging.log(err, Logging.Constants.LogLevel.ERR);
-              reject(err);
-            });
-        } else {
-          Logging.log(err, Logging.Constants.LogLevel.ERR);
-          reject(err);
-        }
-      } else {
-        Logging.logDebug('Fetching local user avatar');
-        fs.readFile(pathname, (err, data) => {
-          if (err) {
-            Logging.log(err, Logging.Constants.LogLevel.ERR);
-            reject(err);
-            return;
-          }
-          resolve(data);
-        });
+const _getAvatar = (filename, imgUrl) => {
+  Logging.log(`Checking ${Config.cdnBucket} for backup of ${filename}`);
+
+  const file = storage.bucket(Config.cdnBucket).file(`b/${filename}`);
+  return file.exists()
+    .then(exists => {
+      if (exists[0]) {
+        Logging.log(`Backup avatar exists. Loading that.`);
+        return file.download()
+          .then(contents => contents[0]);
       }
+
+      Logging.log(`Backup avatar doesn't exist. Loading external.`);
+      let rex = /\.(\w+)$/;
+      let matches = rex.exec(imgUrl);
+      let subType = 'jpg';
+      if (matches) {
+        subType = matches[1];
+      }
+
+      return new Promise((resolve, reject) => {
+        rest.get(imgUrl)
+          .on('success', (data, response) => {
+            Helpers.GCloud.Storage.saveBuffer(file, response.raw, {
+              contentType: `image/${subType}`
+            }, true).then(() => {
+              resolve(response.raw);
+            });
+          })
+          .on('error', reject);
+      });
     });
-  });
 };
 
 /* ************************************************************
@@ -109,6 +106,12 @@ const _saveTwibbyn = (req, res) => {
     res.sendStatus(403);
     return;
   }
+  if (!req.body || !req.body.campaignId) {
+    res.sendStatus(400);
+    return;
+  }
+
+  const campaignId = req.body.campaignId;
 
   const twAuth = req.user.auth.find(a => a.app === 'twitter');
   if (!twAuth) {
@@ -118,18 +121,25 @@ const _saveTwibbyn = (req, res) => {
   Logging.logDebug(twAuth.images);
 
   const imgUrl = twAuth.images.profile.replace('_normal', '');
-  const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
+  const filename = `${req.user.id}_twibbyn_twitter_avatar_backup`;
+  // const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
 
-  _getAvatar(pathname, imgUrl)
+  _getAvatar(filename, imgUrl)
     .then(avatarBuffer => {
       Logging.logDebug('Composing Twibbyn');
-      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn}/${req.body.file}`, true)
+      _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.body.file}`, true)
         .then(twibbyn => {
-          Logging.logDebug(`Got Twibbyn: ${twibbyn.fileName}`);
+          Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
+          Rhizome.Campaign.Metadata.load(campaignId, 'userCount', 0)
+            .then(count => {
+              Rhizome.Campaign.Metadata.save(campaignId, 'userCount', count + 1);
+            });
+
           res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
           res.sendStatus(200);
         });
-    });
+    })
+    .catch(Logging.Promise.logError());
 };
 
 /* ************************************************************
@@ -151,12 +161,13 @@ const _getFbTwibbyn = (req, res) => {
   Logging.logDebug(fbAuth.images);
 
   const imgUrl = `https://graph.facebook.com/${fbAuth.appId}/picture?width=500`;
-  const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_facebook_avatar_backup`;
+  const filename = `${req.user.id}_twibbyn_facebook_avatar_backup`;
+  // const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_facebook_avatar_backup`;
 
-  _getAvatar(pathname, imgUrl)
+  _getAvatar(filename, imgUrl)
     .then(avatarBuffer => {
       Logging.logDebug(`Composing Twibbyn: ${imgUrl}`);
-      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn}/${req.query.file}`)
+      _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.query.file}`)
         .then(twibbyn => {
           Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
           // twibbyn.stream.pipe(res);
@@ -182,8 +193,8 @@ const _postTwitter = (req, res) => {
     return;
   }
 
-  Logging.logDebug(`Tweeting: ${req.body.tweet}, ${Config.cdn}/${req.body.file}`);
-  rest.get(`${Config.cdn}/${req.body.file}`)
+  Logging.logDebug(`Tweeting: ${req.body.tweet}, http://${Config.cdnUrl}/${req.body.file}`);
+  rest.get(`http://${Config.cdnUrl}/${req.body.file}`)
     .on('success', (data, response) => {
       Twitter.tweetMedia(twAuth, req.body.tweet, response.raw)
         .then(results => {

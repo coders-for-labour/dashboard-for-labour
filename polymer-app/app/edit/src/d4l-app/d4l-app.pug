@@ -82,10 +82,10 @@ dom-module#d4l-app
       d4l-footer{
         --footer-background: {
           background: var(--default-background-color);
-        }
+        };
         --footer-icon: {
           color: var(--app-color-primary-red);
-        }
+        };
       }
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
@@ -197,6 +197,8 @@ dom-module#d4l-app
             name="view404"
           )
 
-        d4l-footer()
+        d4l-footer(
+          footer-logo="red"
+        )
 
   script(src="d4l-app.js")

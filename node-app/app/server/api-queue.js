@@ -14,6 +14,11 @@ const Logging = require('./logging');
 const Config = require('./config');
 const Twitter = require('twitter');
 const Sugar = require('sugar');
+const redis = require('redis');
+const UUID = require('uuid');
+
+const redisClient = redis.createClient(Config.redis);
+// redisClient.on('error', err => console.log(err));
 
 /**
  *
@@ -72,15 +77,17 @@ const _appTasks = {
 class APIQueueManager {
   constructor() {
     this._rateLimiter = {};
-    this._queue = [];
+    // this._queue = [];
   }
 
   /**
    * @description Start processing the queue
-   * @param {object} app - express instance
+   * @param {boolean} isPrimary - is primary cluster instance
    */
-  init(app) {
-    this._flush();
+  init(isPrimary) {
+    if (isPrimary) {
+      this._flush();
+    }
   }
 
   /**
@@ -88,8 +95,14 @@ class APIQueueManager {
    * @param {object} qi - contains all parameters for api call
    */
   add(qi) {
+    qi.id = UUID.v1();
     qi.method = qi.method ? qi.method : 'GET';
-    this._queue.push(qi);
+    redisClient.rpush(['api-queue', JSON.stringify(qi)], (err, reply) => {
+      if (err) {
+        Logging.logError(err);
+        return;
+      }
+    });
   }
 
   /**
@@ -128,29 +141,87 @@ class APIQueueManager {
     return false;
   }
 
+  _queueLength() {
+    return new Promise(resolve => {
+      redisClient.llen('api-queue', (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  _fetchQueue() {
+    return new Promise(resolve => {
+      redisClient.lrange('api-queue', 0, -1, (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  _deleteQueueItem(itemId) {
+    return this._fetchQueue()
+      .then(results => {
+        for (let key in results) {
+          if (results[key].includes(itemId)) {
+            Logging.log(`Removing index ${key} from api-queue`);
+            redisClient.lrem('api-queue', 0, results[key]);
+            return key;
+          }
+        }
+      });
+  }
+
   /**
    *
    * @private
    */
   _flush() {
-    Logging.logSilly(`Queue Manager: ${this._queue.length}`);
-    if (this._queue.length === 0) {
-      setTimeout(() => this._flush(), Constants.INTERVAL);
-      return;
-    }
-
-    let tasks = this._queue.filter(qi => {
-      return this._isRateLimited(qi) === false;
-    }).map(qi => _appTasks[qi.app](qi));
-
-    Logging.logDebug(`Attempting ${tasks.length} Twitter`);
-    Promise.all(tasks)
-      .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
-      .then(qis => {
-        this._queue = this._queue.filter(qi => qi.completed !== true);
+    this._queueLength()
+      .then(queueLength => {
+        Logging.logDebug(`Queue Manager: ${queueLength}`);
+        if (queueLength === 0) {
+          setTimeout(() => this._flush(), Constants.INTERVAL);
+          return false;
+        }
+        return this._fetchQueue();
       })
-      .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
-      .catch(err => Logging.log(err));
+      .then(queue => {
+        let tasks = [];
+
+        if (queue) {
+          tasks = queue.reduce((arr, item) => {
+            arr.push(JSON.parse(item));
+            return arr;
+          }, []).filter(qi => {
+            return this._isRateLimited(qi) === false;
+          }).map(qi => _appTasks[qi.app](qi));
+        }
+
+        return tasks;
+      })
+      .then(tasks => {
+        if (tasks && tasks.length > 0) {
+          Logging.logDebug(`Attempting ${tasks.length} Twitter`);
+          Promise.all(tasks)
+            .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
+            .then(qis => {
+              qis.forEach(item => {
+                if (item.completed) {
+                  this._deleteQueueItem(item.id);
+                }
+              });
+            })
+            .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
+            .catch(err => Logging.log(err));
+        }
+      });
   }
 }
 

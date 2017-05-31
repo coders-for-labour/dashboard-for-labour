@@ -10,9 +10,13 @@
  *
  */
 
-const fs = require('fs');
+// const fs = require('fs');
 const crypto = require('crypto');
 const Config = require('./config');
+const Logging = require('./logging');
+const Helpers = require('./helpers');
+const Storage = require('@google-cloud/storage');
+const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
  *
@@ -48,13 +52,23 @@ const __initUploads = app => {
     hash.update(data);
     let digest = hash.digest('hex');
 
-    fs.writeFile(`${Config.appDataPath}/uploads/${digest}.${fileType[1]}`, buffer, 'binary', err => {
-      if (err) {
-        res.sendStatus(500).json(false);
-        return;
-      }
-      res.json(`${digest}.${fileType[1]}`);
-    });
+    let fname = `u/${digest}.${fileType[1]}`;
+    let gfile = storage
+      .bucket(Config.cdnBucket)
+      .file(fname);
+
+    gfile.exists()
+      .then(exists => {
+        console.log(exists);
+        if (exists[0]) {
+          Logging.log(`File ${fname} already exists.`);
+          return;
+        }
+
+        return Helpers.GCloud.Storage.saveBuffer(gfile, buffer, {contentType: `images/${fileType[1]}`});
+      })
+      .then(() => res.json(`${digest}.${fileType[1]}`))
+      .catch(Logging.Promise.logError());
   });
 };
 

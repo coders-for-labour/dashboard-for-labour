@@ -7,6 +7,8 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
+link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
+
 dom-module#d4l-twibbyn-campaign-card
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
   style(include="d4l-theme")
@@ -20,11 +22,15 @@ dom-module#d4l-twibbyn-campaign-card
       position: relative;
       -webkit-background-size: cover;
       background-size: cover;
-      padding: 10px 20px 10px;
+      padding: 0px;
       color: var(--text-light-primary-color);
     }
+    .card .card-content {
+      padding: 10px 20px;
+    }
+
     .footer.tray{
-      margin: 10px -20px -10px;
+      /*margin: 10px -20px -10px;*/
     }
     .footer.tray paper-icon-button {
       color: var(--app-color-secondary-grey);
@@ -32,8 +38,15 @@ dom-module#d4l-twibbyn-campaign-card
 
   template
     .card
-      h1 [[campaign.name]]
-      p [[campaign.description]]
+      .layout.horizontal.top
+        .flex.card-image
+          d4l-twibbyn-overlay(
+            image="[[__selectedProfileImg]]",
+            twibbyn="[[__selectedTwibbyn]]"
+          )
+        .flex.card-content
+          h1 [[campaign.name]]
+          p [[campaign.description]]
       .footer.tray(hidden$="[[!__showButtons]]")
         .layout.horizontal.center
           paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTwibbyn")
