@@ -79,18 +79,7 @@
       "app": "%D4L_CLUSTER_APP%"
     },
     "redis": {
-      "dev": {
-        "host": "",
-        "port": ""
-      },
-      "prod": {
-        "host": "%D4L_REDIS_HOST%",
-        "port": "%D4L_REDIS_PORT%"
-      },
-      "test": {
-        "host": "",
-        "port": ""
-      }
+      "host": "%D4L_REDIS_HOST%"
     },
     "cdnUrl": {
       "dev": "%D4L_CDN_DEV_URL%",
