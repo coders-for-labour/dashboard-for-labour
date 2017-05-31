@@ -174,11 +174,13 @@ Polymer({
       return;
     }
 
+    const campaign = this.get('campaign');
     const selected = this.get('__selectedTwibbyn');
 
     this.set('__uploadStatus', 'uploading');
     this.set('__twibbynSaveUrl', this.get('__twitterSaveUrlPrefix'));
     this.set('__twibbynSaveBody', {
+      campaignId: campaign.id,
       file: selected
     });
   },

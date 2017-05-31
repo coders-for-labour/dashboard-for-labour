@@ -18,6 +18,7 @@ const Logging = require('./logging');
 const Helpers = require('./helpers');
 const Composer = require('./composer');
 const Twitter = require('./twitter');
+const Rhizome = require('rhizome-api-js');
 const rest = require('restler');
 const Storage = require('@google-cloud/storage');
 // const sb = require('stream-buffers');
@@ -109,6 +110,12 @@ const _saveTwibbyn = (req, res) => {
     res.sendStatus(403);
     return;
   }
+  if (!req.body || !req.body.campaignId) {
+    res.sendStatus(400);
+    return;
+  }
+
+  const campaignId = req.body.campaignId;
 
   const twAuth = req.user.auth.find(a => a.app === 'twitter');
   if (!twAuth) {
@@ -127,6 +134,11 @@ const _saveTwibbyn = (req, res) => {
       _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.body.file}`, true)
         .then(twibbyn => {
           Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
+          Rhizome.Campaign.Metadata.load(campaignId, 'userCount', 0)
+            .then(count => {
+              Rhizome.Campaign.Metadata.save(campaignId, 'userCount', count + 1);
+            });
+
           res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
           res.sendStatus(200);
         });
