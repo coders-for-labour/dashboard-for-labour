@@ -38,13 +38,15 @@ module.exports.Promise = {
 module.exports.GCloud = {
   Storage: {
     saveBuffer: (file, buffer, metadata, isPrivate) => {
+      const isPublic = isPrivate !== true;
+
       return new Promise((resolve, reject) => {
         let sbuffer = new sb.ReadableStreamBuffer();
         sbuffer.put(buffer);
         sbuffer.stop();
 
         sbuffer.pipe(file.createWriteStream({
-          public: !isPrivate ? true : false,
+          public: isPublic,
           metadata: metadata
         }))
           .on('finish', resolve)

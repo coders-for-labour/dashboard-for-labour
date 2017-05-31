@@ -25,7 +25,7 @@ const Rhizome = require('rhizome-api-js');
 const __authenticateRihzomeUser = (appAuth, existingUser) => {
   let authentication = {
     authLevel: 1,
-    domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
+    domains: [`${Config.app.subdomain}.${Config.app.domain}`],
     permissions: [
       {route: "user", permission: "list"},
       {route: "user/me/metadata/:key", permission: "add"},

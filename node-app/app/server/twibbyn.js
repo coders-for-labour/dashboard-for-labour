@@ -10,9 +10,7 @@
  *
  */
 
-// const fs = require('fs');
 const path = require('path');
-
 const Config = require('./config');
 const Logging = require('./logging');
 const Helpers = require('./helpers');
@@ -21,8 +19,6 @@ const Twitter = require('./twitter');
 const Rhizome = require('rhizome-api-js');
 const rest = require('restler');
 const Storage = require('@google-cloud/storage');
-// const sb = require('stream-buffers');
-
 const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
