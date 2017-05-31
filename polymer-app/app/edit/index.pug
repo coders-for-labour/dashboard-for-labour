@@ -34,11 +34,11 @@ html(lang="en")
     meta(name="apple-mobile-web-app-title", content="Amplify")
 
     //- Homescreen icons -->
-    link(rel="apple-touch-icon", href="/images/manifest/icon-48x48.png")
-    link(rel="apple-touch-icon", sizes="72x72", href="/images/manifest/icon-72x72.png")
-    link(rel="apple-touch-icon", sizes="96x96", href="/images/manifest/icon-96x96.png")
-    link(rel="apple-touch-icon", sizes="144x144", href="/images/manifest/icon-144x144.png")
-    link(rel="apple-touch-icon", sizes="192x192", href="/images/manifest/icon-192x192.png")
+    //link(rel="apple-touch-icon", href="/images/manifest/icon-48x48.png")
+    //link(rel="apple-touch-icon", sizes="72x72", href="/images/manifest/icon-72x72.png")
+    //link(rel="apple-touch-icon", sizes="96x96", href="/images/manifest/icon-96x96.png")
+    //link(rel="apple-touch-icon", sizes="144x144", href="/images/manifest/icon-144x144.png")
+    //link(rel="apple-touch-icon", sizes="192x192", href="/images/manifest/icon-192x192.png")
 
     //- Tile icon for Windows 8 (144x144 + tile color) -->
     meta(name="msapplication-TileImage", content="/images/manifest/icon-144x144.png")
@@ -106,7 +106,7 @@ html(lang="en")
     script.
       window.fbAsyncInit = function() {
         FB.init({
-          appId      : '125296074702374',
+          appId      : '%{D4L_FACEBOOK_APP_ID}%',
           cookie     : true,
           xfbml      : true,
           version    : 'v2.8'
@@ -129,5 +129,5 @@ html(lang="en")
 
     d4l-app
 
-    script(src="/bower_components/sugar/dist/sugar.min.js", async)
+    script(src="/bower_components/sugar/dist/sugar.min.js")
 

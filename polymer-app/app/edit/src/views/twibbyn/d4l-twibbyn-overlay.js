@@ -26,11 +26,11 @@ Polymer({
     },
     __twibbynEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com/'
+      value: '//%{D4L_CDN_URL}%'
     },
     __twibbynImage: {
       type: String,
-      computed: '__computeTwibbynImage(twibbyn)'
+      computed: '__computeTwibbynImage(twibbyn, __twibbynEndpoint)'
     }
   },
 
@@ -39,12 +39,12 @@ Polymer({
     return image.replace(imageSize, '');
   },
 
-  __computeTwibbynImage: function(twibbyn){
+  __computeTwibbynImage: function(twibbyn, endpoint){
     if (!twibbyn) {
       return '';
     }
 
-    return `${this.get('__twibbynEndpoint')}${twibbyn}`;
+    return `${endpoint}/${twibbyn}`;
   },
 
   __computeHasTwibbyn: function(twibbyn) {

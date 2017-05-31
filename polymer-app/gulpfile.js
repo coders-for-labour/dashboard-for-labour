@@ -38,9 +38,12 @@ const Globs = {
 
 let Environment = {
   NODE_ENV: '',
+  D4L_CDN_DEV_URL: '',
+  D4L_CDN_PROD_URL: '',
   D4L_RHIZOME_DEV_URL: '',
   D4L_RHIZOME_PROD_URL: '',
-  D4L_RHIZOME_TEST_URL: ''
+  D4L_RHIZOME_TEST_URL: '',
+  D4L_FB_APP_ID: ''
 };
 
 for (let variable in Environment) {
@@ -56,13 +59,17 @@ function environmentReplace(stream) {
   let outStr = null;
   switch (Environment.NODE_ENV) {
     case 'production':
-      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_PROD_URL));
+      outStr = stream.pipe(replace('%{D4L_CDN_URL}%', Environment.D4L_CDN_PROD_URL))
+        .pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_PROD_URL))
+        .pipe(replace('%{D4L_FACEBOOK_APP_ID}%', Environment.D4L_FB_APP_ID));
       break;
     case 'development':
-      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
+      outStr = stream.pipe(replace('%{D4L_CDN_URL}%', Environment.D4L_CDN_DEV_URL))
+        .pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL))
+        .pipe(replace('%{D4L_FACEBOOK_APP_ID}%', Environment.D4L_FB_APP_ID));
       break;
     case 'test':
-      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_TEST_URL));
+      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
       break;
   }
 
@@ -124,6 +131,11 @@ gulp.task('jpg', function() {
 		.pipe(gulp.dest(Paths.DEST_IMAGES));
 });
 
+gulp.task('ico', function() {
+  return gulp.src(Globs.ICO)
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+});
+
 gulp.task('svg', function() {
   return gulp.src(Globs.SVG)
     .pipe(imagemin())
@@ -131,7 +143,7 @@ gulp.task('svg', function() {
 });
 
 gulp.task('images', function() {
-  return gulp.start(['png','jpg','svg']);
+  return gulp.start(['png','jpg','ico','svg']);
 });
 
 //

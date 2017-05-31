@@ -79,7 +79,6 @@ const __initWorker = () => {
     resave: false,
     secret: Config.auth.sessionSecret,
     store: new RedisStore({
-      // client: redisClient,
       logErrors: true
     })
   }));
@@ -89,7 +88,7 @@ const __initWorker = () => {
 
   Auth.init(app);
   Twibbyn.init(app);
-  Queue.Manager.init(app);
+  // Queue.Manager.init(app);
   // Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   // Constituency.init(app);
   Uploads.init(app);
@@ -108,6 +107,9 @@ const __initWorker = () => {
  *
  **********************************************************************************/
 const __initMaster = () => {
+  const isPrimary = Config.cluster.app === 'primary';
+  Queue.Manager.init(isPrimary);
+
   __spawnWorkers();
 
   return Promise.resolve();

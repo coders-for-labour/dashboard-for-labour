@@ -69,7 +69,7 @@ Polymer({
     },
     __twibbynEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com/'
+      value: '//%{D4L_CDN_URL}%'
     },
 
     __twitterSaveUrlPrefix: {
@@ -174,11 +174,13 @@ Polymer({
       return;
     }
 
+    const campaign = this.get('campaign');
     const selected = this.get('__selectedTwibbyn');
 
     this.set('__uploadStatus', 'uploading');
     this.set('__twibbynSaveUrl', this.get('__twitterSaveUrlPrefix'));
     this.set('__twibbynSaveBody', {
+      campaignId: campaign.id,
       file: selected
     });
   },
@@ -216,7 +218,7 @@ Polymer({
   __saveFbResponse: function(ev){
     this.__debug(ev.detail.response);
     FB.api('/me/photos', 'post', {
-      url: `http://cdn.forlabour.com/c/${ev.detail.response.file}`,
+      url: `http://%{D4L_CDN_URL}%/c/${ev.detail.response.file}`,
       no_story: true
     }, response => {
       this.set('__uploadStatus', 'uploaded');
