@@ -10,6 +10,10 @@
     "D4L_RHIZOME_DEV_URL": "",
     "D4L_RHIZOME_PROD_URL": "",
     "D4L_RHIZOME_TEST_URL": "",
+    "D4L_CDN_PROD_URL": "",
+    "D4L_CDN_DEV_URL": "",
+    "D4L_CDN_PROD_BUCKET": "",
+    "D4L_CDN_DEV_BUCKET": "",
     "D4L_FB_APP_ID": "",
     "D4L_FB_APP_SECRET": "",
     "D4L_TW_CONSUMER_KEY": "",
@@ -71,6 +75,16 @@
     "redis": {
       "host": "%D4L_REDIS_HOST%",
       "port": "%D4L_REDIS_PORT%"
+    },
+    "cdnUrl": {
+      "dev": "%D4L_CDN_DEV_URL%",
+      "prod": "%D4L_CDN_PROD_URL%",
+      "test": "%D4L_CDN_DEV_URL%"
+    },
+    "cdnBucket": {
+      "dev": "%D4L_CDN_DEV_BUCKET%",
+      "prod": "%D4L_CDN_PROD_BUCKET%",
+      "test": "%D4L_CDN_DEV_BUCKET%"
     }
   },
   "local": {
@@ -89,11 +103,6 @@
         "dev": 6041,
         "prod": 6040,
         "test": 6042
-      },
-      "cdn": {
-        "dev": "http://cdn-forlabour-com.wearelightenclients.co.uk",
-        "prod": "http://cdn-forlabour-com.wearelightenclients.co.uk",
-        "test": "http://cdn-forlabour-com.wearelightenclients.co.uk"
       }
     },
     "workstation2": {
@@ -128,11 +137,6 @@
         "dev": 6041,
         "prod": 6040,
         "test": 6042
-      },
-      "cdn": {
-        "dev": "http://cdn.forlabour.com",
-        "prod": "http://cdn.forlabour.com",
-        "test": "http://cdn.forlabour.com"
       }
     }
   }
