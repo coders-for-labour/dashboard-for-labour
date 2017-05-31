@@ -30,7 +30,7 @@ Polymer({
     },
     __selectedProfileImg: {
       type: String,
-      computed: '__computeSelectedProfileImg(auth.user, __selectedPlatform)'
+      computed: '__computeSelectedProfileImg(auth.user.profiles.*, __selectedPlatform)'
     },
     twibbyns: {
       type: Array,
@@ -283,8 +283,12 @@ Polymer({
     return `/twibbyn/facebook?file=${selectedTwibbyn}`;
   },
 
-  __computeSelectedProfileImg: function(user, platform) {
+  __computeSelectedProfileImg: function(cr, platform) {
     //user.profiles.0.images.profile
+    let user = this.get('auth.user');
+    if (!user) {
+      return '';
+    }
     let profile = user.profiles.find(p => p.app === platform);
     if (!profile) {
       return user.profiles[0].images.profile;
