@@ -128,6 +128,11 @@ gulp.task('jpg', function() {
 		.pipe(gulp.dest(Paths.DEST_IMAGES));
 });
 
+gulp.task('ico', function() {
+  return gulp.src(Globs.ICO)
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+});
+
 gulp.task('svg', function() {
   return gulp.src(Globs.SVG)
     .pipe(imagemin())
@@ -135,7 +140,7 @@ gulp.task('svg', function() {
 });
 
 gulp.task('images', function() {
-  return gulp.start(['png','jpg','svg']);
+  return gulp.start(['png','jpg','ico','svg']);
 });
 
 //
