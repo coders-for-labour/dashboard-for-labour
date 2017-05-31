@@ -45,30 +45,38 @@ Polymer({
     },
 
     route: {
-      type: Object
+      type: Object,
+      notify: true,
     },
     routeData: {
       type: Object,
+      notify: true,
       observer: '__routePageChanged'
     },
     subroute: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteData: {
       type: Object,
+      notify: true,
       observer: '__subrouteChanged'
     },
     subrouteAction: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteActionData: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteActionId: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteActionIdData: {
-      type: Object
+      type: Object,
+      notify: true
     },
 
     page: {
