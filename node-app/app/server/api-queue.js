@@ -97,7 +97,6 @@ class APIQueueManager {
   add(qi) {
     qi.id = UUID.v1();
     qi.method = qi.method ? qi.method : 'GET';
-    console.log(qi);
     redisClient.rpush(['api-queue', JSON.stringify(qi)], (err, reply) => {
       if (err) {
         Logging.logError(err);

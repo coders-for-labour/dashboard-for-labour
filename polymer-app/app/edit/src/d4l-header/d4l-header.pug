@@ -20,13 +20,15 @@ dom-module#d4l-header
     :host {
     }
     app-header {
-      background: var(--default-primary-color);
+      @apply(--d4l-app-header);
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      color: var(--text-light-primary-color);
       z-index: 105;
+    }
+    app-toolbar {
+      font-size:24px;
     }
     .header-toolbar {
       width: 100%;
