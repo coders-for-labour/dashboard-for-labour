@@ -14,9 +14,13 @@ const fs = require('fs');
 const crypto = require('crypto');
 const rest = require('restler');
 const Config = require('./config');
+const Helpers = require('./helpers');
 const Logging = require('./logging');
 const Canvas = require('canvas');
 const Image = Canvas.Image;
+const Storage = require('@google-cloud/storage');
+const storage = Storage(); // eslint-disable-line new-cap
+
 
 let _cache = null;
 let _memCache = null;
@@ -97,12 +101,11 @@ class Composer {
 
     this._renderQueue.push(context => {
       return new Promise((resolve, reject) => {
-        Logging.log(`Rendering Image From Buffer`, Logging.Constants.LogLevel.DEBUG);
-        // Logging.log(o, Logging.Constants.LogLevel.INFO);
+        Logging.logDebug(`Rendering Image From Buffer`);
         let image = new Image();
         image.dataMode = Image.MODE_IMAGE;
         image.onload = () => {
-          Logging.log('Loaded Image', Logging.Constants.LogLevel.DEBUG);
+          Logging.logDebug('Loaded Image');
           context.ctx.drawImage(image, o.left, o.top, o.width, o.height);
           resolve(context);
         };
@@ -143,34 +146,36 @@ class Composer {
   }
 
   render() {
-    let cachedFile = this._cache.tryLoadCachedImage(this._id);
-    if (this._noCache || cachedFile === false) {
-      if (this._noCache === true) {
-        Logging.logWarn(`COMPOSER: FORCE NO CACHE`);
-      }
-      Logging.logDebug(`Rendering Fresh Image`);
-      return this._doRender();
-    }
+    return this._cache.tryLoadCachedImage(this._id)
+      .then(cachedFile => {
+        if (this._noCache || cachedFile === false) {
+          if (this._noCache === true) {
+            Logging.logWarn(`COMPOSER: FORCE NO CACHE`);
+          }
+          Logging.logDebug(`Rendering Fresh Image`);
+          return this._doRender();
+        }
 
-    Logging.logDebug(`Image From Cache: ${cachedFile}`);
-    if (this._toBuffer) {
-      return new Promise((resolve, reject) => {
-        fs.readFile(cachedFile, (err, data) => {
-          if (err) throw err;
-          resolve({
-            stream: null,
-            buffer: data,
-            pathName: cachedFile
+        Logging.logDebug(`Image From Cache: ${cachedFile}`);
+        if (this._toBuffer) {
+          return new Promise((resolve, reject) => {
+            fs.readFile(cachedFile, (err, data) => {
+              if (err) throw err;
+              resolve({
+                stream: null,
+                buffer: data,
+                pathName: cachedFile
+              });
+            });
           });
+        }
+
+        return Promise.resolve({
+          stream: fs.createReadStream(cachedFile),
+          buffer: null,
+          pathName: cachedFile
         });
       });
-    }
-
-    return Promise.resolve({
-      stream: fs.createReadStream(cachedFile),
-      buffer: null,
-      pathName: cachedFile
-    });
   }
 
   _options(options) {
@@ -193,26 +198,28 @@ class Composer {
 
     this._renderQueue.push(context => {
       let buffer = canvas.toBuffer();
-      let cachedFile = this._cache.addImage(buffer, this._id);
-      Logging.logDebug(`Outputing: ${cachedFile}`);
-      if (this._toBuffer) {
-        return new Promise((resolve, reject) => {
-          fs.readFile(cachedFile, (err, data) => {
-            if (err) throw err;
-            resolve({
-              stream: null,
-              buffer: data,
-              pathName: cachedFile
+      return this._cache.addImage(buffer, this._id)
+        .then(cachedFile => {
+          Logging.logDebug(`Outputting: ${cachedFile}`);
+          if (this._toBuffer) {
+            return new Promise((resolve, reject) => {
+              fs.readFile(cachedFile, (err, data) => {
+                if (err) throw err;
+                resolve({
+                  stream: null,
+                  buffer: data,
+                  pathName: cachedFile
+                });
+              });
             });
+          }
+
+          return Promise.resolve({
+            stream: fs.createReadStream(cachedFile),
+            buffer: null,
+            pathName: cachedFile
           });
         });
-      }
-
-      return Promise.resolve({
-        stream: fs.createReadStream(cachedFile),
-        buffer: null,
-        pathName: cachedFile
-      });
     });
 
     return this._renderQueue.reduce((prev, curr) => {
@@ -284,23 +291,42 @@ class Cache {
 
   tryLoadCachedImage(options) {
     let filename = this._genFilename(options);
-    if (fs.existsSync(`${this.__cachePath}/${filename}`)) {
-      Logging.logDebug(`Image Cache HIT: ${filename}`);
-      return `${this.__cachePath}/${filename}`;
-    }
 
-    Logging.logDebug(`Image Cache MISS: ${filename}`);
+    return new Promise((resolve, reject) => {
+      fs.access(`${this.__cachePath}/${filename}`, 'r', err => {
+        if (err) {
+          if (err.code !== 'ENOENT') {
+            Logging.logDebug(`Image Cache MISS: ${filename}`);
+            reject(err);
+            return;
+          }
 
-    return false;
+          resolve(false);
+          return;
+        }
+        Logging.logDebug(`Image Cache HIT: ${filename}`);
+        resolve(`${this.__cachePath}/${filename}`);
+      });
+    });
   }
 
   addImage(buffer, id) {
-    Logging.logSilly(`Hash Input: ${id}`);
-    let filename = this._genFilename(id);
-    Logging.logSilly(`Hash Output: ${filename}`);
-    fs.writeFileSync(`${this.__cachePath}/${filename}`, buffer);
-    Logging.logSilly(`Hash Pathname: ${this.__cachePath}/${filename}`);
-    return `${this.__cachePath}/${filename}`;
+    return new Promise((resolve, reject) => {
+      Logging.logSilly(`Hash Input: ${id}`);
+      let filename = this._genFilename(id);
+      Logging.logSilly(`Hash Output: ${filename}`);
+      fs.writeFile(`${this.__cachePath}/${filename}`, buffer, err => {
+        if (err) throw err;
+        Logging.logSilly(`Hash Pathname: ${this.__cachePath}/${filename}`);
+
+        const gfile = storage.bucket(Config.cdnBucket).file(`c/${filename}`);
+        Helpers.GCloud.Storage.saveBuffer(gfile, buffer, {
+          contentType: `image/png`
+        }).then(() => {
+          resolve(`${this.__cachePath}/${filename}`);
+        });
+      });
+    });
   }
 
   _genFilename(id) {
