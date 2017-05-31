@@ -85,7 +85,7 @@ Polymer({
     },
     __memeEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com'
+      value: '//%{D4L_CDN_URL}%'
     },
 
 
