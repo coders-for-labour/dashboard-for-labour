@@ -7,6 +7,10 @@ Polymer({
     logLevel: {
       type: Number,
       value: 3
+    },
+    footerLogo: {
+      type: String,
+      value: 'red'
     }
   },
 });

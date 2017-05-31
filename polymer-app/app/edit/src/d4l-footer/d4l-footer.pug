@@ -42,7 +42,9 @@ dom-module#d4l-footer
 
     .footer-group .labour-icon {
       margin-right: 10px;
-      @apply --footer-icon;
+      width: 145px;
+      height: 22px;
+      @apply(--footer-icon);
     }
 
   template
@@ -50,9 +52,7 @@ dom-module#d4l-footer
       .flex.text-left.info
         .layout.horizontal.center
           a(href="http://www.labour.org.uk/" target="_BLANK")
-            .layout.horizontal.center
-              iron-icon.labour-icon(icon="d4l-icons:labour")
-              .flex Labour
+            iron-image.labour-icon(src="/images/labour-logo-[[footerLogo]].svg", sizing="contain", position="left")
       .flex.text-right
         a(href="http://www.labour.org.uk/pages/privacy" target="_BLANK") Privacy Policy
 
