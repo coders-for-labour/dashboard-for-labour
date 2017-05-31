@@ -63,7 +63,9 @@ const _getAvatar = (filename, imgUrl) => {
           .on('success', (data, response) => {
             Helpers.GCloud.Storage.saveBuffer(file, response.raw, {
               contentType: `image/${subType}`
-            }, true).then(resolve, reject);
+            }, true).then(() => {
+              resolve(response.raw);
+            });
           })
           .on('error', reject);
       });
@@ -121,7 +123,7 @@ const _saveTwibbyn = (req, res) => {
       _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.body.file}`, true)
         .then(twibbyn => {
           Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
-          // res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
+          res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
           res.sendStatus(200);
         });
     })
