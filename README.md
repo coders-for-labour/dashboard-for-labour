@@ -3,7 +3,10 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.2.0
+## version: 1.2.1
+- Fixed issues with Facebook App Id  
+
+## 1.2.0
 - Small UI Tweaks
 - API Queue is now shared using redis
 
