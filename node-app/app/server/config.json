@@ -31,13 +31,13 @@
   "global": {
     "env": "%NODE_ENV%",
     "app": {
-      "title": "Dashboard for Labour",
+      "title": "Amplify",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
       "version": "1.2.0",
-      "protocol": "http",
-      "subdomain": "dashboard",
-      "domain": "forlabour.com"
+      "protocol": "https",
+      "subdomain": "amplify",
+      "domain": "labour.org.uk"
     },
     "api": {
       "key": "%D4L_TEAM_API_TOTP_KEY%",
