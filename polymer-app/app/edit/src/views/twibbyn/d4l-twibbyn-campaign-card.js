@@ -84,7 +84,7 @@ Polymer({
   __computeSelectedProfileImg: function(user, platform) {
     let profile = user.profiles.find(p => p.app === platform);
     if (!profile) {
-      return user.profiles[0].images.profile;
+      profile = user.profiles[0];
     }
 
     if (profile.app === 'facebook') {

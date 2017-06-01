@@ -21,8 +21,7 @@ Polymer({
       notify: true
     },
     campaign: {
-      type: Object,
-      observer: '__campaignChanged'
+      type: Object
     },
     __selectedPlatform: {
       type: String,
@@ -40,7 +39,12 @@ Polymer({
       type: String,
       notify: true
     },
-
+    __twibbynPosition: {
+      type: String,
+    },
+    __squareAvatar: {
+      type: Boolean
+    },
     __uploadStatus: {
       type: String,
       value: 'ready' // ready | uploading | uploaded
@@ -83,7 +87,7 @@ Polymer({
 
     __fbGetTwibbynUrl: {
       type: String,
-      computed: '__computeFbGetTwibbynUrl(__selectedTwibbyn)'
+      computed: '__computeFbGetTwibbynUrl(__selectedTwibbyn, campaign, __twibbynPosition)'
     },
 
     __twibbynSaveBody: {
@@ -91,6 +95,11 @@ Polymer({
     }
 
   },
+
+  observers: [
+    '__campaignChanged(campaign, db.campaign.data.*)',
+    '__authUser(auth.user.profiles.*)'
+  ],
 
   __campaignChanged: function(){
     const campaignId = this.get('campaign.id');
@@ -115,6 +124,15 @@ Polymer({
     this.linkPaths('metadata', `db.campaign.metadata.${campaignId}`);
   },
 
+  __authUser: function() {
+    let profiles = this.get('auth.user.profiles');
+    if (!profiles.length) {
+      this.__warn('No user profiles!');
+    }
+
+    this.__selectedPlatform = profiles[0].app;
+  },
+
   __connectTwitter: function() {
     window.location = '/auth/twitter';
   },
@@ -124,12 +142,14 @@ Polymer({
 
   __selectTwitter: function() {
     this.set('__selectedPlatform', 'twitter');
+    this.set('__twibbynPosition', 'center');
     this.set('__uploadStatus', 'ready');
     this.__silly(`Selected: ${this.__selectedPlatform}`);
   },
 
   __selectFacebook: function() {
     this.set('__selectedPlatform', 'facebook');
+    this.set('__twibbynPosition', 'center');
     this.set('__uploadStatus', 'ready');
     this.__silly(`Selected: ${this.__selectedPlatform}`);
   },
@@ -176,12 +196,17 @@ Polymer({
 
     const campaign = this.get('campaign');
     const selected = this.get('__selectedTwibbyn');
+    let gravity = this.get('__twibbynPosition');
+    if (gravity === 'center') {
+      gravity = 'mid';
+    }
 
     this.set('__uploadStatus', 'uploading');
     this.set('__twibbynSaveUrl', this.get('__twitterSaveUrlPrefix'));
     this.set('__twibbynSaveBody', {
       campaignId: campaign.id,
-      file: selected
+      file: selected,
+      gravity: gravity
     });
   },
   __saveFacebook: function() {
@@ -279,8 +304,16 @@ Polymer({
     return metaImages;
   },
 
-  __computeFbGetTwibbynUrl: function(selectedTwibbyn) {
-    return `/twibbyn/facebook?file=${selectedTwibbyn}`;
+  __computeFbGetTwibbynUrl: function(selectedTwibbyn, campaign, position) {
+    let gravity = position;
+    if (gravity === 'center') {
+      gravity = 'mid';
+    }
+
+    let url = `/twibbyn/facebook?file=${selectedTwibbyn}&campaign=${campaign ? campaign.id : -1}&gravity=${gravity}`;
+    this.__silly(url);
+
+    return url;
   },
 
   __computeSelectedProfileImg: function(cr, platform) {
@@ -291,7 +324,7 @@ Polymer({
     }
     let profile = user.profiles.find(p => p.app === platform);
     if (!profile) {
-      return user.profiles[0].images.profile;
+      profile = user.profiles[0];
     }
 
     if (profile.app === 'facebook') {
