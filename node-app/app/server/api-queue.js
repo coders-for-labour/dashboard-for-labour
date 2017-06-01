@@ -264,6 +264,8 @@ class APIQueueManager {
             })
             .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
             .catch(err => Logging.log(err));
+        } else {
+          setTimeout(() => this._flush(), Constants.INTERVAL);
         }
       });
   }
