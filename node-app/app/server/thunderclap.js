@@ -12,7 +12,7 @@
 
 // const path = require('path');
 const Helpers = require('./helpers');
-// const Logging = require('./logging');
+const Logging = require('./logging');
 const Rhizome = require('rhizome-api-js');
 const Queue = require('./api-queue');
 const Sugar = require('sugar');
@@ -45,11 +45,30 @@ const _subscribeThunderclap = (req, res) => {
 
   const campaignId = req.body.campaignId;
   const message = req.body.message;
+  let supporters = [];
 
-  Rhizome.Campaign.Metadata.load(campaignId, 'thunderclapTime', '')
+  Rhizome.Campaign.Metadata.load(campaignId, 'supporters', [])
+    .then(s => {
+      Logging.logDebug(req.user.id);
+      Logging.logDebug(s);
+      if (s.findIndex(id => id == req.user.id) !== -1) { // eslint-disable-line eqeqeq
+        throw new Error('already_subscribed');
+      }
+      supporters = s;
+      supporters.push(req.user.id);
+      Rhizome.Campaign.Metadata.save(campaignId, 'supporters', supporters);
+
+      return Rhizome.Campaign.Metadata.load(campaignId, 'thunderclapTime', '');
+    })
     .then(timeString => {
       if (!timeString) {
-        timeString = Sugar.Date.create('now').toISOString();
+        throw new Error('invalid_timestamp');
+      }
+
+      const time = Sugar.Date.create('now');
+      const itemDate = Sugar.Date.create(timeString);
+      if (!Sugar.Date.isAfter(time, itemDate)) {
+        throw new Error('campaign_elapsed');
       }
 
       return Queue.Manager.add({
@@ -69,16 +88,14 @@ const _subscribeThunderclap = (req, res) => {
     })
     .then(result => {
       if (!result) {
-        res.sendStatus(400);
-        return;
+        throw new Error('failed_to_queue');
       }
 
-      Rhizome.Campaign.Metadata.load(campaignId, 'userCount', 0)
-        .then(count => {
-          Rhizome.Campaign.Metadata.save(campaignId, 'userCount', count + 1);
-        });
-
-      res.sendStatus(200);
+      res.json({res: true});
+    })
+    .catch(err => {
+      Logging.log(`Thunderclap Subscribe Failed: ${err.message}`);
+      res.json({res: false, err: err.message});
     });
 };
 
