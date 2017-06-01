@@ -55,7 +55,6 @@ class Composer {
   }
 
   imageFromUrl(imgUrl, options) {
-    let o = this._options(options);
     this._id += imgUrl;
 
     this._renderQueue.push(context => {
@@ -63,11 +62,16 @@ class Composer {
         Logging.log(`Rendering Image From URL ${imgUrl}`);
         rest.get(imgUrl)
           .on('success', (data, response) => {
-            Logging.logDebug(o);
             let image = new Image();
             image.dataMode = Image.MODE_IMAGE;
             image.onload = () => {
-              Logging.logDebug('Loaded Image');
+              options.srcWidth = image.width;
+              options.srcHeight = image.height;
+              let o = this._options(options);
+
+              Logging.logDebug(`Loaded Image [${image.width},${image.height}]`);
+              Logging.logSilly(o);
+
               context.ctx.drawImage(image, o.left, o.top, o.width, o.height);
               resolve(context);
             };
@@ -96,15 +100,19 @@ class Composer {
   }
 
   __imageFromBuffer(imgBuffer, options) {
-    let o = this._options(options);
-
     this._renderQueue.push(context => {
       return new Promise((resolve, reject) => {
         Logging.logDebug(`Rendering Image From Buffer`);
         let image = new Image();
         image.dataMode = Image.MODE_IMAGE;
         image.onload = () => {
-          Logging.logDebug('Loaded Image');
+          options.srcWidth = image.width;
+          options.srcHeight = image.height;
+          let o = this._options(options);
+
+          Logging.logDebug(`Loaded Image [${image.width},${image.height}]`);
+          Logging.logSilly(o);
+
           context.ctx.drawImage(image, o.left, o.top, o.width, o.height);
           resolve(context);
         };
@@ -184,6 +192,16 @@ class Composer {
     options.height = options.height || this._height;
     options.width = options.width <= 1 ? this._width * options.width : options.width;
     options.height = options.height <= 1 ? this._height * options.height : options.height;
+
+    if (options.preserveAspect) {
+      let aspect = options.srcWidth / options.srcHeight;
+      if (options.srcWidth <= options.srcHeight) {
+        options.height = options.width / aspect;
+      } else {
+        options.width = options.height / aspect;
+      }
+    }
+
     return this._applyGravity(options);
   }
 
