@@ -29,6 +29,22 @@ Polymer({
       value: false
     },
 
+    __thunderclapEndpoint: {
+      type: String,
+      value: '//%{D4L_CDN_URL}%'
+    },
+    __thunderclapTwitterUrl: {
+      type: String,
+      value: '/thunderclap/twitter/subscribe'
+    },
+
+    __thunderclapSubscribeUrl: {
+      type: String
+    },
+    __thunderclapSubscribeBody: {
+      type: Object
+    },
+
     __pageTitle: {
       type: String,
       value: 'Images for Labour',
@@ -41,10 +57,24 @@ Polymer({
     }
   },
 
+  __subscribeThunderclap: function(ev){
+    const campaign = ev.detail;
+
+    this.set('__thunderclapSubscribeUrl', this.get('__thunderclapTwitterUrl'));
+    this.set('__thunderclapSubscribeBody', {
+      campaignId: campaign.id,
+      message: campaign.description
+    });
+  },
+
+  __thunderclapResponse: function(res){
+    // this.__debug(res);
+  },
+
   __computeCampaignsQuery: function () {
     return {
       type: {
-        $eq: 'meme'
+        $eq: 'thunderclap'
       },
       status: {
         $eq: 'published'

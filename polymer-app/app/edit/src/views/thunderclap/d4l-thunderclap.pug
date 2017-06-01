@@ -7,6 +7,7 @@ link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
 link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
@@ -40,6 +41,17 @@ dom-module#d4l-thunderclap
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
+
+    iron-ajax#ajaxSubscribeThunderclap(
+      auto,
+      handleAs="json",
+      content-type="application/json",
+      url="[[__thunderclapSubscribeUrl]]",
+      method="PUT",
+      body="[[__thunderclapSubscribeBody]]"
+      on-response="__thunderclapResponse",
+      on-error="__ajaxError"
+    )
 
     d4l-header(
       auth="[[auth]]",
@@ -78,7 +90,10 @@ dom-module#d4l-thunderclap
                 .layout.horizontal.wrap.card-group.group-2
                   template(is="dom-repeat", items="[[campaigns]]", as="campaign")
                     d4l-thunderclap-card.card(
-                      campaign="[[campaign]]"
+                      db="{{db}}",
+                      auth="[[auth]]",
+                      campaign="[[campaign]]",
+                      on-subscribe-thunderclap="__subscribeThunderclap"
                     )
 
           div(name="detail", mobile$="[[isMobile]]")

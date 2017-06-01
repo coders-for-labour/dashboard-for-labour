@@ -23,7 +23,7 @@
     "D4L_SESSION_SECRET": "",
     "D4L_TWFY_API_KEY": "",
     "D4L_REDIS_HOST": "127.0.0.1",
-    "D4L_REDIS_PORT": "6397",
+    "D4L_REDIS_PORT": "6379",
     "D4L_CLUSTER_APP": "primary",
     "D4L_APP_SUBDOMAIN": "dashboard",
     "D4L_APP_DOMAIN": "forlabour.com"

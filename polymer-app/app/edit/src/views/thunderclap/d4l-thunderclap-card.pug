@@ -28,6 +28,9 @@ dom-module#d4l-thunderclap-card
       background: var(--app-color-primary-red);
       padding: 10px 20px;
     }
+    .thunderclap-text {
+      word-break: break-all;
+    }
 
     .thunderclap-footer {
       padding: 10px 20px 10px;
@@ -38,7 +41,8 @@ dom-module#d4l-thunderclap-card
     }
 
     .footer.tray{
-      margin: 10px -20px -10px;
+      position: relative;
+      margin: -30px -20px -10px;
     }
     .footer.tray paper-icon-button {
       color: var(--app-color-secondary-grey);
@@ -47,26 +51,24 @@ dom-module#d4l-thunderclap-card
   template
     .card
       .thunderclap-content
-        div "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at mi viverra, dapibus diam nec, lobortis purus. Nullam scelerisque hendrerit posuere. Pellentesque metus tellus, ultricies non lacus in, rutrum scelerisque velit. Aenean dignissim eget eros nec interdum. Nulla quis mauris arcu."
-        div.text-right Ends: May 31st, 12:00pm
+        div.thunderclap-text "[[campaign.description]]"
+        div.text-right Ends: [[__thunderClapFormatted]]
       .thunderclap-footer
-        .layout.horizontal.wrap
-          h1 [[campaign.name]]
         .layout.horizontal.center
-          .flex-2
-            p [[campaign.description]]
-
-          .flex.layout.horizontal.center
+          .flex-2.layout.horizontal.wrap
+            h1 [[campaign.name]]
+          .flex.layout.horizontal.wrap
             iron-icon(icon="d4l-icons:member")
-            div 0
+            div [[__userCountLabel]]
 
           .flex.layout.horizontal.center
             iron-icon(icon="d4l-icons:time")
-            div 9 Days
+            div [[__thunderClapDaysLeft]]
 
         .footer.tray(hidden$="[[!__showButtons]]")
           .layout.horizontal.center
-            paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewThunderclap")
+            paper-icon-button(icon="d4l-icons:view-circle", on-tap="__subscribeThunderclap")
+            div Subscribe
 
 
   script(src="./d4l-thunderclap-card.js")
