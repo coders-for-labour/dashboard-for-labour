@@ -28,6 +28,11 @@ Polymer({
       notify: true
     },
 
+    __userCountLabel: {
+      type: String,
+      computed: '__computeUserCountLabel(metadata.userCount, metadata)'
+    },
+
     __thunderclapTime: {
       type: String,
       computed: '__computeThunderclapTime(metadata.thunderclapTime, metadata)'
@@ -60,6 +65,7 @@ Polymer({
       this.__silly('__campaignChanged', 'Init default metadata for', campaignId);
       const metaDefault = Object.assign({}, {
         __populate__: true,
+        userCount: 0,
         thunderclapTime: ''
       });
       this.set(['db.campaign.metadata', campaignId], metaDefault);
@@ -84,6 +90,10 @@ Polymer({
     this.fire('subscribe-thunderclap', campaign, {
       bubbles: false
     });
+  },
+
+  __computeUserCountLabel: function(count){
+    return count;
   },
 
   __computeThunderclapTime: function(time) {

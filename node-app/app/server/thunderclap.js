@@ -10,9 +10,9 @@
  *
  */
 
-const path = require('path');
+// const path = require('path');
 const Helpers = require('./helpers');
-const Logging = require('./logging');
+// const Logging = require('./logging');
 const Rhizome = require('rhizome-api-js');
 const Queue = require('./api-queue');
 const Sugar = require('sugar');
@@ -45,7 +45,6 @@ const _subscribeThunderclap = (req, res) => {
 
   const campaignId = req.body.campaignId;
   const message = req.body.message;
-  const time = new Sugar.Date.create('now').toISOString();
 
   Rhizome.Campaign.Metadata.load(campaignId, 'thunderclapTime', '')
     .then(timeString => {
@@ -60,7 +59,7 @@ const _subscribeThunderclap = (req, res) => {
         api: 'statuses/update.json',
         processAfter: timeString,
         params: {
-          status: `${message} ${time}`,
+          status: `${message} ${timeString}`,
           include_entities: false, // eslint-disable-line camelcase
           skip_statuses: true // eslint-disable-line camelcase
         },
@@ -73,9 +72,14 @@ const _subscribeThunderclap = (req, res) => {
         res.sendStatus(400);
         return;
       }
+
+      Rhizome.Campaign.Metadata.load(campaignId, 'userCount', 0)
+        .then(count => {
+          Rhizome.Campaign.Metadata.save(campaignId, 'userCount', count + 1);
+        });
+
       res.sendStatus(200);
     });
-
 };
 
 module.exports.init = app => {
