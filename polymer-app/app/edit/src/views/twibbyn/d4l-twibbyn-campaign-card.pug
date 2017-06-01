@@ -10,39 +10,42 @@ link(rel="import", href="/src/shared-styles.html")
 link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
 
 dom-module#d4l-twibbyn-campaign-card
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
-  style(include="d4l-theme")
-  style(include="shared-styles")
-  style(include="shared-card-styles").
-    :host {
-      display: block;
-    }
-
-    .card {
-      position: relative;
-      -webkit-background-size: cover;
-      background-size: cover;
-      padding: 0px;
-      color: var(--text-light-primary-color);
-    }
-    .card .card-content {
-      padding: 10px 20px;
-    }
-
-    .footer.tray{
-      /*margin: 10px -20px -10px;*/
-    }
-    .footer.tray paper-icon-button {
-      color: var(--app-color-secondary-grey);
-    }
-
-    d4l-twibbyn-overlay {
-      display: block;
-      width: 125px;
-      height: 125px;
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-card-styles").
+      :host {
+        display: block;
+        min-width: 350px;
+      }
+
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 0px;
+        color: var(--text-light-primary-color);
+      }
+      .card .card-content {
+        padding: 10px 20px;
+      }
+
+      .footer.tray{
+        /*margin: 10px -20px -10px;*/
+      }
+      .footer.tray paper-icon-button {
+        color: var(--app-color-secondary-grey);
+      }
+
+      d4l-twibbyn-overlay {
+        display: block;
+        width: 150px;
+        height: 150px;
+      }
+
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
     .card
       .layout.horizontal.top
         .flex.card-image
@@ -53,6 +56,7 @@ dom-module#d4l-twibbyn-campaign-card
         .flex.card-content
           h1 [[campaign.name]]
           p [[campaign.description]]
+
       .footer.tray(hidden$="[[!__showButtons]]")
         .layout.horizontal.center
           paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTwibbyn")
