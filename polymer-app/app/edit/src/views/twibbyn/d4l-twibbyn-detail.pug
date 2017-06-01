@@ -38,6 +38,10 @@ dom-module#d4l-twibbyn-detail
       text-align: center;
     }
 
+    #reposition {
+      margin: 0;
+    }
+
     a {
       text-decoration: none;
     }
@@ -54,8 +58,9 @@ dom-module#d4l-twibbyn-detail
     }
 
     d4l-twibbyn-overlay {
-      width: 250px;
-      height: 250px;
+      display: block;
+      width: 200px;
+      height: 200px;
     }
 
   template
@@ -84,12 +89,15 @@ dom-module#d4l-twibbyn-detail
       d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
 
       h1 Avatar
+      h2#reposition(hidden$="[[__squareAvatar]]") Tap to reposition
       .layout.horizontal.center
         .flex.text-right
           paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__prevTwibbyn") Prev
         d4l-twibbyn-overlay(
           image="[[__selectedProfileImg]]",
-          twibbyn="[[__selectedTwibbyn]]")
+          twibbyn="[[__selectedTwibbyn]]",
+          position="{{__twibbynPosition}}",
+          square="{{__squareAvatar}}")
         .flex.text-left
           paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__nextTwibbyn", style="transform: rotate(180deg);") Next
 

@@ -56,6 +56,7 @@ const _twitterAPITask = qi => {
       Logging.logSilly(data);
       if (error) {
         Logging.logError(error);
+        qi.error = error;
         resolve(qi);
         return;
       }
@@ -93,16 +94,12 @@ class APIQueueManager {
   /**
    * @description Add to the queue, defer execution, honor rate limits
    * @param {object} qi - contains all parameters for api call
+   * @return {Promise} - Resolves with result from redis
    */
   add(qi) {
     qi.id = UUID.v1();
     qi.method = qi.method ? qi.method : 'GET';
-    redisClient.rpush(['api-queue', JSON.stringify(qi)], (err, reply) => {
-      if (err) {
-        Logging.logError(err);
-        return;
-      }
-    });
+    return this._addQueueItem(qi);
   }
 
   /**
@@ -141,6 +138,11 @@ class APIQueueManager {
     return false;
   }
 
+  /**
+   * @description Fetch the length of the api-queue
+   * @return {Promise} - Resolves with the length of the redis api-queue
+   * @private
+   */
   _queueLength() {
     return new Promise(resolve => {
       redisClient.llen('api-queue', (err, result) => {
@@ -153,6 +155,12 @@ class APIQueueManager {
     });
   }
 
+  /**
+   * @description Push a queue item into the redis queue, returns a promise
+   * @param {object} item - contains all parameters for api call
+   * @return {Promise} - Resolves with result from redis
+   * @private
+   */
   _fetchQueue() {
     return new Promise(resolve => {
       redisClient.lrange('api-queue', 0, -1, (err, result) => {
@@ -165,6 +173,30 @@ class APIQueueManager {
     });
   }
 
+  /**
+   * @description Push a queue item into the redis queue, returns a promise
+   * @param {object} item - contains all parameters for api call
+   * @return {Promise} - Resolves with result from redis
+   * @private
+   */
+  _addQueueItem(item) {
+    return new Promise(resolve => {
+      redisClient.rpush(['api-queue', JSON.stringify(item)], (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  /**
+   * @description Remove an item from the redis api-queue using itemId
+   * @param {object} itemId - api queue item id
+   * @return {Promise} - Resolves with result from redis
+   * @private
+   */
   _deleteQueueItem(itemId) {
     return this._fetchQueue()
       .then(results => {
@@ -200,6 +232,17 @@ class APIQueueManager {
             arr.push(JSON.parse(item));
             return arr;
           }, []).filter(qi => {
+            if (qi.error) {
+              return false;
+            }
+            if (qi.processAfter) {
+              const time = Sugar.Date.create('now');
+              const itemDate = Sugar.Date.create(qi.processAfter);
+
+              if (!Sugar.Date.isAfter(time, itemDate)) {
+                return false;
+              }
+            }
             return this._isRateLimited(qi) === false;
           }).map(qi => _appTasks[qi.app](qi));
         }
@@ -213,6 +256,10 @@ class APIQueueManager {
             .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
             .then(qis => {
               qis.forEach(item => {
+                if (item.error) {
+                  this._deleteQueueItem(item.id);
+                  this._addQueueItem(item);
+                }
                 if (item.completed) {
                   this._deleteQueueItem(item.id);
                 }
@@ -220,6 +267,8 @@ class APIQueueManager {
             })
             .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
             .catch(err => Logging.log(err));
+        } else {
+          setTimeout(() => this._flush(), Constants.INTERVAL);
         }
       });
   }

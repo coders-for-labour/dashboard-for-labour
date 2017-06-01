@@ -3,7 +3,14 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.2.1
+## version: 1.2.2
+- Request 'publish_actions' permissions for facebook (needed) for thunderclap
+- Enhanced composer to support preservation of image aspect ratios
+- Added basic UI for repositioning non-square avatars
+- Extended the twibbyn API
+- Minor bug fixes
+
+## 1.2.1
 - Fixed issues with Facebook App Id  
 
 ## 1.2.0

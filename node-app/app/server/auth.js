@@ -206,7 +206,7 @@ module.exports.init = app => {
   });
 
   const FB_AUTH_SCOPE = [
-    'public_profile', 'email'
+    'public_profile', 'email', 'publish_actions'
   ];
   app.get('/auth/facebook', (req, res, next) => {
     req.session.returnPath = req.get('Referer');
