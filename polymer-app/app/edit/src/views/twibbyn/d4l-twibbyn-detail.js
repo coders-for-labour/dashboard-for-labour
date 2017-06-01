@@ -126,8 +126,9 @@ Polymer({
 
   __authUser: function() {
     let profiles = this.get('auth.user.profiles');
-    if (!profiles.length) {
+    if (!profiles || !profiles.length) {
       this.__warn('No user profiles!');
+      return;
     }
 
     this.__selectedPlatform = profiles[0].app;
