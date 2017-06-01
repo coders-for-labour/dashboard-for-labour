@@ -16,6 +16,10 @@ Polymer({
       type: String,
       value: '',
     },
+    __text: {
+      type: String,
+      value: ''
+    },
     __image: {
       type: String,
       value: ''
@@ -44,6 +48,7 @@ Polymer({
   __onOpenChanged: function() {
     this.__debug('__onOpenChanged', 'state', this.open);
     if (this.open) {
+      this.__text = this.text;
       this.$.dialog.open();
     } else {
       this.$.dialog.close();
@@ -61,7 +66,7 @@ Polymer({
 
   __save: function() {
     this.fire('save', {
-      text: this.text,
+      text: this.__text,
       image: this.__image
     });
     this.open = false;

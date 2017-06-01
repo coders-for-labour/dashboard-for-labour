@@ -43,7 +43,6 @@ dom-module#d4l-thunderclap
     d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
 
     iron-ajax#ajaxSubscribeThunderclap(
-      auto,
       handleAs="json",
       content-type="application/json",
       url="[[__thunderclapSubscribeUrl]]",
@@ -63,6 +62,8 @@ dom-module#d4l-thunderclap
       allow-back,
       on-back-button-clicked="__navBack"
     )
+
+    d4l-post-dialog(title="Subscribe", text="{{__campaignText}}", open="{{__openPostDialog}}", on-save="__saveThunderclap")
 
     iron-pages(
     selected='[[__loadMode]]',
@@ -93,7 +94,7 @@ dom-module#d4l-thunderclap
                       db="{{db}}",
                       auth="[[auth]]",
                       campaign="[[campaign]]",
-                      on-subscribe-thunderclap="__subscribeThunderclap"
+                      on-subscribe="__subscribeThunderclap"
                     )
 
           div(name="detail", mobile$="[[isMobile]]")

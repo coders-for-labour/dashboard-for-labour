@@ -30,7 +30,7 @@ Polymer({
 
     __userCountLabel: {
       type: String,
-      computed: '__computeUserCountLabel(metadata.userCount, metadata)'
+      computed: '__computeUserCountLabel(metadata.supporters.length, metadata)'
     },
 
     __thunderclapTime: {
@@ -65,8 +65,9 @@ Polymer({
       this.__silly('__campaignChanged', 'Init default metadata for', campaignId);
       const metaDefault = Object.assign({}, {
         __populate__: true,
-        userCount: 0,
-        thunderclapTime: ''
+        thunderclapTime: '',
+        supporters: [],
+        featured: ''
       });
       this.set(['db.campaign.metadata', campaignId], metaDefault);
     }
@@ -87,9 +88,7 @@ Polymer({
   __subscribeThunderclap: function(){
     const campaign = this.get('campaign');
 
-    this.fire('subscribe-thunderclap', campaign, {
-      bubbles: false
-    });
+    this.fire('subscribe', {id: campaign.id, text: campaign.description});
   },
 
   __computeUserCountLabel: function(count){
@@ -97,7 +96,7 @@ Polymer({
   },
 
   __computeThunderclapTime: function(time) {
-    if (!time || !time === ''){
+    if (!time || !time === '') {
       return Sugar.Date.create('now');
     }
 
@@ -107,7 +106,7 @@ Polymer({
     return Sugar.Date.relative(time);
   },
   __computeThunderClapFormatted: function(time) {
-    return Sugar.Date.format(time, '{dd} {Month} {yyyy}');
+    return Sugar.Date.format(time, '{Dow} {do} {Month}, {12hr}:{mm}{tt}');
   }
 
 });

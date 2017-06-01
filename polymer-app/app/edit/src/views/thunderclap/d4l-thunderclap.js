@@ -7,7 +7,7 @@ Polymer({
   properties: {
     logLevel: {
       type: Number,
-      value: 3
+      value: 4
     },
     db: {
       type: Object,
@@ -22,6 +22,13 @@ Polymer({
     },
     campaigns: {
       type: Array
+    },
+
+    __campaignId: {
+      type: String
+    },
+    __campaignText: {
+      type: String
     },
 
     __openPostDialog: {
@@ -57,17 +64,33 @@ Polymer({
     }
   },
 
-  __subscribeThunderclap: function(ev){
-    const campaign = ev.detail;
+  __subscribeThunderclap: function(ev) {
+    this.__debug(ev.detail);
+    this.__campaignId = ev.detail.id;
+    this.__campaignText = ev.detail.text;
+    this.__openPostDialog = true;
+  },
+
+  __saveThunderclap: function(ev) {
+    this.__debug(ev.detail);
+    if (!this.__campaignId) {
+      this.__warn('No campaign set!');
+      return;
+    }
 
     this.set('__thunderclapSubscribeUrl', this.get('__thunderclapTwitterUrl'));
     this.set('__thunderclapSubscribeBody', {
-      campaignId: campaign.id,
-      message: campaign.description
+      campaignId: this.__campaignId,
+      message: ev.detail.text
     });
+
+    this.__campaignId = '';
+    this.__campaignText = '';
+
+    this.$.ajaxSubscribeThunderclap.generateRequest();
   },
 
-  __thunderclapResponse: function(res){
+  __thunderclapResponse: function(){
     // this.__debug(res);
   },
 
