@@ -3,7 +3,10 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.2.2
+## version: 1.3.0
+- Added support for thunderclap campaigns.
+
+## 1.2.2
 - Request 'publish_actions' permissions for facebook (needed) for thunderclap
 - Enhanced composer to support preservation of image aspect ratios
 - Added basic UI for repositioning non-square avatars
