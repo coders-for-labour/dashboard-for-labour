@@ -59,7 +59,7 @@ const _subscribeThunderclap = (req, res) => {
         api: 'statuses/update.json',
         processAfter: timeString,
         params: {
-          status: `${message} ${timeString}`,
+          status: `${message}`,
           include_entities: false, // eslint-disable-line camelcase
           skip_statuses: true // eslint-disable-line camelcase
         },

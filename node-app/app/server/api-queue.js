@@ -232,6 +232,9 @@ class APIQueueManager {
             arr.push(JSON.parse(item));
             return arr;
           }, []).filter(qi => {
+            if (qi.error) {
+              return false;
+            }
             if (qi.processAfter) {
               const time = Sugar.Date.create('now');
               const itemDate = Sugar.Date.create(qi.processAfter);
@@ -253,10 +256,6 @@ class APIQueueManager {
             .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
             .then(qis => {
               qis.forEach(item => {
-                // Clear item from queue if tweet is longer than 140 chars
-                if (item.error || item.error) {
-                  this._deleteQueueItem(item.id);
-                }
                 if (item.completed) {
                   this._deleteQueueItem(item.id);
                 }
