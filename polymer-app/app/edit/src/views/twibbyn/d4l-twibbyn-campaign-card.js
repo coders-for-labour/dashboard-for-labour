@@ -27,6 +27,10 @@ Polymer({
       type: Object,
       notify: true
     },
+    isMobile: {
+      type: Boolean,
+      value: false
+    },
 
     __selectedTwibbyn: {
       type: String,
