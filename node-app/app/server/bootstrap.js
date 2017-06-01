@@ -19,6 +19,7 @@ const Rhizome = require('rhizome-api-js');
 const Auth = require('./auth');
 // const Cache = require('./cache');
 const Twibbyn = require('./twibbyn');
+const Thunderclap = require('./thunderclap');
 const Queue = require('./api-queue');
 const Uploads = require('./uploads');
 // const Constituency = require('./constituency');
@@ -88,6 +89,7 @@ const __initWorker = () => {
 
   Auth.init(app);
   Twibbyn.init(app);
+  Thunderclap.init(app);
   // Queue.Manager.init(app);
   // Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   // Constituency.init(app);
