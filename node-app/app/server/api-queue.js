@@ -219,7 +219,6 @@ class APIQueueManager {
       .then(queueLength => {
         Logging.logDebug(`Queue Manager: ${queueLength}`);
         if (queueLength === 0) {
-          setTimeout(() => this._flush(), Constants.INTERVAL);
           return false;
         }
         return this._fetchQueue();
