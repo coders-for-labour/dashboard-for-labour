@@ -256,6 +256,10 @@ class APIQueueManager {
             .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
             .then(qis => {
               qis.forEach(item => {
+                if (item.error) {
+                  this._deleteQueueItem(item.id);
+                  this._addQueueItem(item);
+                }
                 if (item.completed) {
                   this._deleteQueueItem(item.id);
                 }
