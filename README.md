@@ -3,7 +3,11 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.3.0
+## version: 1.3.1
+- Added realtime use count to twibbyn card
+- Change Thunderclap to Storm
+
+## 1.3.0
 - Added support for thunderclap campaigns.
 
 ## 1.2.2
