@@ -138,7 +138,6 @@ const _saveTwibbyn = (req, res) => {
             });
 
           res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
-          res.sendStatus(200);
         });
     })
     .catch(Logging.Promise.logError());
