@@ -65,7 +65,8 @@ Polymer({
       this.__silly('__campaignChanged', 'Init default metadata for', campaignId);
       const metaDefault = Object.assign({}, {
         __populate__: true,
-        images: []
+        images: [],
+        userCount: 0
       });
       this.set(['db.campaign.metadata', campaignId], metaDefault);
     }
