@@ -48,7 +48,7 @@ Polymer({
   },
 
   __computePageTitle: function (campaign) {
-    let title = 'Twibbyn for Labour';
+    let title = 'Twibbyn';
 
     if (campaign && campaign.name) {
       title = `${title} - ${campaign.name}`
