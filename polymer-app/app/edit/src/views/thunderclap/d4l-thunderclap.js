@@ -54,7 +54,7 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Images for Labour',
+      value: 'Storm',
       computed: '__computePageTitle(__selectedItem)'
     },
 
@@ -106,7 +106,9 @@ Polymer({
   },
 
   __computePageTitle: function (campaign) {
-    let title = 'Thunderclap';
+    let title = 'Storm';
+
+    this.__debug(title);
 
     if (campaign && campaign.name) {
       title = `${title} - ${campaign.name}`

@@ -18,7 +18,7 @@ Polymer({
     },
     type: {
       type: String,
-      value: 'thunderclap'
+      value: 'storm'
     },
     campaign: {
       type: Object

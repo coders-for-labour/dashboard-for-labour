@@ -237,6 +237,10 @@ Polymer({
       return window.location = '/logout';
     }
 
+    if (page === 'storm') {
+      page = 'thunderclap';
+    }
+
     let resolvedPageUrl = this.resolveUrl(`../views/${page}/d4l-${page}.html`);
     this.importHref(resolvedPageUrl, null, this.__showPage404, true);
   },
