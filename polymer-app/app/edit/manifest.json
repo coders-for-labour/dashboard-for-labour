@@ -1,10 +1,11 @@
 {
-  "name": "Amplify",
-  "short_name": "D4L",
-  "start_url": "/?homescreen=1",
+  "name": "Amplify - Labour’s tool for supporters",
+  "short_name": "Amplify",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#D30437",
-  "background_color": "#FFF",
+  "theme_color": "#E4003B",
+  "background_color": "#FFFFF",
+  "description": "Change your profile pictures and get tweeting for Labour now.",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",
