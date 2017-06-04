@@ -1,7 +1,10 @@
 Polymer({
   is: 'd4l-twibbyn-detail',
   behaviors: [
-    Polymer.D4LLogging
+    Polymer.D4LLogging,
+    Polymer.D4LFacebook,
+    Polymer.D4LFacebook,
+    Polymer.D4LShare
   ],
   properties: {
     logLevel: {
@@ -49,6 +52,14 @@ Polymer({
       type: String,
       value: 'ready' // ready | uploading | uploaded
     },
+    __tweetBody: {
+      type: Object,
+      value: function() {
+        return {
+          tweet: '',
+        };
+      }
+    },
 
     __hideReady: {
       type: Boolean,
@@ -93,7 +104,6 @@ Polymer({
     __twibbynSaveBody: {
       type: Object
     }
-
   },
 
   observers: [
@@ -258,6 +268,38 @@ Polymer({
     });
   },
 
+  __shareAmplifyFb: function() {
+    let postText = this.get('__shareText.fb');
+    const url = 'https://amplify.labour.org.uk';
+    this.set('__shareFbStatus', 'sharing');
+    this.__shareUrl(postText, url, (err, postResponse) => {
+      if (err) {
+        this.__err(err);
+        this.set('__shareFbStatus', 'ready');
+        return;
+      }
+      this.set('__shareFbStatus', 'shared');
+      this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
+    });
+  },
+
+  __shareAmplifyTw: function() {
+    let postText = this.get('__shareText.tw');
+    this.set('__tweetBody', {
+      tweet: postText
+    });
+    this.set('__shareTwStatus', 'sharing');
+    this.$.ajaxTweet.generateRequest();
+  },
+
+  __sharedTw: function() {
+    this.set('__shareTwStatus', 'shared');
+  },
+
+  __sharedTwErr: function() {
+    this.set('__shareTwStatus', 'ready');
+  },
+
   __finishedUpload: function() {
     this.set('__uploadStatus', 'ready');
   },
@@ -347,5 +389,5 @@ Polymer({
   },
   __computeHideUploaded: function(status) {
     return status === 'ready' || status === 'uploading';
-  },
+  }
 });

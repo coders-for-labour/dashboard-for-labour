@@ -3,7 +3,12 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.3.2
+## version: 1.3.3
+- Added improved share flow to twibbon.
+- Added share flwo to storm.
+- Improve manifest.json (better PWA experience)
+
+## 1.3.2
 - Added metadata, updated icons, copy.
 - Removed Images card.
 

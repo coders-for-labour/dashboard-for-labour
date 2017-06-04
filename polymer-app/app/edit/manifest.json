@@ -4,16 +4,17 @@
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#E4003B",
-  "background_color": "#FFFFF",
+  "background_color": "#E4003B",
   "description": "Change your profile pictures and get tweeting for Labour now.",
+  ​​"orientation": "portrait-primary",
   "icons": [
     {
-      "src": "images/manifest/icon-192x192.png",
+      "src": "images/manifest/manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "images/manifest/icon-512x512.png",
+      "src": "images/manifest/manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

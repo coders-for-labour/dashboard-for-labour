@@ -2,8 +2,11 @@ link(rel="import", href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-list/iron-list.html")
 link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
+link(rel="import", href="/bower_components/paper-button/paper-button.html")
+link(rel="import", href="/bower_components/paper-input/paper-textarea.html")
 link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
@@ -12,6 +15,7 @@ link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-social/d4l-social.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
@@ -84,6 +88,15 @@ dom-module#d4l-twibbyn-detail
       on-response="__saveFbResponse",
       on-error="__ajaxError")
 
+    iron-ajax#ajaxTweet(
+      handleAs="json",
+      content-type="application/json",
+      url="/twitter",
+      method="POST",
+      body="[[__tweetBody]]",
+      on-response="__sharedTw",
+      on-error="__sharedTwErr")
+
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
       h1 Platform
       d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
@@ -116,7 +129,13 @@ dom-module#d4l-twibbyn-detail
             h2 Tap Set as Profile then select 'Options' (at the bottom right of the photo) and then 'Make Profile Picture'.
             a(href="[[__configureFacebookUrl]]", target="__blank")
               paper-button() Set as Profile
-            paper-button(on-tap="__finishedUpload") Finished
+
+            h2 Think your friends want to Amplify Labour’s message? Share now.
+            //-paper-textarea(char-counter, no-label-float, max-rows="5", value="{{__shareText.fb}}", placeholder="", autofocus)
+
+            .layout.horizontal
+              paper-button(on-tap="__finishedUpload") Finished
+              paper-button(disabled$="[[__disableShareFb]]", on-tap="__shareAmplifyFb") [[__shareFbButton]]
 
         div(name="twitter")
           .layout.vertical.center(hidden$="[[__hideReady]]")
@@ -129,8 +148,12 @@ dom-module#d4l-twibbyn-detail
 
           .layout.vertical.center(hidden$="[[__hideUploaded]]")
             h2 It can take several minutes for your new avatar appear on Twitter.
-            paper-button(on-tap="__finishedUpload") Finished
+            h2 Think your friends want to Amplify Labour’s message? Share now.
+            //paper-textarea(char-counter, maxlength="50", no-label-float, rows="3", max-rows="5", value="{{__shareText.tw}}", placeholder="", autofocus)
 
+            .layout.horizontal
+              paper-button(on-tap="__finishedUpload") Finished
+              paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplifyTw") [[__shareTwButton]]
 
     .page-content.flex-2(hidden$="[[isMobile]]", mobile$="[[isMobile]]")
       iron-selector(attr-for-selected="name", selected="{{__selectedTwibbyn}}")
