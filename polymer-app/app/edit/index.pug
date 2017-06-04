@@ -11,7 +11,7 @@ doctype html
 html(lang="en")
   head
     meta(charset="utf-8")
-    meta(name="viewport", content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes")
+    meta(name="viewport", content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no")
 
     title Amplify
     meta(name="description", content="Social media tools for activists for #ge17")
@@ -22,7 +22,23 @@ html(lang="en")
     link(rel="manifest", href="/manifest.json")
 
     //- See https://goo.gl/qRE0vM
-    meta(name="theme-color", content="#D30437")
+    meta(name="theme-color", content="#e4003b")
+
+    //- Twitter card
+    meta(name="twitter:card", value="summary_large_image")
+    meta(name="twitter:site", content="@UKLabour")
+    meta(name="twitter:title", content="Amplify – Labour’s tool for supporters")
+    meta(name="twitter:description", content="Change your profile pictures and get tweeting for Labour now.")
+    meta(name="twitter:creator", content="@UkLabour")
+    //-Twitter summary card with large image must be at least 280x150px -->
+    meta(name="twitter:image:src", content="https://amplify-cdn.storage.googleapis.com/amplify-promo.png")
+
+    <!-- Open Graph data -->
+    meta(property="og:title", content="Amplify – Labour’s tool for supporters")
+    meta(property="og:type", content="article")
+    meta(property="og:url", content="https://amplify.labour.org.uk/")
+    meta(property="og:image", content="https://amplify-cdn.storage.googleapis.com/amplify-promo.png")
+    meta(property="og:description", content="Change your profile pictures and get tweeting for Labour now.")
 
     //- Add to homescreen for Chrome on Android. Fallback for manifest.json
     meta(name="mobile-web-app-capable", content="yes")
@@ -34,15 +50,15 @@ html(lang="en")
     meta(name="apple-mobile-web-app-title", content="Amplify")
 
     //- Homescreen icons -->
-    //link(rel="apple-touch-icon", href="/images/manifest/icon-48x48.png")
-    //link(rel="apple-touch-icon", sizes="72x72", href="/images/manifest/icon-72x72.png")
-    //link(rel="apple-touch-icon", sizes="96x96", href="/images/manifest/icon-96x96.png")
-    //link(rel="apple-touch-icon", sizes="144x144", href="/images/manifest/icon-144x144.png")
-    //link(rel="apple-touch-icon", sizes="192x192", href="/images/manifest/icon-192x192.png")
+    link(rel="apple-touch-icon", href="/images/manifest/icon-48x48.png")
+    link(rel="apple-touch-icon", sizes="72x72", href="/images/manifest/icon-72x72.png")
+    link(rel="apple-touch-icon", sizes="96x96", href="/images/manifest/icon-96x96.png")
+    link(rel="apple-touch-icon", sizes="144x144", href="/images/manifest/icon-144x144.png")
+    link(rel="apple-touch-icon", sizes="192x192", href="/images/manifest/icon-192x192.png")
 
     //- Tile icon for Windows 8 (144x144 + tile color) -->
     meta(name="msapplication-TileImage", content="/images/manifest/icon-144x144.png")
-    meta(name="msapplication-TileColor", content="#C62828")
+    meta(name="msapplication-TileColor", content="#e4003b")
     meta(name="msapplication-tap-highlight", content="no")
 
     link(href="https://fonts.googleapis.com/css?family=Raleway:300,500,700", rel="stylesheet")
