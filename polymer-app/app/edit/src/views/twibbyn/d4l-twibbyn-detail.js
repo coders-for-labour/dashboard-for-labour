@@ -1,7 +1,8 @@
 Polymer({
   is: 'd4l-twibbyn-detail',
   behaviors: [
-    Polymer.D4LLogging
+    Polymer.D4LLogging,
+    Polymer.D4LFacebook
   ],
   properties: {
     logLevel: {
@@ -48,6 +49,23 @@ Polymer({
     __uploadStatus: {
       type: String,
       value: 'ready' // ready | uploading | uploaded
+    },
+    __shareText: {
+      type: Object,
+      value: function() {
+        return {
+          fb: 'I\'ve just Amplified Labour! https://amplify.labour.org.uk #votelabour',
+          tw: 'I\'ve just Amplified Labour! https://amplify.labour.org.uk #votelabour'
+        };
+      }
+    },
+    __tweetBody: {
+      type: Object,
+      value: function() {
+        return {
+          tweet: '',
+        };
+      }
     },
 
     __hideReady: {
@@ -258,6 +276,28 @@ Polymer({
     });
   },
 
+  __shareAmplifyFb: function() {
+    let postText = this.get('__shareText.fb');
+    const url = 'https://amplify.labour.org.uk';
+    this.__shareUrl(postText, url, (err, postResponse) => {
+      if (err) {
+        this.__err(err);
+        return;
+      }
+
+      this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
+    });
+
+  },
+
+  __shareAmplifyTw: function() {
+    let postText = this.get('__shareText.tw');
+    this.set('__tweetBody', {
+      tweet: this.get('__shareText.tw')
+    });
+    this.$.ajaxTweet.generateRequest();
+  },
+
   __finishedUpload: function() {
     this.set('__uploadStatus', 'ready');
   },
@@ -347,5 +387,5 @@ Polymer({
   },
   __computeHideUploaded: function(status) {
     return status === 'ready' || status === 'uploading';
-  },
+  }
 });

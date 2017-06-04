@@ -199,6 +199,15 @@ const _postTwitter = (req, res) => {
     return;
   }
 
+  if (!req.body.file) {
+    Logging.logDebug(`Tweeting: ${req.body.tweet}`);
+    Twitter.tweet(twAuth, req.body.tweet)
+      .then(results => {
+        res.send(results);
+      });
+    return;
+  }
+
   Logging.logDebug(`Tweeting: ${req.body.tweet}, http://${Config.cdnUrl}/${req.body.file}`);
   rest.get(`http://${Config.cdnUrl}/${req.body.file}`)
     .on('success', (data, response) => {
