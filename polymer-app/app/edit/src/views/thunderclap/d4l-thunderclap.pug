@@ -11,6 +11,7 @@ link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-social/d4l-social.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
@@ -49,8 +50,17 @@ dom-module#d4l-thunderclap
       method="PUT",
       body="[[__thunderclapSubscribeBody]]"
       on-response="__thunderclapResponse",
-      on-error="__ajaxError"
-    )
+      on-error="__ajaxError")
+
+    iron-ajax#ajaxTweet(
+      handleAs="json",
+      content-type="application/json",
+      url="/twitter",
+      method="POST",
+      body="[[__tweetBody]]",
+      on-response="__sharedTw",
+      on-error="__sharedTwErr")
+
 
     d4l-header(
       auth="[[auth]]",
@@ -86,6 +96,8 @@ dom-module#d4l-thunderclap
                     iron-icon(icon="d4l-social-icons:storm")
                     h1 Storm
                   p Rally together with other supporters by tweeting our most important messages, so everyone knows.
+                  p Think your friends want to Amplify Labour’s message?
+                  paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplify") [[__shareTwButton]]
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2

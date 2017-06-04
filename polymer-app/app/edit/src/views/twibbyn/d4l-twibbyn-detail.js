@@ -281,7 +281,6 @@ Polymer({
       this.set('__shareFbStatus', 'shared');
       this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
     });
-
   },
 
   __shareAmplifyTw: function() {

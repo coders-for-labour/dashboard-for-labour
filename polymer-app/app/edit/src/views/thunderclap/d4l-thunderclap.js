@@ -2,7 +2,9 @@ Polymer({
   is: 'd4l-thunderclap',
   behaviors: [
     Polymer.D4LLogging,
-    Polymer.D4LViewList
+    Polymer.D4LViewList,
+    Polymer.D4LFacebook,
+    Polymer.D4LShare
   ],
   properties: {
     logLevel: {
@@ -29,6 +31,10 @@ Polymer({
     },
     __campaignText: {
       type: String
+    },
+
+    __tweetBody: {
+      type: Object
     },
 
     __openPostDialog: {
@@ -93,6 +99,39 @@ Polymer({
   __thunderclapResponse: function(){
     // this.__debug(res);
   },
+
+  __shareAmplify: function() {
+    this.__debug('Hello');
+    let postText = this.get('__shareText.fb');
+    const url = 'https://amplify.labour.org.uk';
+    this.set('__shareTwStatus', 'sharing');
+
+    this.__debug(postText);
+
+    this.__shareUrl(postText, url, (err, postResponse) => {
+      if (err) {
+        this.__err(err);
+        this.set('__shareTwStatus', 'ready');
+        return;
+      }
+      this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
+      postText = this.get('__shareText.tw');
+      this.set('__tweetBody', {
+        tweet: postText
+      });
+      this.set('__shareTwStatus', 'sharing');
+      this.$.ajaxTweet.generateRequest();
+    });
+  },
+
+  __sharedTw: function() {
+    this.set('__shareTwStatus', 'shared');
+  },
+
+  __sharedTwErr: function() {
+    this.set('__shareTwStatus', 'ready');
+  },
+
 
   __computeCampaignsQuery: function () {
     return {
