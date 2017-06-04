@@ -49,7 +49,7 @@ Polymer.D4LFacebook = {
       }
 
       FB.api('/me/feed', 'post', {
-        url: url,
+        link: url,
         message: postText,
       }, response => {
         if (!response.id) {

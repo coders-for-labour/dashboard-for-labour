@@ -15,7 +15,7 @@ link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
-link(rel="import", href="/src/d4l-facebook/d4l-facebook.html")
+link(rel="import", href="/src/d4l-social/d4l-social.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
@@ -93,8 +93,9 @@ dom-module#d4l-twibbyn-detail
       content-type="application/json",
       url="/twitter",
       method="POST",
-      body="[[__tweetBody]]"
-      on-error="__ajaxError")
+      body="[[__tweetBody]]",
+      on-response="__sharedTw",
+      on-error="__sharedTwErr")
 
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
       h1 Platform
@@ -134,7 +135,7 @@ dom-module#d4l-twibbyn-detail
 
             .layout.horizontal
               paper-button(on-tap="__finishedUpload") Finished
-              paper-button(on-tap="__shareAmplifyFb") Share Now
+              paper-button(disabled$="[[__disableShareFb]]", on-tap="__shareAmplifyFb") [[__shareFbButton]]
 
         div(name="twitter")
           .layout.vertical.center(hidden$="[[__hideReady]]")
@@ -152,7 +153,7 @@ dom-module#d4l-twibbyn-detail
 
             .layout.horizontal
               paper-button(on-tap="__finishedUpload") Finished
-              paper-button(on-tap="__shareAmplifyTw") Share Amplify
+              paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplifyTw") [[__shareTwButton]]
 
     .page-content.flex-2(hidden$="[[isMobile]]", mobile$="[[isMobile]]")
       iron-selector(attr-for-selected="name", selected="{{__selectedTwibbyn}}")
