@@ -3,7 +3,11 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.3.3
+## version: 1.3.4
+- Updated facebook share to use Share Dialog UI
+- Minor bug fixes
+
+## 1.3.4
 - Added improved share flow to twibbon.
 - Added share flwo to storm.
 - Improve manifest.json (better PWA experience)
