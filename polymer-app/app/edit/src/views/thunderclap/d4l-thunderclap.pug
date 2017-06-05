@@ -61,7 +61,6 @@ dom-module#d4l-thunderclap
       on-response="__sharedTw",
       on-error="__sharedTwErr")
 
-
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
@@ -97,7 +96,8 @@ dom-module#d4l-thunderclap
                     h1 Storm
                   p Rally together with other supporters by tweeting our most important messages, so everyone knows.
                   p Think your friends want to Amplify Labour’s message?
-                  paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplify") [[__shareTwButton]]
+                  paper-button(disabled$="[[__disableShareFb]]", on-tap="__shareAmplifyFb") [[__shareFbButton]]
+                  paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplifyTw") [[__shareTwButton]]
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2

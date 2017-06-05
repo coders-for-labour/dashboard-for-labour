@@ -21,6 +21,15 @@ Polymer.D4LShare = {
       value: 'ready'
     },
 
+    __tweetBody: {
+      type: Object,
+      value: function() {
+        return {
+          tweet: '',
+        };
+      }
+    },
+
     __disableShareFb: {
       type: Boolean,
       computed: '__computeDisableShareFb(__shareFbStatus)'
@@ -93,11 +102,44 @@ Polymer.D4LShare = {
     }
   },
 
+  __shareAmplifyFb: function(){
+    let postText = this.get('__shareText.fb');
+    const url = 'https://amplify.labour.org.uk';
+    this.set('__shareFbStatus', 'sharing');
+
+    this.__shareUrl(postText, url, (err, postResponse) => {
+      if (err) {
+        this.__err(err);
+        this.set('__shareFbStatus', 'ready');
+        return;
+      }
+      this.set('__shareFbStatus', 'shared');
+    });
+  },
+
+  __shareAmplifyTw: function(){
+    let postText = this.get('__shareText.fb');
+    this.set('__shareTwStatus', 'sharing');
+
+    this.set('__tweetBody', {
+      tweet: postText
+    });
+    this.set('__shareTwStatus', 'sharing');
+    this.$.ajaxTweet.generateRequest();
+  },
+  __sharedTw: function() {
+    this.set('__shareTwStatus', 'shared');
+  },
+  __sharedTwErr: function() {
+    this.set('__shareTwStatus', 'ready');
+    this.fire('appViewError', ev);
+  },
+
   __computeDisableShareFb: function(status) {
     return status !== 'ready';
   },
   __computeShareFbButton: function(status) {
-    let button = 'Share Now';
+    let button = 'Share on Facebook';
     switch (status) {
       case 'sharing':
         button = 'Sharing...';
@@ -113,7 +155,7 @@ Polymer.D4LShare = {
     return status !== 'ready';
   },
   __computeShareTwButton: function(status) {
-    let button = 'Share Now';
+    let button = 'Share on Twitter';
     switch (status) {
       case 'sharing':
         button = 'Sharing...';
