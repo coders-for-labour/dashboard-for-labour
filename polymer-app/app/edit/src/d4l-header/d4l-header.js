@@ -71,6 +71,10 @@ Polymer({
 
   __computeUserImage: function(image){
     const imageSize = /_normal/i;
+    if (!image) {
+      return;
+    }
+
     return image.replace(imageSize, '');
   }
 
