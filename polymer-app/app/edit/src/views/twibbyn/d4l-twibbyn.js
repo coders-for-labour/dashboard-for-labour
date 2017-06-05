@@ -2,7 +2,9 @@ Polymer({
   is: 'd4l-twibbyn',
   behaviors: [
     Polymer.D4LLogging,
-    Polymer.D4LViewList
+    Polymer.D4LViewList,
+    Polymer.D4LFacebook,
+    Polymer.D4LShare
   ],
   properties: {
     logLevel: {

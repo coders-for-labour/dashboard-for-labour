@@ -100,6 +100,9 @@ class Composer {
   }
 
   __imageFromBuffer(imgBuffer, options) {
+    this._id += options.preserveAspect;
+    this._id += options.gravity;
+
     this._renderQueue.push(context => {
       return new Promise((resolve, reject) => {
         Logging.logDebug(`Rendering Image From Buffer`);
@@ -194,10 +197,11 @@ class Composer {
     options.height = options.height <= 1 ? this._height * options.height : options.height;
 
     if (options.preserveAspect) {
-      let aspect = options.srcWidth / options.srcHeight;
       if (options.srcWidth <= options.srcHeight) {
+        let aspect = options.srcWidth / options.srcHeight;
         options.height = options.width / aspect;
       } else {
+        let aspect = options.srcHeight / options.srcWidth;
         options.width = options.height / aspect;
       }
     }

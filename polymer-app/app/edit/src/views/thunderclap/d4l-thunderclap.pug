@@ -39,7 +39,7 @@ dom-module#d4l-thunderclap
     }
 
   template
-    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+    iron-media-query(query="(max-width: 800px)", query-matches="{{isMobile}}")
 
     d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
 
@@ -60,7 +60,6 @@ dom-module#d4l-thunderclap
       body="[[__tweetBody]]",
       on-response="__sharedTw",
       on-error="__sharedTwErr")
-
 
     d4l-header(
       auth="[[auth]]",
@@ -97,7 +96,9 @@ dom-module#d4l-thunderclap
                     h1 Storm
                   p Rally together with other supporters by tweeting our most important messages, so everyone knows.
                   p Think your friends want to Amplify Labour’s message?
-                  paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplify") [[__shareTwButton]]
+                  .share-buttons
+                    paper-button(disabled$="[[__disableShareFb]]", on-tap="__shareAmplifyFb") [[__shareFbButton]]
+                    paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplifyTw") [[__shareTwButton]]
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2

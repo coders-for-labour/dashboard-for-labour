@@ -96,7 +96,7 @@ module.exports.init = app => {
       name: p.name,
       email: p.email,
       profileImgUrl: p.picture.data.url,
-      bannerImgUrl: p.cover.source
+      bannerImgUrl: p.cover ? p.cover.source : ''
     };
 
     Logging.logSilly(user);

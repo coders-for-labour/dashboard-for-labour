@@ -34,7 +34,7 @@
       "title": "Amplify",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "protocol": "https",
       "subdomain": "amplify",
       "domain": "labour.org.uk"

@@ -7,9 +7,11 @@ link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
 link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-social/d4l-social.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
@@ -42,6 +44,15 @@ dom-module#d4l-twibbyn
 
     d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
 
+    iron-ajax#ajaxTweet(
+      handleAs="json",
+      content-type="application/json",
+      url="/twitter",
+      method="POST",
+      body="[[__tweetBody]]",
+      on-response="__sharedTw",
+      on-error="__sharedTwErr")
+
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
@@ -73,7 +84,10 @@ dom-module#d4l-twibbyn
                   .layout.horizontal.center
                     iron-icon(icon="d4l-social-icons:social")
                     h1 Twibbyns
-                  p Tell your friends why you’ve voting Labour by changing your Facebook and Twitter profile picture.
+                  p Tell your friends why you’re voting Labour by changing your Facebook and Twitter profile picture.
+                  .share-buttons
+                    paper-button(disabled$="[[__disableShareFb]]", on-tap="__shareAmplifyFb") [[__shareFbButton]]
+                    paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplifyTw") [[__shareTwButton]]
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2
