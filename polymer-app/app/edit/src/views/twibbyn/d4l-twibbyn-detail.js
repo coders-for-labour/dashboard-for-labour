@@ -28,7 +28,8 @@ Polymer({
     },
     __selectedPlatform: {
       type: String,
-      value: ''
+      value: '',
+      observer: '__selectedPlatformChanged'
     },
     __selectedProfileImg: {
       type: String,
@@ -160,6 +161,13 @@ Polymer({
   },
   __connectFacebook: function() {
     window.location = '/auth/facebook';
+  },
+
+  __selectedPlatformChanged: function (platform) {
+    this.__warn('__selectedPlatformChanged', platform);
+    this.set('__twibbynPosition', 'center');
+    this.set('__uploadStatus', 'ready');
+    this.set('__twibbynError', '');
   },
 
   __selectTwitter: function() {
