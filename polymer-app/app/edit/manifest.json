@@ -6,7 +6,7 @@
   "theme_color": "#E4003B",
   "background_color": "#E4003B",
   "description": "Change your profile pictures and get tweeting for Labour now.",
-  ​​"orientation": "portrait-primary",
+  ​​"orientation": "portrait",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",
