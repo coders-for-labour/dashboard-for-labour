@@ -52,14 +52,6 @@ Polymer({
       type: String,
       value: 'ready' // ready | uploading | uploaded
     },
-    __tweetBody: {
-      type: Object,
-      value: function() {
-        return {
-          tweet: '',
-        };
-      }
-    },
 
     __hideReady: {
       type: Boolean,
@@ -72,6 +64,20 @@ Polymer({
     __hideUploaded: {
       type: Boolean,
       computed: '__computeHideUploaded(__uploadStatus)'
+    },
+    __hideReauth: {
+      type: Boolean,
+      computed: '__computeHideReauth(__uploadStatus, __fbReauthRequired)'
+    },
+    __hideError: {
+      type: Boolean,
+      notify: true,
+      computed: '__computeHideError(__twibbynError)'
+    },
+
+    __fbReauthRequired: {
+      type: Boolean,
+      value: false
     },
 
     __configureFacebookPhotoId: {
@@ -103,6 +109,11 @@ Polymer({
 
     __twibbynSaveBody: {
       type: Object
+    },
+
+    __twibbynError: {
+      type: String,
+      value: ''
     }
   },
 
@@ -229,6 +240,17 @@ Polymer({
     }
     this.set('__uploadStatus', 'uploading');
 
+    const reAuth = this.get('__fbReauthRequired');
+
+    let fbOptions = {
+      return_scopes: true,
+      scope: 'publish_actions'
+    };
+
+    // if (reAuth) {
+    //   fbOptions['auth_type'] = 'rerequest';
+    // }
+
     FB.login(response => {
       this.__debug(response);
       if (response.status !== 'connected') {
@@ -236,10 +258,21 @@ Polymer({
         return;
       }
 
+      // if (response.authResponse.grantedScopes
+      //   && !response.authResponse.grantedScopes.includes('publish_actions')) {
+      //
+      //     this.set('__uploadStatus', 'ready');
+      //     this.set('__fbReauthRequired', true);
+      //
+      //   return;
+      // }
+
+      // if (reAuth) {
+      //   this.set('__fbReauthRequired', false);
+      // }
+
       this.$.ajaxGetFbTwibbyn.generateRequest();
-    }, {
-      scope: 'publish_actions'
-    });
+    }, fbOptions);
 
     this.__debug('__saveFacebook');
   },
@@ -260,7 +293,7 @@ Polymer({
       this.set('__uploadStatus', 'uploaded');
       if (!response.id) {
         this.__debug(response);
-        this.__err('Failed to upload photo to Facebook');
+        this.__twibbynFlowError('Failed to upload photo to Facebook');
         return;
       }
 
@@ -268,46 +301,23 @@ Polymer({
     });
   },
 
-  __shareAmplifyFb: function() {
-    let postText = this.get('__shareText.fb');
-    const url = 'https://amplify.labour.org.uk';
-    this.set('__shareFbStatus', 'sharing');
-    this.__shareUrl(postText, url, (err, postResponse) => {
-      if (err) {
-        this.__err(err);
-        this.set('__shareFbStatus', 'ready');
-        return;
-      }
-      this.set('__shareFbStatus', 'shared');
-      this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
-    });
-  },
-
-  __shareAmplifyTw: function() {
-    let postText = this.get('__shareText.tw');
-    this.set('__tweetBody', {
-      tweet: postText
-    });
-    this.set('__shareTwStatus', 'sharing');
-    this.$.ajaxTweet.generateRequest();
-  },
-
-  __sharedTw: function() {
-    this.set('__shareTwStatus', 'shared');
-  },
-
-  __sharedTwErr: function() {
-    this.set('__shareTwStatus', 'ready');
-  },
-
   __finishedUpload: function() {
     this.set('__uploadStatus', 'ready');
   },
 
-  __ajaxError: function(ev){
-    this.__err(ev);
+  __resetTwibbynFlow: function(){
+    this.set('__uploadStatus', 'ready');
+    this.set('__twibbynError', '');
   },
 
+  __twibbynFlowError: function (msg) {
+    this.set('__twibbynError', msg);
+    this.set('__uploadStatus', 'ready');
+  },
+  __ajaxError: function(ev){
+    this.set('__uploadStatus', 'ready');
+    this.fire('appViewError', ev);
+  },
 
   checkAuthApp: function(app) {
     let user = this.get('auth.user');
@@ -389,5 +399,12 @@ Polymer({
   },
   __computeHideUploaded: function(status) {
     return status === 'ready' || status === 'uploading';
+  },
+  __computeHideReauth: function(status, reAuth) {
+    return !reAuth;
+  },
+  __computeHideError: function(msg) {
+    this.__warn(msg);
+    return !msg || msg === '';
   }
 });

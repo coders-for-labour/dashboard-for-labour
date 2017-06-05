@@ -37,32 +37,21 @@ Polymer.D4LFacebook = {
         });
       });
     }, {
+      return_scopes: true,
       scope: 'publish_actions'
     });
   },
   __shareUrl: function(postText, url, cb) {
-    FB.login(response => {
-      this.__debug(response);
-      if (response.status !== 'connected') {
-        cb(new Error('login_cancelled'));
+    FB.ui({
+      method: 'share',
+      href: url
+    }, postResponse => {
+      if (!postResponse || postResponse.error_message) {
+        cb(new Error('Failed to post to Facebook'));
         return;
       }
 
-      FB.api('/me/feed', 'post', {
-        link: url,
-        message: postText,
-      }, response => {
-        if (!response.id) {
-          this.__err(response);
-          cb(new Error('Failed to upload photo to Facebook'));
-          return;
-        }
-
-        cb(null, response);
-
-      });
-    }, {
-      scope: 'publish_actions'
+      cb(null, postResponse);
     });
   }
 };

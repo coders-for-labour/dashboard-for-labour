@@ -114,12 +114,19 @@ dom-module#d4l-twibbyn-detail
         .flex.text-left
           paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__nextTwibbyn", style="transform: rotate(180deg);") Next
 
-
-      iron-pages(attr-for-selected="name", selected="{{__selectedPlatform}}")
+      .layout.vertical.center(hidden$="[[__hideError]]")
+        h2 There was a problem, please try again
+        p [[__twibbynError]]
+        paper-button(on-tap="__resetTwibbynFlow") Try Again
+      iron-pages(hidden$="[[!__hideError]]", attr-for-selected="name", selected="{{__selectedPlatform}}")
         div(name="facebook")
           .layout.vertical.center(hidden$="[[__hideReady]]")
             h2 Tap Save to upload your new avatar to Facebook.
-            paper-button(on-tap="__saveFacebook") Save
+            paper-button(on-tap="__saveFacebook") Save to Facebook
+
+          .layout.vertical.center(hidden$="[[__hideReauth]]")
+            h2 We need permission to publish your twibbyn to facebook
+            paper-button(on-tap="__saveFacebook") Give Permissions
 
           .layout.vertical.center(hidden$="[[__hideUploading]]")
             h2 Uploading your avatar to Facebook
@@ -140,7 +147,7 @@ dom-module#d4l-twibbyn-detail
         div(name="twitter")
           .layout.vertical.center(hidden$="[[__hideReady]]")
             h2 Tap Save to automatically update your Twitter profile.
-            paper-button(on-tap="__saveTwitter") Save
+            paper-button(on-tap="__saveTwitter") Save to Twitter
 
           .layout.vertical.center(hidden$="[[__hideUploading]]")
             h2 Adding your Twitter request to the queue...

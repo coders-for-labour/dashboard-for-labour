@@ -100,60 +100,6 @@ Polymer({
     // this.__debug(res);
   },
 
-  __shareAmplify: function() {
-    let user = this.get('auth.user');
-    if (!user || !user.profiles.length) {
-      this.__warn('No auth');
-      return;
-    }
-
-    let postText = this.get('__shareText.fb');
-    const url = 'https://amplify.labour.org.uk';
-    this.set('__shareTwStatus', 'sharing');
-
-    let authFb = user.profiles.find(p => p.app === 'facebook') !== -1;
-    let authTw = user.profiles.find(p => p.app === 'twitter') !== -1;
-
-    this.__debug(`AuthFb: ${authFb}`, `AuthTw: ${authTw}`);
-
-    if (authFb && authTw) {
-      this.__shareUrl(postText, url, (err, postResponse) => {
-        if (err) {
-          this.__err(err);
-          this.set('__shareTwStatus', 'ready');
-          return;
-        }
-        this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
-        postText = this.get('__shareText.tw');
-        this.set('__tweetBody', {
-          tweet: postText
-        });
-        this.set('__shareTwStatus', 'sharing');
-        this.$.ajaxTweet.generateRequest();
-      });
-    } else {
-      if (authFb) {
-        this.__shareUrl(postText, url, (err, postResponse) => {
-          if (err) {
-            this.__err(err);
-            this.set('__shareTwStatus', 'ready');
-            return;
-          }
-          this.set('__shareTwStatus', 'shared');
-          this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
-        });
-      }
-      if (authTw) {
-        postText = this.get('__shareText.tw');
-        this.set('__tweetBody', {
-          tweet: postText
-        });
-        this.set('__shareTwStatus', 'sharing');
-        this.$.ajaxTweet.generateRequest();
-      }
-    }
-  },
-
   __sharedTw: function() {
     this.set('__shareTwStatus', 'shared');
   },
@@ -161,7 +107,6 @@ Polymer({
   __sharedTwErr: function() {
     this.set('__shareTwStatus', 'ready');
   },
-
 
   __computeCampaignsQuery: function () {
     return {
