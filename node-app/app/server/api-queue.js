@@ -11,6 +11,7 @@
  */
 
 const Logging = require('./logging');
+const Helpers = require('./helpers');
 const Config = require('./config');
 const Twitter = require('twitter');
 const Sugar = require('sugar');
@@ -99,10 +100,17 @@ class APIQueueManager {
   add(qi) {
     qi.id = UUID.v1();
     qi.method = qi.method ? qi.method : 'GET';
-    return this._addQueueItem(qi);
+
+    let score = 0;
+    if (qi.processAfter) {
+      const date = Sugar.Date.create(qi.processAfter);
+      score = Sugar.Date.format(date, '{X}');
+    }
+
+    return this._addQueueItem(score, qi);
   }
 
-  /**
+  /* *
    * @description Immediately execute a queue Item, ignore rate limits
    * @param {object} qi - Queue Item
    * @return {Promise} - Resolves to the QI with .completed true and .results if successful
@@ -112,7 +120,7 @@ class APIQueueManager {
     return _appTasks[qi.app](qi);
   }
 
-  /**
+  /* *
    * @param {object} qi - Queue Item
    * @return {boolean} - true if rate limited
    * @private
@@ -138,14 +146,16 @@ class APIQueueManager {
     return false;
   }
 
-  /**
+  /* *
    * @description Fetch the length of the api-queue
    * @return {Promise} - Resolves with the length of the redis api-queue
    * @private
    */
   _queueLength() {
+    const now = Sugar.Date.create('now');
+    const nowEpoch = Sugar.Date.format(now, '{X}');
     return new Promise(resolve => {
-      redisClient.llen('api-queue', (err, result) => {
+      redisClient.zcount('api-queue', -1, nowEpoch, (err, result) => {
         if (err) {
           Logging.logError(err);
           return;
@@ -155,15 +165,19 @@ class APIQueueManager {
     });
   }
 
-  /**
+  /* *
    * @description Push a queue item into the redis queue, returns a promise
    * @param {object} item - contains all parameters for api call
    * @return {Promise} - Resolves with result from redis
    * @private
    */
   _fetchQueue() {
+    const now = Sugar.Date.create('now');
+    const nowEpoch = Sugar.Date.format(now, '{X}');
+    const limit = 1000;
+
     return new Promise(resolve => {
-      redisClient.lrange('api-queue', 0, -1, (err, result) => {
+      redisClient.zrangebyscore('api-queue', -1, nowEpoch, 'LIMIT', 0, limit, (err, result) => {
         if (err) {
           Logging.logError(err);
           return;
@@ -173,15 +187,15 @@ class APIQueueManager {
     });
   }
 
-  /**
+  /* *
    * @description Push a queue item into the redis queue, returns a promise
    * @param {object} item - contains all parameters for api call
    * @return {Promise} - Resolves with result from redis
    * @private
    */
-  _addQueueItem(item) {
+  _addQueueItem(score, item) {
     return new Promise(resolve => {
-      redisClient.rpush(['api-queue', JSON.stringify(item)], (err, result) => {
+      redisClient.zadd('api-queue', score, JSON.stringify(item), (err, result) => {
         if (err) {
           Logging.logError(err);
           return;
@@ -197,17 +211,16 @@ class APIQueueManager {
    * @return {Promise} - Resolves with result from redis
    * @private
    */
-  _deleteQueueItem(itemId) {
-    return this._fetchQueue()
-      .then(results => {
-        for (let key in results) {
-          if (results[key].includes(itemId)) {
-            Logging.log(`Removing index ${key} from api-queue`);
-            redisClient.lrem('api-queue', 0, results[key]);
-            return key;
-          }
+  _deleteQueueItem(jsonItem) {
+    return new Promise(resolve => {
+      redisClient.zrem('api-queue', jsonItem, (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
         }
+        resolve(result);
       });
+    });
   }
 
   /**
@@ -215,8 +228,11 @@ class APIQueueManager {
    * @private
    */
   _flush() {
+    const timer = new Helpers.Timer();
+
     this._queueLength()
       .then(queueLength => {
+        timer.start();
         Logging.logDebug(`Queue Manager: ${queueLength}`);
         if (queueLength === 0) {
           return false;
@@ -226,9 +242,13 @@ class APIQueueManager {
       .then(queue => {
         let tasks = [];
 
+        Logging.logDebug(`FETCHED QUEUE: ${timer.interval}`);
+
         if (queue) {
-          tasks = queue.reduce((arr, item) => {
-            arr.push(JSON.parse(item));
+          tasks = queue.reduce((arr, jsonItem) => {
+            let item = JSON.parse(jsonItem);
+            item.queueState = JSON.stringify(item);
+            arr.push(item);
             return arr;
           }, []).filter(qi => {
             if (qi.error) {
@@ -246,23 +266,30 @@ class APIQueueManager {
           }).map(qi => _appTasks[qi.app](qi));
         }
 
+        Logging.logInfo(`PROCESSED QUEUE: ${timer.interval}`);
+
         return tasks;
       })
       .then(tasks => {
         if (tasks && tasks.length > 0) {
-          Logging.logDebug(`Attempting ${tasks.length} Twitter`);
+          Logging.logDebug(`Attempting ${tasks.length} API`);
+          Logging.logInfo(`CALLING TASKS: ${timer.interval}`);
           Promise.all(tasks)
-            .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
+            .then(Logging.Promise.logProp('API Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
             .then(qis => {
               qis.forEach(item => {
                 if (item.error) {
-                  this._deleteQueueItem(item.id);
-                  this._addQueueItem(item);
+                  this._deleteQueueItem(item.queueState);
+                  delete item.queueState;
+                  this.add(item);
                 }
                 if (item.completed) {
-                  this._deleteQueueItem(item.id);
+                  this._deleteQueueItem(item.queueState);
                 }
               });
+            })
+            .then(() => {
+              Logging.logInfo(`CALLED TASKS: ${timer.lapTime}`);
             })
             .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
             .catch(err => Logging.log(err));

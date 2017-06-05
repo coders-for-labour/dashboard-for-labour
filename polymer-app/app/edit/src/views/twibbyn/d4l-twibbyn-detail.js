@@ -164,7 +164,7 @@ Polymer({
   },
 
   __selectedPlatformChanged: function (platform) {
-    this.__warn('__selectedPlatformChanged', platform);
+    this.__silly('__selectedPlatformChanged', platform);
     this.set('__twibbynPosition', 'center');
     this.set('__uploadStatus', 'ready');
     this.set('__twibbynError', '');

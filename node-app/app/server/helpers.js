@@ -32,6 +32,38 @@ module.exports.Promise = {
 
 /* ************************************************************
  *
+ * Timer
+ *
+ **************************************************************/
+
+class Timer {
+  constructor() {
+    this._start = 0;
+  }
+
+  start() {
+    let hrTime = process.hrtime();
+    this._last = this._start = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
+  }
+
+  get lapTime() {
+    let hrTime = process.hrtime();
+    let time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
+    let lapTime = time - this._last;
+    this._last = time;
+    return (lapTime / 1000000);
+  }
+  get interval() {
+    let hrTime = process.hrtime();
+    let time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
+    return ((time - this._start) / 1000000);
+  }
+}
+
+module.exports.Timer = Timer;
+
+/* ************************************************************
+ *
  * GOOGLE CLOUD PLATFORM
  *
  **************************************************************/
