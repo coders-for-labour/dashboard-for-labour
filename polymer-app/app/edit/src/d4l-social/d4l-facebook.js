@@ -44,7 +44,6 @@ Polymer.D4LFacebook = {
   __shareUrl: function(postText, url, cb) {
     FB.ui({
       method: 'share',
-      quote: postText,
       href: url
     }, postResponse => {
       if (!postResponse || postResponse.error_message) {
