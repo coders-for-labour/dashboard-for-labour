@@ -3,7 +3,12 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.3.6
+## version: 1.3.7
+- Api-queue error items are now pushed into a separate list
+- Manage api-queue timeout so it can be called asap
+- Tidy debug messages
+
+## 1.3.6
 - Disabled facebook from being used with Twibbyn
 - Tiny UI tweak
 
