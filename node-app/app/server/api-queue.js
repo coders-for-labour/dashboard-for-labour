@@ -281,36 +281,36 @@ class APIQueueManager {
         return tasks;
       })
       .then(tasks => {
-        if (tasks && tasks.length > 0) {
-          Logging.logDebug(`Attempting ${tasks.length} API`);
-          Logging.logDebug(`CALLING TASKS: ${tasks.length} - ${timer.interval}`);
-          Promise.all(tasks)
-            .then(qis => {
-              qis.forEach(item => {
-                if (item.error) {
-                  this._deleteQueueItem(Constants.Queue.API, item.queueState);
-                  delete item.queueState;
-                  this.add(item, Constants.Queue.ERROR);
-                }
-                if (item.completed) {
-                  this._deleteQueueItem(Constants.Queue.API, item.queueState);
-                }
-              });
-              return qis;
-            })
-            .then(qis => {
-              Logging.logDebug(`CALLED TASKS: ${qis.length} - ${timer.lapTime}`);
-            })
-            .then(() => this._recallQueueTimeout())
-            .catch(err => {
-              Logging.log(err);
-              this._recallQueueTimeout();
-            });
-        } else {
-          this._recallQueueTimeout();
+        if (!tasks || !tasks.length) {
+          return false;
         }
-      }).catch(err => {
-        Logging.log(err);
+
+        Logging.logDebug(`CALLING TASKS: ${tasks.length}`);
+        return Promise.all(tasks);
+      })
+      .then(Logging.logTimer('CALLED TASKS', timer))
+      .then((qis) => {
+        if (!qis) {
+          return;
+        }
+
+        Logging.logDebug(`CALLED TASKS: ${qis.length} - ${timer.lapTime}`);
+
+        qis.forEach(item => {
+          if (item.error) {
+            this._deleteQueueItem(Constants.Queue.API, item.queueState);
+            delete item.queueState;
+            this.add(item, Constants.Queue.ERROR);
+          }
+          if (item.completed) {
+            this._deleteQueueItem(Constants.Queue.API, item.queueState);
+          }
+        });
+        return qis;
+      })
+      .then(() => this._recallQueueTimeout())
+      .catch(err => {
+        Logging.logError(err);
         this._recallQueueTimeout();
       });
   }
