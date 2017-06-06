@@ -84,7 +84,7 @@ const _subscribeThunderclap = (req, res) => {
         },
         token: twitterAuth.token,
         tokenSecret: twitterAuth.tokenSecret
-      });
+      }, Queue.Constants.Queue.API);
     })
     .then(result => {
       if (!result) {
