@@ -30,6 +30,10 @@ const Constants = {
   App: {
     TWITTER: 'twitter',
     FACEBOOK: 'facebook'
+  },
+  Queue: {
+    API: 'api-queue',
+    ERROR: 'api-queue-error'
   }
 };
 module.exports.Constants = Constants;
@@ -79,6 +83,7 @@ const _appTasks = {
 class APIQueueManager {
   constructor() {
     this._rateLimiter = {};
+    this._queueTimeout = null;
     // this._queue = [];
   }
 
@@ -92,12 +97,12 @@ class APIQueueManager {
     }
   }
 
-  /**
+  /* *
    * @description Add to the queue, defer execution, honor rate limits
    * @param {object} qi - contains all parameters for api call
    * @return {Promise} - Resolves with result from redis
    */
-  add(qi) {
+  add(qi, key) {
     qi.id = UUID.v1();
     qi.method = qi.method ? qi.method : 'GET';
 
@@ -107,7 +112,7 @@ class APIQueueManager {
       score = Sugar.Date.format(date, '{X}');
     }
 
-    return this._addQueueItem(score, qi);
+    return this._addQueueItem(key, score, qi);
   }
 
   /* *
@@ -151,11 +156,11 @@ class APIQueueManager {
    * @return {Promise} - Resolves with the length of the redis api-queue
    * @private
    */
-  _queueLength() {
+  _queueLength(key) {
     const now = Sugar.Date.create('now');
     const nowEpoch = Sugar.Date.format(now, '{X}');
     return new Promise(resolve => {
-      redisClient.zcount('api-queue', -1, nowEpoch, (err, result) => {
+      redisClient.zcount(key, -1, nowEpoch, (err, result) => {
         if (err) {
           Logging.logError(err);
           return;
@@ -171,13 +176,13 @@ class APIQueueManager {
    * @return {Promise} - Resolves with result from redis
    * @private
    */
-  _fetchQueue() {
+  _fetchQueue(key) {
     const now = Sugar.Date.create('now');
     const nowEpoch = Sugar.Date.format(now, '{X}');
     const limit = 1000;
 
     return new Promise(resolve => {
-      redisClient.zrangebyscore('api-queue', -1, nowEpoch, 'LIMIT', 0, limit, (err, result) => {
+      redisClient.zrangebyscore(key, -1, nowEpoch, 'LIMIT', 0, limit, (err, result) => {
         if (err) {
           Logging.logError(err);
           return;
@@ -193,9 +198,9 @@ class APIQueueManager {
    * @return {Promise} - Resolves with result from redis
    * @private
    */
-  _addQueueItem(score, item) {
+  _addQueueItem(key, score, item) {
     return new Promise(resolve => {
-      redisClient.zadd('api-queue', score, JSON.stringify(item), (err, result) => {
+      redisClient.zadd(key, score, JSON.stringify(item), (err, result) => {
         if (err) {
           Logging.logError(err);
           return;
@@ -207,13 +212,14 @@ class APIQueueManager {
 
   /**
    * @description Remove an item from the redis api-queue using itemId
-   * @param {object} itemId - api queue item id
+   * @param {object} key - redis list key
+   * @param {object} jsonItem - json object
    * @return {Promise} - Resolves with result from redis
    * @private
    */
-  _deleteQueueItem(jsonItem) {
+  _deleteQueueItem(key, jsonItem) {
     return new Promise(resolve => {
-      redisClient.zrem('api-queue', jsonItem, (err, result) => {
+      redisClient.zrem(key, jsonItem, (err, result) => {
         if (err) {
           Logging.logError(err);
           return;
@@ -223,37 +229,42 @@ class APIQueueManager {
     });
   }
 
+  _recallQueueTimeout() {
+    if (!this._queueTimeout) {
+      this._queueTimeout = setTimeout(() => this._flush(), Constants.INTERVAL);
+    }
+  }
+
   /**
    *
    * @private
    */
   _flush() {
     const timer = new Helpers.Timer();
+    this._queueTimeout = null;
 
-    this._queueLength()
+    this._queueLength(Constants.Queue.API)
       .then(queueLength => {
         timer.start();
-        Logging.logDebug(`Queue Manager: ${queueLength}`);
         if (queueLength === 0) {
           return false;
         }
-        return this._fetchQueue();
+        return this._fetchQueue(Constants.Queue.API);
       })
       .then(queue => {
         let tasks = [];
-
-        Logging.logDebug(`FETCHED QUEUE: ${timer.interval}`);
-
         if (queue) {
+          Logging.logDebug(`FETCHED QUEUE: ${queue.length} - ${timer.interval}`);
+
           tasks = queue.reduce((arr, jsonItem) => {
             let item = JSON.parse(jsonItem);
             item.queueState = JSON.stringify(item);
             arr.push(item);
             return arr;
           }, []).filter(qi => {
-            if (qi.error) {
-              return false;
-            }
+            // if (qi.error) {
+            //   return false;
+            // }
             if (qi.processAfter) {
               const time = Sugar.Date.create('now');
               const itemDate = Sugar.Date.create(qi.processAfter);
@@ -264,38 +275,43 @@ class APIQueueManager {
             }
             return this._isRateLimited(qi) === false;
           }).map(qi => _appTasks[qi.app](qi));
+          Logging.logInfo(`PROCESSED QUEUE: ${tasks.length} - ${timer.interval}`);
         }
-
-        Logging.logInfo(`PROCESSED QUEUE: ${timer.interval}`);
 
         return tasks;
       })
       .then(tasks => {
         if (tasks && tasks.length > 0) {
           Logging.logDebug(`Attempting ${tasks.length} API`);
-          Logging.logInfo(`CALLING TASKS: ${timer.interval}`);
+          Logging.logDebug(`CALLING TASKS: ${tasks.length} - ${timer.interval}`);
           Promise.all(tasks)
-            .then(Logging.Promise.logProp('API Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
             .then(qis => {
               qis.forEach(item => {
                 if (item.error) {
-                  this._deleteQueueItem(item.queueState);
+                  this._deleteQueueItem(Constants.Queue.API, item.queueState);
                   delete item.queueState;
-                  this.add(item);
+                  this.add(item, Constants.Queue.ERROR);
                 }
                 if (item.completed) {
-                  this._deleteQueueItem(item.queueState);
+                  this._deleteQueueItem(Constants.Queue.API, item.queueState);
                 }
               });
+              return qis;
             })
-            .then(() => {
-              Logging.logInfo(`CALLED TASKS: ${timer.lapTime}`);
+            .then(qis => {
+              Logging.logDebug(`CALLED TASKS: ${qis.length} - ${timer.lapTime}`);
             })
-            .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
-            .catch(err => Logging.log(err));
+            .then(this._recallQueueTimeout)
+            .catch(err => {
+              Logging.log(err);
+              this._recallQueueTimeout();
+            });
         } else {
-          setTimeout(() => this._flush(), Constants.INTERVAL);
+          this._recallQueueTimeout();
         }
+      }).catch(err => {
+        Logging.log(err);
+        this._recallQueueTimeout();
       });
   }
 }
