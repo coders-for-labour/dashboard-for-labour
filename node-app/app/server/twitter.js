@@ -40,7 +40,7 @@ module.exports.updateProfile = (user, imgBuffer) => {
     },
     token: user.token,
     tokenSecret: user.tokenSecret
-  });
+  }, Queue.Constants.Queue.API);
 
   Logging.logDebug(imgBuffer);
 
