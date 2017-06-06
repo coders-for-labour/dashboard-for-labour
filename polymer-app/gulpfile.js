@@ -16,6 +16,7 @@ const replace = require('gulp-replace');
 const Paths = {
   SOURCE: 'app/edit',
   DEST: 'app/serve',
+  BUNDLED: 'build/bundled/app/serve',
   DEST_SRC: 'app/serve/src',
   DEST_IMAGES: 'app/serve/images',
   DEST_VIDEOS: 'app/serve/videos'
@@ -192,6 +193,23 @@ gulp.task('clean', function() {
 gulp.task('build', ['clean'], function() {
   return gulp.start(['resources', 'scripts', 'images', 'videos', 'markup']);
 });
+
+gulp.task('build-sw', function(cb){
+  var swPrecache = require('sw-precache');
+  var rootDir = Paths.BUNDLED;
+
+  swPrecache.write(`${rootDir}/service-worker.js`, {
+    staticFileGlobs: [
+      `${Paths.BUNDLED}/manifest.json`,
+      `${Paths.BUNDLED}/bower_components/webcomponentsjs/webcomponents-lite.min.js`,
+      `${Paths.BUNDLED}/src/**/*`,
+      `${Paths.BUNDLED}/images/**/*`,
+      `${Paths.BUNDLED}/videos/**/*`
+    ],
+    stripPrefix: rootDir
+  }, cb);
+});
+
 
 gulp.task('watch', ['build'], function() {
   gulp.watch(Globs.SCRIPTS, ['scripts']);
