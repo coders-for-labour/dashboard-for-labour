@@ -153,7 +153,9 @@ Polymer({
       return;
     }
 
-    this.__selectedPlatform = profiles[0].app;
+    if (profiles[0].app !== 'facebook') {
+      this.__selectedPlatform = profiles[0].app;
+    }
   },
 
   __connectTwitter: function() {
@@ -165,6 +167,7 @@ Polymer({
 
   __selectedPlatformChanged: function (platform) {
     this.__silly('__selectedPlatformChanged', platform);
+
     this.set('__twibbynPosition', 'center');
     this.set('__uploadStatus', 'ready');
     this.set('__twibbynError', '');

@@ -3,7 +3,11 @@
 Social media tools for activists for #ge17
 
 # What's New
-## version: 1.3.5
+## version: 1.3.6
+- Disabled facebook from being used with Twibbyn
+- Tiny UI tweak
+
+## 1.3.5
 - REFACTOR: Api-queue to use sorted sets instead of lists
 - ADDED: Timing class to helpers
 
