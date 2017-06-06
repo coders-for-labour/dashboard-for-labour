@@ -301,7 +301,7 @@ class APIQueueManager {
             .then(qis => {
               Logging.logDebug(`CALLED TASKS: ${qis.length} - ${timer.lapTime}`);
             })
-            .then(this._recallQueueTimeout)
+            .then(() => this._recallQueueTimeout())
             .catch(err => {
               Logging.log(err);
               this._recallQueueTimeout();
