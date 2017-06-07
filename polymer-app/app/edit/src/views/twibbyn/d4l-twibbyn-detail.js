@@ -153,9 +153,9 @@ Polymer({
       return;
     }
 
-    if (profiles[0].app !== 'facebook') {
-      this.__selectedPlatform = profiles[0].app;
-    }
+    //-if (profiles[0].app !== 'facebook') {
+    this.__selectedPlatform = profiles[0].app;
+    //-}
   },
 
   __connectTwitter: function() {
