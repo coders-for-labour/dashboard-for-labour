@@ -68,6 +68,11 @@ dom-module#d4l-auth
         cursor: pointer;
       }
 
+      .auth-desc {
+        text-align: center;
+        margin: 0px 5px 5px;
+      }
+
       .page-background {
         position: fixed;
         top:0px;
@@ -101,6 +106,10 @@ dom-module#d4l-auth
       .layout.vertical.center-center
         iron-icon.auth-icon(icon="d4l-icons:labour")
         h1 Amplify
+        p.auth-desc
+          | Change your Facebook profile picture
+          br
+          | and twibbyn to show your support for Labour now.
         .layout.horizontal.center.login-group(on-click="loginTwitter")
           p Login with Twitter
           iron-icon.twitter-icon(icon="d4l-social-icons:twitter")
