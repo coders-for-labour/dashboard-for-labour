@@ -8,6 +8,12 @@ Polymer({
       type: Number,
       value: 4,
     },
+    open: {
+      type: Boolean,
+      value: false,
+      notify: true,
+      observer: '__onOpenChanged'
+    },
     title: {
       type: String,
       value: 'Post'
@@ -16,6 +22,11 @@ Polymer({
       type: String,
       value: '',
     },
+
+    hasTwitter: {
+      type: Boolean
+    },
+
     __text: {
       type: String,
       value: ''
@@ -27,12 +38,6 @@ Polymer({
     __hasImage: {
       type: Boolean,
       computed: '__computeHasImage(__image)'
-    },
-    open: {
-      type: Boolean,
-      value: false,
-      notify: true,
-      observer: '__onOpenChanged'
     },
     __uploadResponse: {
       type: Object,
@@ -53,6 +58,10 @@ Polymer({
     } else {
       this.$.dialog.close();
     }
+  },
+
+  __connectTwitter: function () {
+    window.location = '/auth/twitter';
   },
 
   __onUploadResponse: function(response) {

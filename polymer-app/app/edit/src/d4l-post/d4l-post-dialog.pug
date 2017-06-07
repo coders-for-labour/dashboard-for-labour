@@ -43,6 +43,11 @@ dom-module#d4l-post-dialog
         --preview-height: 50px;
       }
 
+      .twitter-msg {
+        margin-top: 10px;
+        margin-left: 6px;
+      }
+
     paper-dialog#dialog(on-iron-overlay-closed="__dialogClosed", with-backdrop)
       .dialog-header
         .layout.horizontal.center
@@ -59,6 +64,10 @@ dom-module#d4l-post-dialog
 
       .dialog-footer
         //-paper-button#send(disabled="[[!__hasImage]]", autofocus, on-click="__save") Save
-        paper-button#send(autofocus, on-click="__save") Subscribe
+        .layout.horizontal.center
+          paper-button#send(autofocus, disabled$="[[!hasTwitter]]", on-click="__save") Subscribe
+          paper-button#send(autofocus, hidden$="[[hasTwitter]]", on-click="__connectTwitter") Sign-in with Twitter
+        .layout.horizontal.center
+          p(hidden$="[[hasTwitter]]", class="twitter-msg") Please sign-in with a twitter account to subscribe to a storm
 
   script(src="d4l-post-dialog.js")
