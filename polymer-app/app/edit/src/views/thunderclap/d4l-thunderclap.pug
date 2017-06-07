@@ -72,7 +72,14 @@ dom-module#d4l-thunderclap
       on-back-button-clicked="__navBack"
     )
 
-    d4l-post-dialog(title="Subscribe", text="{{__campaignText}}", open="{{__openPostDialog}}", on-save="__saveThunderclap")
+    d4l-post-dialog(
+      title="Subscribe",
+      type="thunderclap",
+      has-twitter="[[__hasUserTwitter]]",
+      text="{{__campaignText}}",
+      open="{{__openPostDialog}}",
+      on-save="__saveThunderclap"
+    )
 
     iron-pages(
     selected='[[__loadMode]]',
@@ -94,7 +101,7 @@ dom-module#d4l-thunderclap
                   .layout.horizontal.center
                     iron-icon(icon="d4l-social-icons:storm")
                     h1 Storm
-                  p Rally together with other supporters by tweeting our most important messages, so everyone knows.
+                  p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
                   p Think your friends want to Amplify Labour’s message?
                   .share-buttons
                     paper-button(disabled$="[[__disableShareFb]]", on-tap="__shareAmplifyFb") [[__shareFbButton]]
