@@ -67,7 +67,7 @@ const _subscribeThunderclap = (req, res) => {
 
       const time = Sugar.Date.create('now');
       const itemDate = Sugar.Date.create(timeString);
-      if (!Sugar.Date.isAfter(time, itemDate)) {
+      if (!Sugar.Date.isAfter(itemDate, time)) {
         throw new Error('campaign_elapsed');
       }
 
