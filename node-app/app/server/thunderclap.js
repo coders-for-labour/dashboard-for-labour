@@ -55,8 +55,6 @@ const _subscribeThunderclap = (req, res) => {
         throw new Error('already_subscribed');
       }
       supporters = s;
-      supporters.push(req.user.id);
-      Rhizome.Campaign.Metadata.save(campaignId, 'supporters', supporters);
 
       return Rhizome.Campaign.Metadata.load(campaignId, 'thunderclapTime', '');
     })
@@ -67,9 +65,12 @@ const _subscribeThunderclap = (req, res) => {
 
       const time = Sugar.Date.create('now');
       const itemDate = Sugar.Date.create(timeString);
-      if (!Sugar.Date.isAfter(time, itemDate)) {
+      if (!Sugar.Date.isAfter(itemDate, time)) {
         throw new Error('campaign_elapsed');
       }
+
+      supporters.push(req.user.id);
+      Rhizome.Campaign.Metadata.save(campaignId, 'supporters', supporters);
 
       return Queue.Manager.add({
         app: Queue.Constants.App.TWITTER,
