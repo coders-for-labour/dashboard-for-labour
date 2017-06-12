@@ -288,7 +288,7 @@ class APIQueueManager {
         Logging.logDebug(`CALLING TASKS: ${tasks.length}`);
         return Promise.all(tasks);
       })
-      .then(Logging.logTimer('CALLED TASKS', timer))
+      .then(Logging.Promise.logTimer('CALLED TASKS', timer))
       .then((qis) => {
         if (!qis) {
           return;
