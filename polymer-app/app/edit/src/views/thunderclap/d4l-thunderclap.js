@@ -67,6 +67,13 @@ Polymer({
     __campaignsQuery: {
       type: Object,
       computed: '__computeCampaignsQuery(db.campaign.data.*)'
+    },
+
+    __hasUserTwitter: {
+      type: Boolean,
+      notify: true,
+      value: false,
+      computed: '__computeHasUserTwitter(auth.user, auth.user.profiles.*)'
     }
   },
 
@@ -129,6 +136,16 @@ Polymer({
     }
 
     return title;
+  },
+
+  __computeHasUserTwitter: function(authUser){
+    return authUser.profiles.reduce((outcome, profile) => {
+      if (profile.app === 'twitter') {
+        return true;
+      }
+
+      return outcome;
+    }, false);
   }
 
 });
