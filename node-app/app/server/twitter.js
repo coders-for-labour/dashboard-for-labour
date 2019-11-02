@@ -10,9 +10,9 @@
  *
  */
 
-const Logging = require('./logging');
-// const Config = require('./config');
+const Config = require('node-env-obj')('../../');
 
+const Logging = require('./logging');
 const Queue = require('./api-queue');
 
 /**

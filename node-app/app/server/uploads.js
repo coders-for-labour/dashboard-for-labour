@@ -10,9 +10,10 @@
  *
  */
 
-// const fs = require('fs');
+const Config = require('node-env-obj')('../../');
+
+const fs = require('fs');
 const crypto = require('crypto');
-const Config = require('./config');
 const Logging = require('./logging');
 const Helpers = require('./helpers');
 const Storage = require('@google-cloud/storage');

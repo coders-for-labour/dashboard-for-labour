@@ -10,9 +10,9 @@
  *
  */
 
+const Config = require('node-env-obj')('../../');
 const Logging = require('./logging');
 const Helpers = require('./helpers');
-const Config = require('./config');
 const Twitter = require('twitter');
 const Sugar = require('sugar');
 const redis = require('redis');

@@ -10,6 +10,8 @@
  *
  */
 
+const Config = require('node-env-obj')('../../');
+
 const os = require('os');
 const cluster = require('cluster');
 const Helpers = require('./helpers');

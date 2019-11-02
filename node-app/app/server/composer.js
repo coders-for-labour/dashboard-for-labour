@@ -10,16 +10,18 @@
  *
  */
 
+const Config = require('node-env-obj')('../../');
+
 const fs = require('fs');
 const crypto = require('crypto');
 const rest = require('restler');
-const Config = require('./config');
 const Helpers = require('./helpers');
-const Logging = require('./logging');
 const Canvas = require('canvas');
 const Image = Canvas.Image;
 const Storage = require('@google-cloud/storage');
 const storage = Storage(); // eslint-disable-line new-cap
+
+const Logging = require('./logging');
 
 let _cache = null;
 let _memCache = null;
@@ -307,7 +309,7 @@ class Composer {
  */
 class Cache {
   constructor() {
-    this.__cachePath = `${Config.appDataPath}/image_cache`;
+    this.__cachePath = `${Config.data.path}/image_cache`;
   }
 
   tryLoadCachedImage(options) {

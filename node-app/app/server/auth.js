@@ -10,12 +10,14 @@
  *
  */
 
-const Logging = require('./logging');
-const Config = require('./config');
+const Config = require('node-env-obj')('../../');
+
 const passport = require('passport');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const Rhizome = require('rhizome-api-js');
+
+const Logging = require('./logging');
 
 /* ************************************************************
  *

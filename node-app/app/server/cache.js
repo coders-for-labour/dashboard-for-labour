@@ -10,12 +10,15 @@
  *
  */
 
-const Config = require("./config");
+const Config = require('node-env-obj')('../../');
+
 const EventEmitter = require('events');
 const rest = require('restler');
+const levelup = require('levelup');
+const leveldown = require('leveldown');
+
 const Logging = require('./logging');
 const otp = require('./stotp');
-const levelup = require('levelup');
 
 /* ****************************************************************
  *
@@ -60,7 +63,7 @@ const Constants = {
  * DB
  *
  ******************************************************************/
-const db = levelup(`${Config.appDataPath}/cache`);
+const db = levelup(leveldown(`${Config.data.path}/cache`));
 
 /* ****************************************************************
  *
@@ -92,14 +95,18 @@ class Cache extends EventEmitter {
       if (err) {
         Logging.logError(err);
         this._data = _Constants.DEFAULTS[this._type];
-        this._refresh();
-        return;
+      } else {
+        this._data = JSON.parse(value);
+        this.emit('cache-data', this._data);
       }
 
-      this._data = JSON.parse(value);
-      // Logging.logDebug(this._data);
-      this.emit('cache-data', this._data);
-      this._refresh();
+      this._refresh()
+        .then(() => {
+          console.log('Refresh');
+        })
+        .catch(err => {
+          Logging.logError(err);
+        })
     });
   }
 
@@ -135,7 +142,7 @@ class Cache extends EventEmitter {
 
           Logging.log(`Refreshed Cache ${this._type.toUpperCase()}`, Logging.Constants.LogLevel.INFO);
           if (data.res === undefined) {
-            throw new Error('Invalid data');
+            reject('Invalid data');
           }
 
           db.put(this._type, JSON.stringify(data.res), err => {

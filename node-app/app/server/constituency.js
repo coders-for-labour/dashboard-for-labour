@@ -10,10 +10,12 @@
  *
  */
 
-const Config = require('./config');
+const Config = require('node-env-obj')('../../');
+
+const rest = require('restler');
+
 const Logging = require('./logging');
 const Cache = require('./cache');
-const rest = require('restler');
 
 class Constituency {
   init(app) {

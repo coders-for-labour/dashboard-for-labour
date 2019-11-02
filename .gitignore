@@ -47,3 +47,10 @@ jspm_packages
 
 node-app/app_data
 .vscode
+
+# Env files
+*.env
+!.example.env
+
+# App Data
+app_data/*

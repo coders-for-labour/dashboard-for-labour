@@ -10,8 +10,9 @@
  *
  */
 
+const Config = require('node-env-obj')('../../');
+
 const fs = require('fs');
-const Config = require('./config');
 // const Storage = require('@google-cloud/storage');
 const sb = require('stream-buffers');
 
@@ -96,12 +97,12 @@ module.exports.GCloud = {
 module.exports.AppData = {
   createFolder: folderName => {
     return new Promise((resolve, reject) => {
-      fs.mkdir(`${Config.appDataPath}`, err => {
+      fs.mkdir(`${Config.data.path}`, err => {
         if (err && err.code !== 'EEXIST') {
           throw err;
         }
 
-        fs.mkdir(`${Config.appDataPath}${folderName}`, err => {
+        fs.mkdir(`${Config.data.path}${folderName}`, err => {
           if (err && err.code !== 'EEXIST') {
             throw err;
           }

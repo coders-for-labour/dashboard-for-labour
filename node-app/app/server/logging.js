@@ -10,13 +10,13 @@
  *
  */
 
-const proxyquire = require('proxyquire');
+const Config = require('node-env-obj')('../../');
+
+// const proxyquire = require('proxyquire');
 const winston = require('winston');
-proxyquire('winston-logrotate', {
-  winston: winston
-});
-const Config = require('./config');
-// require('sugar');
+// proxyquire('winston-logrotate', {
+//   winston: winston
+// });
 
 /**
  *
@@ -40,32 +40,35 @@ module.exports.Constants = {
  *
  */
 
-winston.remove(winston.transports.Console);
-winston.add(winston.transports.Console, {
-  colorize: 'all',
-  timestamp: true,
-  level: 'info'
-});
-
-winston.add(winston.transports.Rotate, {
-  name: 'debug-file',
-  json: false,
-  file: `${Config.logPath}/log-debug.log`,
+// winston.remove(winston.transports.Console);
+winston.add(new winston.transports.Console({
   level: 'debug',
-  size: '1m',
-  keep: 2,
-  colorize: 'all',
-  timestamp: true
-});
-winston.add(winston.transports.Rotate, {
-  name: 'error-file',
-  json: false,
-  file: `${Config.logPath}/log-err.log`,
-  size: '1m',
-  keep: 10,
-  level: 'err',
-  timestamp: true
-});
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+  )
+}));
+// winston.add(new winston.transports.Rotate({
+//   name: 'debug-file',
+//   json: false,
+//   file: `${Config.log.path}/log-debug.log`,
+//   level: 'debug',
+//   size: '1m',
+//   keep: 2,
+//   colorize: 'all',
+//   timestamp: true
+// }));
+// winston.add(new winston.transports.Rotate({
+//   name: 'error-file',
+//   json: false,
+//   file: `${Config.log.path}/log-err.log`,
+//   level: 'err',
+//   size: '1m',
+//   keep: 10,
+//   timestamp: true
+// }));
 winston.addColors({
   info: 'white',
   error: 'red',
@@ -81,12 +84,10 @@ winston.addColors({
  * @private
  */
 function _log(log, level) {
-  winston.log(level, log);
-  // if (typeof log === 'string') {
-  //   winston.log(level, log);
-  // } else {
-  //   winston.log(level, '', log);
-  // }
+  winston.log({
+    level: level,
+    message: log
+  });
 }
 
 /**
@@ -95,7 +96,6 @@ function _log(log, level) {
 
 module.exports.setLogLevel = level => {
   winston.level = level;
-  // _logLevel = level;
 };
 
 /**
@@ -139,13 +139,13 @@ module.exports.logSilly = log => {
  * @param {string} warn - warning to log
  */
 module.exports.logWarn = warn => {
-  _log(warn, LogLevel.ERR);
+  module.exports.log(warn, LogLevel.ERR);
 };
 /**
  * @param {string} err - error object to log
  */
 module.exports.logError = err => {
-  _log(err, LogLevel.ERR);
+  module.exports.log(err, LogLevel.ERR);
 };
 
 /**
