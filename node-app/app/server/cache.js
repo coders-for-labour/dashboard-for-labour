@@ -100,18 +100,21 @@ class Cache extends EventEmitter {
         this.emit('cache-data', this._data);
       }
 
-      this._refresh()
-        .then(() => {
-          console.log('Refresh');
-        })
-        .catch(err => {
-          Logging.logError(err);
-        })
+      this._callRefresh();
     });
   }
 
   getData() {
     return Promise.resolve(this._data);
+  }
+
+  _callRefresh() {
+    return this._refresh()
+      .catch(err => {
+        Logging.logError(err);
+        Logging.logDebug(`CACHE REFRESH ERROR: ${this._type.toUpperCase()}`);
+        this._setTimeout(_Constants.ERROR_CACHE_INTERVAL);
+      });
   }
 
   _refresh() {
@@ -143,6 +146,7 @@ class Cache extends EventEmitter {
           Logging.log(`Refreshed Cache ${this._type.toUpperCase()}`, Logging.Constants.LogLevel.INFO);
           if (data.res === undefined) {
             reject('Invalid data');
+            return;
           }
 
           db.put(this._type, JSON.stringify(data.res), err => {
@@ -150,14 +154,15 @@ class Cache extends EventEmitter {
               Logging.logError(err);
             }
           });
+
           this._data = data.res;
           resolve(this._data);
           this.emit('cache-data', this._data);
           this._setTimeout();
         })
         .on('fail', (data, response) => {
-          this._setTimeout(_Constants.ERROR_CACHE_INTERVAL);
           Logging.logDebug(`CACHE REFRESH FAILED(${response.statusCode}): ${this._type.toUpperCase()}`);
+          this._setTimeout(_Constants.ERROR_CACHE_INTERVAL);
           resolve(this._data);
         })
         .on('error', err => {
@@ -184,11 +189,9 @@ class Cache extends EventEmitter {
       Logging.log('WARNING ***TIMEOUT***', Logging.Constants.LogLevel.WARN);
     }
 
-    const refresh = () => this._refresh();
     clearTimeout(this._timeout);
-    Logging.log(`Scheduling Cache Refresh (${this._type.toUpperCase()}) ${timeout / 1000}s`
-      , Logging.Constants.LogLevel.INFO);
-    this._timeout = setTimeout(refresh, timeout);
+    Logging.logInfo(`Scheduling Cache Refresh (${this._type.toUpperCase()}) ${timeout / 1000}s`);
+    this._timeout = setTimeout(() => this._callRefresh(), timeout);
   }
 }
 
