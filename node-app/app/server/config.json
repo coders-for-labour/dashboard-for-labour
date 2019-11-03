@@ -12,8 +12,10 @@
     "D4L_TEAM_API_TOTP_KEY": "",
     "D4L_TEAM_API_URL": "",
 
-    "D4L_RHIZOME_APP_TOKEN": "",
-    "D4L_RHIZOME_URL": "",
+    "D4L_BUTTRESS_URL": "",
+    "D4L_BUTTRESS_API_TOKEN": "",
+    "D4L_BUTTRESS_API_PATH": "D4L",
+    "D4L_BUTTRESS_API_VERSION": 1,
 
     "D4L_FB_APP_ID": "",
     "D4L_FB_APP_SECRET": "",
@@ -56,12 +58,14 @@
         "constituency": "%D4L_TEAM_API_URL%"
       }
     },
+    "buttress": {
+      "url": "%D4L_BUTTRESS_URL%",
+      "token": "%D4L_BUTTRESS_API_TOKEN%",
+      "apiPath": "%D4L_BUTTRESS_API_PATH%",
+      "apiVersion": "%D4L_BUTTRESS_API_VERSION%"
+    },
     "auth": {
       "sessionSecret": "%D4L_SESSION_SECRET%",
-      "rhizome": {
-        "url": "%D4L_RHIZOME_PROD_URL%",
-        "appToken": "%D4L_RHIZOME_PROD_APP_TOKEN%"
-      },
       "facebook": {
         "appId": "%D4L_FB_APP_ID%",
         "appSecret": "%D4L_FB_APP_SECRET%"

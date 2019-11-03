@@ -15,13 +15,13 @@ const Config = require('node-env-obj')('../../');
 const passport = require('passport');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const Rhizome = require('rhizome-api-js');
+const Buttress = require('buttress-js-api');
 
 const Logging = require('./logging');
 
 /* ************************************************************
  *
- * RHIZOME AUTHENTICATION
+ * BUTTRESS AUTHENTICATION
  *
  **************************************************************/
 const __authenticateRihzomeUser = (appAuth, existingUser) => {
@@ -42,13 +42,8 @@ const __authenticateRihzomeUser = (appAuth, existingUser) => {
     ]
   };
 
-  if (existingUser) {
-    Logging.logDebug(`Adding App (${appAuth.app}) To User: ${existingUser.id}`);
-    return Rhizome.Auth.addAuthToUser(existingUser.id, appAuth);
-  }
-
   Logging.logDebug(`Authenticating User`);
-  return Rhizome.Auth.findOrCreateUser(appAuth, authentication);
+  return Buttress.Auth.findOrCreateUser(appAuth, authentication);
 };
 
 module.exports.init = app => {
@@ -135,11 +130,11 @@ module.exports.init = app => {
 
     Logging.logSilly(req.user);
 
-    Rhizome.User.load(req.user.rhizomeId)
+    Buttress.User.load(req.user.id)
       .then(user => {
         res.json({
           user: {
-            id: req.user.rhizomeId,
+            id: req.user.id,
             profiles: user.auth.map(function(a) {
               return {
                 id: a.appId,
@@ -156,7 +151,7 @@ module.exports.init = app => {
               surname: req.user.person.surname,
               formalName: req.user.person.formalName
             },
-            authToken: req.user.rhizomeAuthToken
+            authToken: req.user.token
           }
         });
       });

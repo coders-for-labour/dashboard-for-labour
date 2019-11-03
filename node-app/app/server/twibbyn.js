@@ -89,7 +89,7 @@ const _hasBackup = (req, res) => {
     res.sendStatus(403);
     return;
   }
-  // let pathname = `${Config.data.path}/user_data/${req.user.rhizomeId}_twibbyn_twitter_avatar_backup`;
+  // let pathname = `${Config.data.path}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
   return res.json(false);
 };
 
@@ -98,7 +98,7 @@ const _restoreBackup = (req, res) => {
     res.sendStatus(403);
     return;
   }
-  // let pathname = `${Config.data.path}/user_data/${req.user.rhizomeId}_twibbyn_twitter_avatar_backup`;
+  // let pathname = `${Config.data.path}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
   return res.json(false);
 };
 
