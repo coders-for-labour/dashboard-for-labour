@@ -29,7 +29,7 @@ class Constituency {
 
       if (req.query.name) {
         this.lookup(req.query.name)
-          .then(constituency => {
+          .then((constituency) => {
             if (!constituency) {
               res.send(null);
               return;
@@ -38,18 +38,18 @@ class Constituency {
               name: req.query.name,
               id: constituency.id,
               results: {
-                2015: constituency['2015']
-              }
+                2015: constituency['2015'],
+              },
             });
           });
         return;
       }
 
       rest.get(`${Config.auth.twfy.apiUrl}/getConstituency?postcode=${req.query.postcode}&key=${Config.auth.twfy.apiKey}`)
-        .on('success', data => {
+        .on('success', (data) => {
           data = JSON.parse(data);
           this.lookup(data.name)
-            .then(constituency => {
+            .then((constituency) => {
               if (!constituency) {
                 res.send(null);
                 return;
@@ -58,8 +58,8 @@ class Constituency {
                 name: data.name,
                 id: constituency.id,
                 results: {
-                  2015: constituency['2015']
-                }
+                  2015: constituency['2015'],
+                },
               });
             });
         })
@@ -74,7 +74,7 @@ class Constituency {
 
   lookup(name) {
     return Cache.Manager.getData(Cache.Constants.Type.CONSTITUENCY)
-      .then(constituencies => {
+      .then((constituencies) => {
         const constituency = constituencies[name];
         if (!constituency) {
           Logging.logError(`FAILED TO LOOK UP CONSTITUENCY: ${name}`);

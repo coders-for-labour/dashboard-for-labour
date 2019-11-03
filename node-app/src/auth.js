@@ -25,28 +25,28 @@ const Logging = require('./logging');
  *
  **************************************************************/
 const __authenticateRihzomeUser = (appAuth, existingUser) => {
-  let authentication = {
+  const authentication = {
     authLevel: 1,
     domains: [`${Config.app.subdomain}.${Config.app.domain}`],
     permissions: [
-      {route: "user", permission: "list"},
-      {route: "user/me/metadata/:key", permission: "add"},
-      {route: "user/me/metadata/:key", permission: "write"},
-      {route: "user/me/metadata/:key?", permission: "read"},
-      {route: "campaign", permission: "list"},
-      {route: "campaign/:id/metadata/:key?", permission: "read"},
-      {route: "post", permission: "list"},
-      {route: "post", permission: "read"},
-      {route: "post", permission: "add"},
-      {route: "post", permission: "write"}
-    ]
+      {route: 'user', permission: 'list'},
+      {route: 'user/me/metadata/:key', permission: 'add'},
+      {route: 'user/me/metadata/:key', permission: 'write'},
+      {route: 'user/me/metadata/:key?', permission: 'read'},
+      {route: 'campaign', permission: 'list'},
+      {route: 'campaign/:id/metadata/:key?', permission: 'read'},
+      {route: 'post', permission: 'list'},
+      {route: 'post', permission: 'read'},
+      {route: 'post', permission: 'add'},
+      {route: 'post', permission: 'write'},
+    ],
   };
 
   Logging.logDebug(`Authenticating User`);
   return Buttress.Auth.findOrCreateUser(appAuth, authentication);
 };
 
-module.exports.init = app => {
+module.exports.init = (app) => {
   /* ************************************************************
    *
    * TWITTER
@@ -55,7 +55,7 @@ module.exports.init = app => {
   passport.use(new TwitterStrategy({
     consumerKey: Config.auth.twitter.consumerKey,
     consumerSecret: Config.auth.twitter.consumerSecret,
-    callbackURL: `/auth/twitter/callback`
+    callbackURL: `/auth/twitter/callback`,
   }, (token, tokenSecret, profile, cb) => {
     Logging.logSilly('AUTHENTICATE: Strategy');
 
@@ -68,7 +68,7 @@ module.exports.init = app => {
       username: profile.username,
       profileUrl: `https://twitter.com/${profile.username}`,
       profileImgUrl: profile.photos[0].value,
-      bannerImgUrl: profile._json.profile_background_image_url ? profile._json.profile_background_image_url : ''
+      bannerImgUrl: profile._json.profile_background_image_url ? profile._json.profile_background_image_url : '',
     };
 
     cb(null, user);
@@ -83,7 +83,7 @@ module.exports.init = app => {
     clientID: Config.auth.facebook.appId,
     clientSecret: Config.auth.facebook.appSecret,
     callbackURL: '/auth/facebook/callback',
-    profileFields: ['id', 'displayName', 'name', 'cover', 'picture', 'email']
+    profileFields: ['id', 'displayName', 'name', 'cover', 'picture', 'email'],
   }, (token, refreshToken, profile, cb) => {
     const p = profile._json;
     const user = {
@@ -131,7 +131,7 @@ module.exports.init = app => {
     Logging.logSilly(req.user);
 
     Buttress.User.load(req.user.id)
-      .then(user => {
+      .then((user) => {
         res.json({
           user: {
             id: req.user.id,
@@ -141,7 +141,7 @@ module.exports.init = app => {
                 app: a.app,
                 email: a.email,
                 url: a.profileUrl,
-                images: a.images
+                images: a.images,
               };
             }),
             person: {
@@ -149,10 +149,10 @@ module.exports.init = app => {
               forename: req.user.person.forename,
               initials: req.user.person.initials,
               surname: req.user.person.surname,
-              formalName: req.user.person.formalName
+              formalName: req.user.person.formalName,
             },
-            authToken: req.user.token
-          }
+            authToken: req.user.token,
+          },
         });
       });
   });
@@ -170,30 +170,30 @@ module.exports.init = app => {
   const TW_AUTH_SCOPE = [
   ];
   app.get('/auth/twitter', (req, res, next) => {
-    Logging.logSilly("AUTHENTICATE: /auth/twitter");
+    Logging.logSilly('AUTHENTICATE: /auth/twitter');
 
     req.session.returnPath = req.get('Referer');
     Logging.logSilly(req.session.returnPath);
 
     passport.authenticate(
       'twitter', {
-        scope: TW_AUTH_SCOPE.join(' ')
+        scope: TW_AUTH_SCOPE.join(' '),
       }
     )(req, res, next);
   });
   app.get('/auth/twitter/callback', (req, res, next) => {
-    Logging.logSilly("AUTHENTICATE: /auth/twitter/callback");
+    Logging.logSilly('AUTHENTICATE: /auth/twitter/callback');
 
     passport.authenticate('twitter', (err, appAuth, info) => {
-      Logging.logSilly("AUTHENTICATE: Authenticated");
+      Logging.logSilly('AUTHENTICATE: Authenticated');
       if (err) throw err;
 
       __authenticateRihzomeUser(appAuth, req.user)
-        .then(user => {
+        .then((user) => {
           Logging.logDebug(user);
-          req.login(user, err => {
+          req.login(user, (err) => {
             if (err) throw err;
-            let rp = req.session.returnPath;
+            const rp = req.session.returnPath;
             req.session.returnPath = '';
             res.redirect(rp ? rp : '/');
           });
@@ -211,7 +211,7 @@ module.exports.init = app => {
 
     passport.authenticate(
       'facebook', {
-        scope: FB_AUTH_SCOPE
+        scope: FB_AUTH_SCOPE,
       }
     )(req, res, next);
   });
@@ -220,11 +220,11 @@ module.exports.init = app => {
       if (err) throw err;
 
       __authenticateRihzomeUser(appAuth, req.user)
-        .then(user => {
+        .then((user) => {
           Logging.logSilly(user);
-          req.login(user, err => {
+          req.login(user, (err) => {
             if (err) throw err;
-            let rp = req.session.returnPath;
+            const rp = req.session.returnPath;
             req.session.returnPath = '';
             res.redirect(rp ? rp : '/');
           });

@@ -46,7 +46,7 @@ class Composer {
 
   params(param, value) {
     this._id += `${param},${value}`;
-    this._renderQueue.push(context => {
+    this._renderQueue.push((context) => {
       return new Promise((resolve, reject) => {
         Logging.log(`Setting Context: ${param} -> ${value}`, Logging.Constants.LogLevel.DEBUG);
         Logging.log(context.ctx, Logging.Constants.LogLevel.DEBUG);
@@ -59,7 +59,7 @@ class Composer {
   imageFromUrl(imgUrl, options) {
     this._id += imgUrl;
 
-    this._renderQueue.push(context => {
+    this._renderQueue.push((context) => {
       return new Promise((resolve, reject) => {
         Logging.log(`Rendering Image From URL ${imgUrl}`);
         rest.get(imgUrl)
@@ -82,7 +82,7 @@ class Composer {
           .on('fail', (data, response) => {
             Logging.logWarn(`${imgUrl}:response.statusCode`);
           })
-          .on('error', err => {
+          .on('error', (err) => {
             Logging.logErr(err);
           });
       });
@@ -90,7 +90,7 @@ class Composer {
   }
 
   imageFromFile(imgFile, options) {
-    let file = options.cacheFile ? _memCache.load(imgFile) : fs.readFileSync(imgFile);
+    const file = options.cacheFile ? _memCache.load(imgFile) : fs.readFileSync(imgFile);
     this._id += imgFile;
 
     return this.__imageFromBuffer(file, options);
@@ -105,7 +105,7 @@ class Composer {
     this._id += options.preserveAspect;
     this._id += options.gravity;
 
-    this._renderQueue.push(context => {
+    this._renderQueue.push((context) => {
       return new Promise((resolve, reject) => {
         Logging.logDebug(`Rendering Image From Buffer`);
         let image = new Image();
@@ -127,10 +127,10 @@ class Composer {
   }
 
   text(text, options) {
-    let o = this._options(options);
+    const o = this._options(options);
     this._id += text;
 
-    this._renderQueue.push(context => {
+    this._renderQueue.push((context) => {
       return new Promise((resolve, reject) => {
         Logging.log(`Rendering Text`, Logging.Constants.LogLevel.DEBUG);
 
@@ -141,7 +141,7 @@ class Composer {
         context.ctx.fillStyle = o.color;
 
         if (o.width < this._width) {
-          let phrases = this._splitText(context.ctx, text, options.width);
+          const phrases = this._splitText(context.ctx, text, options.width);
           let top = o.top;
           for (let x = 0; x < phrases.length; x++) {
             context.ctx.save();
@@ -216,8 +216,8 @@ class Composer {
    * @private
    */
   _doRender() {
-    let canvas = new Canvas(this._width, this._height);
-    let p = Promise.resolve({canvas: canvas, ctx: canvas.getContext('2d')});
+    const canvas = new Canvas(this._width, this._height);
+    const p = Promise.resolve({canvas: canvas, ctx: canvas.getContext('2d')});
 
     this._renderQueue.push(context => {
       let buffer = canvas.toBuffer();
@@ -251,13 +251,13 @@ class Composer {
   }
 
   _splitText(ctx, text, width) {
-    let wa = text.split(' ');
-    let phrases = [];
+    const wa = text.split(' ');
+    const phrases = [];
     let lastPhrase = wa[0];
     let measure = 0;
 
-    for (var i = 1; i < wa.length; i++) {
-      let w = wa[i];
+    for (let i = 1; i < wa.length; i++) {
+      const w = wa[i];
       measure = ctx.measureText(lastPhrase + w).width;
       if (measure < width) {
         lastPhrase += ' ' + w;
@@ -273,8 +273,8 @@ class Composer {
   }
 
   _applyGravity(options) {
-    let pos = {top: 0, left: 0};
-    let topRel = options.top;
+    const pos = {top: 0, left: 0};
+    const topRel = options.top;
     if (/top|bottom/.test(options.gravity)) {
       if (/top/.test(options.gravity) === true) {
         pos.top = 0;
@@ -287,7 +287,7 @@ class Composer {
     pos.top = Math.ceil(pos.top);
     pos.top += topRel;
 
-    let leftRel = options.left;
+    const leftRel = options.left;
     if (/left|right/.test(options.gravity)) {
       if (/left/.test(options.gravity) === true) {
         pos.left = 0;
@@ -353,7 +353,7 @@ class Cache {
   }
 
   _genFilename(id) {
-    let hash = crypto.createHash('sha1');
+    const hash = crypto.createHash('sha1');
     return hash.update(id, 'ascii').digest('hex');
   }
 }

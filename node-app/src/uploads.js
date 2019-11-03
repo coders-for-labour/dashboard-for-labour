@@ -24,34 +24,34 @@ const storage = Storage(); // eslint-disable-line new-cap
  * Uploads
  *
  **************************************************************/
-const __initUploads = app => {
+const __initUploads = (app) => {
   app.post('/image/upload', (req, res) => {
     if (!req.user) {
       res.sendStatus(401).json(false);
       return;
     }
 
-    let file = req.body.file;
-    let rex = /^data:(\w+\/\w+);base64,(.+)$/;
+    const file = req.body.file;
+    const rex = /^data:(\w+\/\w+);base64,(.+)$/;
     if (rex.test(file) === false) {
       res.sendStatus(400).json(false);
       return;
     }
 
-    let matches = rex.exec(file);
-    let mimeType = matches[1];
-    let data = matches[2];
-    let buffer = Buffer.from(data, 'base64');
+    const matches = rex.exec(file);
+    const mimeType = matches[1];
+    const data = matches[2];
+    const buffer = Buffer.from(data, 'base64');
 
-    let fileType = mimeType.split('/');
+    const fileType = mimeType.split('/');
     if (fileType[0] !== 'image') {
       res.sendStatus(400).json(false);
       return;
     }
 
-    let hash = crypto.createHash('sha256');
+    const hash = crypto.createHash('sha256');
     hash.update(data);
-    let digest = hash.digest('hex');
+    const digest = hash.digest('hex');
 
     let fname = `u/${digest}.${fileType[1]}`;
     let gfile = storage
@@ -74,5 +74,5 @@ const __initUploads = app => {
 };
 
 module.exports = {
-  init: __initUploads
+  init: __initUploads,
 };

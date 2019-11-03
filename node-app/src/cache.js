@@ -30,20 +30,20 @@ const _Constants = {
   ERROR_CACHE_INTERVAL: 5 * 1000,
   REQUEST_TIMEOUT: 30 * 1000,
   DEFAULTS: {
-    team: []
+    team: [],
   },
   FUNCTIONS: {
     team: 'team:list',
-    constituency: 'constituency:list'
+    constituency: 'constituency:list',
   },
   URLS: {
     team: Config.api.urls.team,
-    constituency: Config.api.urls.constituency
+    constituency: Config.api.urls.constituency,
   },
   URL_PARAMS: {
     team: {},
-    constituency: {}
-  }
+    constituency: {},
+  },
 };
 
 /* ****************************************************************
@@ -54,8 +54,8 @@ const _Constants = {
 const Constants = {
   Type: {
     TEAM: 'team',
-    CONSTITUENCY: 'constituency'
-  }
+    CONSTITUENCY: 'constituency',
+  },
 };
 
 /* ****************************************************************
@@ -88,7 +88,7 @@ class Cache extends EventEmitter {
     this._otp = otp.create({
       length: 12,
       salt: Config.api.key,
-      mode: otp.Constants.Mode.ALPHANUMERIC
+      mode: otp.Constants.Mode.ALPHANUMERIC,
     });
 
     db.get(type, (err, value) => {
@@ -110,7 +110,7 @@ class Cache extends EventEmitter {
 
   _callRefresh() {
     return this._refresh()
-      .catch(err => {
+      .catch((err) => {
         Logging.logError(err);
         Logging.logDebug(`CACHE REFRESH ERROR: ${this._type.toUpperCase()}`);
         this._setTimeout(_Constants.ERROR_CACHE_INTERVAL);
@@ -123,9 +123,9 @@ class Cache extends EventEmitter {
 
       const q = {
         token: this._otp.getCode(),
-        fn: _Constants.FUNCTIONS[this._type]
+        fn: _Constants.FUNCTIONS[this._type],
       };
-      for (let k in _Constants.URL_PARAMS[this._type]) {
+      for (const k in _Constants.URL_PARAMS[this._type]) {
         if (!Object.prototype.hasOwnProperty.call(_Constants.URL_PARAMS[this._type], k)) {
           continue;
         }
@@ -135,7 +135,7 @@ class Cache extends EventEmitter {
 
       Logging.log(`Refreshing Cache ${this._type.toUpperCase()}`, Logging.Constants.LogLevel.INFO);
       rest.get(_Constants.URLS[this._type], {timeout: _Constants.REQUEST_TIMEOUT, query: q})
-        .on('success', data => {
+        .on('success', (data) => {
           if (data.err === true) {
             Logging.logDebug(`CACHE REFRESH ERROR: ${this._type.toUpperCase()}: ${data.res}`);
             resolve(this._data);
@@ -145,11 +145,11 @@ class Cache extends EventEmitter {
 
           Logging.log(`Refreshed Cache ${this._type.toUpperCase()}`, Logging.Constants.LogLevel.INFO);
           if (data.res === undefined) {
-            reject('Invalid data');
+            reject(new Error('Invalid data'));
             return;
           }
 
-          db.put(this._type, JSON.stringify(data.res), err => {
+          db.put(this._type, JSON.stringify(data.res), (err) => {
             if (err) {
               Logging.logError(err);
             }
@@ -165,13 +165,13 @@ class Cache extends EventEmitter {
           this._setTimeout(_Constants.ERROR_CACHE_INTERVAL);
           resolve(this._data);
         })
-        .on('error', err => {
+        .on('error', (err) => {
           Logging.logError(err);
           Logging.logDebug(`CACHE REFRESH ERROR(${err.syscall}:${err.code}): ${this._type.toUpperCase()}`);
           this._setTimeout(_Constants.ERROR_CACHE_INTERVAL);
           resolve(this._data);
         })
-        .on('timeout', err => {
+        .on('timeout', (err) => {
           Logging.logError(err);
           Logging.logDebug(`CACHE REFRESH TIMED OUT: ${this._type.toUpperCase()}`);
           this._setTimeout(_Constants.ERROR_CACHE_INTERVAL);

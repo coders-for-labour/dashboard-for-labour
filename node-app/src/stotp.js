@@ -10,30 +10,30 @@
  *
  */
 
-var crypto = require('crypto');
+const crypto = require('crypto');
 
 /**
  *
  * @type {{Mode: {NUMERIC: string, ALPHANUMERIC: string, ALPHA: string}}}
  */
-var Constants = module.exports.Constants = {
+const Constants = module.exports.Constants = {
   Mode: {
     NUMERIC: 'numeric',
     ALPHANUMERIC: 'alphanumeric',
-    ALPHA: 'alpha'
-  }
+    ALPHA: 'alpha',
+  },
 };
 
 /**
  * @type {{MODE: string, EPOCH: number, WINDOW_SIZE: number, LENGTH: number, SALT: string, TOLERANCE: number}}
  */
-var Defaults = {
+const Defaults = {
   MODE: Constants.Mode.NUMERIC,
   EPOCH: 1.418221717366e12,
   WINDOW_SIZE: 30,
   LENGTH: 6,
   SALT: '',
-  TOLERANCE: 6
+  TOLERANCE: 6,
 };
 
 /**
@@ -44,16 +44,16 @@ class Helpers {
     salt = salt || Date.now();
     length = length || Defaults.LENGTH;
 
-    var hash = crypto.createHash('sha512');
+    const hash = crypto.createHash('sha512');
     hash.update(`${salt}`);
-    var bytes = hash.digest();
+    const bytes = hash.digest();
 
-    var chars = numeric === false ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' :
-                                    '0123456789012345';
-    var mask = numeric === false ? 0x3d : 0x0f;
-    var string = '';
+    const chars = numeric === false ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' :
+      '0123456789012345';
+    const mask = numeric === false ? 0x3d : 0x0f;
+    let string = '';
 
-    for (var byte = 0; byte < length; byte++) {
+    for (let byte = 0; byte < length; byte++) {
       string += chars[bytes[byte] & mask];
     }
 
@@ -83,8 +83,8 @@ class STOTP {
   getCode(salt) {
     salt = salt || this.salt;
     return Helpers.getRandomString(`${salt}${this._getWindow()}`,
-                                  this.length,
-                                  this.mode === Constants.Mode.NUMERIC);
+      this.length,
+      this.mode === Constants.Mode.NUMERIC);
   }
 
   /**
@@ -96,15 +96,15 @@ class STOTP {
   test(code, salt, tolerance) {
     salt = salt || this.salt;
     tolerance = tolerance || this.tolerance;
-    var matches = false;
+    let matches = false;
     if (!code) {
       return matches;
     }
-    var window = this._getWindow() + tolerance;
-    for (var x = tolerance * 2; x >= 0; x--) {
+    let window = this._getWindow() + tolerance;
+    for (let x = tolerance * 2; x >= 0; x--) {
       if (Helpers.getRandomString(`${salt}${window}`,
-          this.length,
-          this.mode === Constants.Mode.NUMERIC) === code) {
+        this.length,
+        this.mode === Constants.Mode.NUMERIC) === code) {
         matches = true;
         break;
       }
@@ -114,11 +114,11 @@ class STOTP {
   }
 
   _getWindow() {
-    var interval = (Date.now() - this.epoch) / 1000;
+    const interval = (Date.now() - this.epoch) / 1000;
     return Math.floor(interval / this.windowSize, 0);
   }
 }
 
-module.exports.create = options => {
+module.exports.create = (options) => {
   return new STOTP(options);
 };

@@ -10,7 +10,7 @@
  *
  */
 
-const Config = require('node-env-obj')('../../');
+// const Config = require('node-env-obj')('../../');
 
 // const proxyquire = require('proxyquire');
 const winston = require('winston');
@@ -22,18 +22,18 @@ const winston = require('winston');
  *
  * @type {{ERR: string, WARN: string, INFO: string, VERBOSE: string, DEBUG: string, SILLY: string, DEFAULT: string}}
  */
-var LogLevel = {
+const LogLevel = {
   ERR: 'error',
   WARN: 'warn',
   INFO: 'info',
   VERBOSE: 'verbose',
   DEBUG: 'debug',
   SILLY: 'silly',
-  DEFAULT: 'info'
+  DEFAULT: 'info',
 };
 
 module.exports.Constants = {
-  LogLevel: LogLevel
+  LogLevel: LogLevel,
 };
 
 /**
@@ -46,15 +46,15 @@ winston.add(new winston.transports.Console({
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.printf(info => {
+    winston.format.errors({stack: true}),
+    winston.format.printf((info) => {
       if (info.stack) {
         return `${info.timestamp} ${info.level}: ${info.message}\n${info.stack}`;
       }
 
       return `${info.timestamp} ${info.level}: ${info.message}`;
     })
-  )
+  ),
 }));
 // winston.add(new winston.transports.Rotate({
 //   name: 'debug-file',
@@ -80,7 +80,7 @@ winston.addColors({
   error: 'red',
   warn: 'yellow',
   verbose: 'white',
-  debug: 'white'
+  debug: 'white',
 });
 
 /**
@@ -92,7 +92,7 @@ winston.addColors({
 function _log(log, level) {
   winston.log({
     level: level,
-    message: log
+    message: log,
   });
 }
 
@@ -100,7 +100,7 @@ function _log(log, level) {
  * STANDARD LOGGING
  */
 
-module.exports.setLogLevel = level => {
+module.exports.setLogLevel = (level) => {
   winston.level = level;
 };
 
@@ -116,41 +116,41 @@ module.exports.log = (log, level) => {
 /**
  * @param {string} log - Text to log
  */
-module.exports.logInfo = log => {
+module.exports.logInfo = (log) => {
   module.exports.log(log, LogLevel.INFO);
 };
 
 /**
  * @param {string} log - Text to log
  */
-module.exports.logVerbose = log => {
+module.exports.logVerbose = (log) => {
   module.exports.log(log, LogLevel.VERBOSE);
 };
 
 /**
  * @param {string} log - Text to log
  */
-module.exports.logDebug = log => {
+module.exports.logDebug = (log) => {
   module.exports.log(log, LogLevel.DEBUG);
 };
 
 /**
  * @param {string} log - Text to log
  */
-module.exports.logSilly = log => {
+module.exports.logSilly = (log) => {
   module.exports.log(log, LogLevel.SILLY);
 };
 
 /**
  * @param {string} warn - warning to log
  */
-module.exports.logWarn = warn => {
+module.exports.logWarn = (warn) => {
   module.exports.log(warn, LogLevel.ERR);
 };
 /**
  * @param {string} err - error object to log
  */
-module.exports.logError = err => {
+module.exports.logError = (err) => {
   module.exports.log(err, LogLevel.ERR);
 };
 
@@ -167,7 +167,7 @@ module.exports.Promise = {};
  */
 module.exports.Promise.log = (log, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     if (res instanceof Object) {
       _log(`${log}:`, level);
       _log(res, level);
@@ -186,7 +186,7 @@ module.exports.Promise.log = (log, level) => {
  */
 module.exports.Promise.logIf = (log, val, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     if (val === res) {
       _log(`${log}: ${res}`, level);
     }
@@ -202,7 +202,7 @@ module.exports.Promise.logIf = (log, val, level) => {
  */
 module.exports.Promise.logIfNot = (log, val, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     if (val !== res) {
       _log(`${log}: ${res}`, level);
     }
@@ -222,7 +222,7 @@ module.exports.Promise.logIfNot = (log, val, level) => {
  */
 module.exports.Promise.logProp = (log, prop, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     _log(`${log}: ${res[prop]}`, level);
     return res;
   };
@@ -237,7 +237,7 @@ module.exports.Promise.logProp = (log, prop, level) => {
  */
 module.exports.Promise.logPropIf = (log, prop, val, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     if (val === res[prop]) {
       _log(`${log}: ${res[prop]}`, level);
     }
@@ -254,7 +254,7 @@ module.exports.Promise.logPropIf = (log, prop, val, level) => {
  */
 module.exports.Promise.logPropIfNot = (log, prop, val, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     if (val !== res[prop]) {
       _log(`${log}: ${res[prop]}`, level);
     }
@@ -273,9 +273,9 @@ module.exports.Promise.logPropIfNot = (log, prop, val, level) => {
  */
 module.exports.Promise.logArray = (log, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     _log(`${log}: ${res.length}`, level);
-    res.forEach(r => {
+    res.forEach((r) => {
       _log(r);
     });
     return res;
@@ -290,9 +290,9 @@ module.exports.Promise.logArray = (log, level) => {
  */
 module.exports.Promise.logArrayProp = (log, prop, level) => {
   level = level || LogLevel.DEFAULT;
-  return res => {
+  return (res) => {
     _log(`${log}: ${res.length}`, level);
-    res.forEach(r => {
+    res.forEach((r) => {
       _log(r[prop]);
     });
     return res;
@@ -303,9 +303,9 @@ module.exports.Promise.logArrayProp = (log, prop, level) => {
  * @param {string} log - Text to log
  * @return {function(*)} - returns a function for chaining into a promise
  */
-module.exports.Promise.logVerbose = log => {
-  var level = LogLevel.VERBOSE;
-  return res => {
+module.exports.Promise.logVerbose = (log) => {
+  const level = LogLevel.VERBOSE;
+  return (res) => {
     _log(log, level);
     _log(res, level);
     return res;
@@ -316,9 +316,9 @@ module.exports.Promise.logVerbose = log => {
  * @param {string} log - Text to log
  * @return {function(*)} - returns a function for chaining into a promise
  */
-module.exports.Promise.logDebug = log => {
-  var level = LogLevel.DEBUG;
-  return res => {
+module.exports.Promise.logDebug = (log) => {
+  const level = LogLevel.DEBUG;
+  return (res) => {
     _log(log, level);
     _log(res, level);
     return res;
@@ -328,9 +328,9 @@ module.exports.Promise.logDebug = log => {
  * @param {string} log - Text to log
  * @return {function(*)} - returns a function for chaining into a promise
  */
-module.exports.Promise.logSilly = log => {
-  var level = LogLevel.SILLY;
-  return res => {
+module.exports.Promise.logSilly = (log) => {
+  const level = LogLevel.SILLY;
+  return (res) => {
     _log(log, level);
     _log(res, level);
     return res;
@@ -340,8 +340,8 @@ module.exports.Promise.logSilly = log => {
  * @return {function(*)} - returns a function for chaining into a promise
  */
 module.exports.Promise.logError = () => {
-  var level = LogLevel.ERR;
-  return err => {
+  const level = LogLevel.ERR;
+  return (err) => {
     _log(err, level);
     return err;
   };

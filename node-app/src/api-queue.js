@@ -29,11 +29,11 @@ const Constants = {
   INTERVAL: 30000,
   App: {
     TWITTER: 'twitter',
-    FACEBOOK: 'facebook'
+    FACEBOOK: 'facebook',
   },
   Queue: {
     API: 'api-queue',
-    ERROR: 'api-queue-error'
+    ERROR: 'api-queue-error',
   }
 };
 module.exports.Constants = Constants;
@@ -43,18 +43,18 @@ module.exports.Constants = Constants;
  * @return {Promise} - resolves with the queue item (results populated)
  * @private
  */
-const _twitterAPITask = qi => {
+const _twitterAPITask = (qi) => {
   const twitter = new Twitter({
     consumer_key: Config.auth.twitter.consumerKey, // eslint-disable-line camelcase
     consumer_secret: Config.auth.twitter.consumerSecret, // eslint-disable-line camelcase
     access_token_key: qi.token, // eslint-disable-line camelcase
-    access_token_secret: qi.tokenSecret // eslint-disable-line camelcase
+    access_token_secret: qi.tokenSecret, // eslint-disable-line camelcase
   });
 
   return new Promise((resolve, reject) => {
     const methods = {
       GET: 'get',
-      POST: 'post'
+      POST: 'post',
     };
 
     twitter[methods[qi.method]](qi.api, qi.params, function(error, data, response) {
@@ -74,7 +74,7 @@ const _twitterAPITask = qi => {
 
 const _appTasks = {
   [Constants.App.TWITTER]: _twitterAPITask,
-  [Constants.App.FACEBOOK]: null
+  [Constants.App.FACEBOOK]: null,
 };
 
 /**
@@ -136,7 +136,7 @@ class APIQueueManager {
       Logging.logDebug(`FIRST CALL IN WINDOW: ${uid}`);
       this._rateLimiter[uid] = {
         calls: 1,
-        windowEnds: Sugar.Date.advance(Sugar.Date.create(), '15 minutes')
+        windowEnds: Sugar.Date.advance(Sugar.Date.create(), '15 minutes'),
       };
       return false;
     }

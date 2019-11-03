@@ -98,7 +98,7 @@ const __initWorker = () => {
   const tasks = [
     Helpers.AppData.createFolder('/'),
     Helpers.AppData.createFolder('/image_cache'),
-    Helpers.AppData.createFolder('/uploads')
+    Helpers.AppData.createFolder('/uploads'),
   ];
 
   return Promise.all(tasks);
@@ -144,6 +144,6 @@ const _installApp = app => {
 };
 
 module.exports = {
-  app: _installApp
+  app: _installApp,
 };
 

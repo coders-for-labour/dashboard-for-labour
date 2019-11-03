@@ -25,10 +25,10 @@ const sb = require('stream-buffers');
  **************************************************************/
 
 module.exports.Promise = {
-  prop: prop => (val => val[prop]),
-  func: func => (val => val[func]()),
+  prop: (prop) => ((val) => val[prop]),
+  func: (func) => ((val) => val[func]()),
   nop: () => (() => null),
-  inject: value => (() => value)
+  inject: (value) => (() => value),
 };
 
 /* ************************************************************
@@ -95,14 +95,14 @@ module.exports.GCloud = {
  *
  **************************************************************/
 module.exports.AppData = {
-  createFolder: folderName => {
+  createFolder: (folderName) => {
     return new Promise((resolve, reject) => {
-      fs.mkdir(`${Config.data.path}`, err => {
+      fs.mkdir(`${Config.data.path}`, (err) => {
         if (err && err.code !== 'EEXIST') {
           throw err;
         }
 
-        fs.mkdir(`${Config.data.path}${folderName}`, err => {
+        fs.mkdir(`${Config.data.path}${folderName}`, (err) => {
           if (err && err.code !== 'EEXIST') {
             throw err;
           }
@@ -110,5 +110,5 @@ module.exports.AppData = {
         });
       });
     });
-  }
+  },
 };

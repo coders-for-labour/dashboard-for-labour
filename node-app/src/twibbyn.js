@@ -39,7 +39,7 @@ const _composeTwibbyn = (rearImgBuffer, rearImgBufferUid, frontImgUrl, options) 
   composer.imageFromBuffer(rearImgBuffer, rearImgBufferUid, {preserveAspect: true, gravity: options.gravity});
   composer.params('globalAlpha', 1);
   composer.imageFromUrl(frontImgUrl, {
-    width: 1.0, height: 1.0, gravity: 'bottom'
+    width: 1.0, height: 1.0, gravity: 'bottom',
   });
 
   return composer.render();
@@ -157,7 +157,7 @@ const _getFbTwibbyn = (req, res) => {
     return;
   }
 
-  const fbAuth = req.user.auth.find(a => a.app === 'facebook');
+  const fbAuth = req.user.auth.find((a) => a.app === 'facebook');
   if (!fbAuth) {
     res.send(400);
     return;
@@ -196,7 +196,7 @@ const _postTwitter = (req, res) => {
     return;
   }
 
-  const twAuth = req.user.auth.find(a => a.app === 'twitter');
+  const twAuth = req.user.auth.find((a) => a.app === 'twitter');
   if (!twAuth) {
     res.send(400);
     return;
@@ -215,7 +215,7 @@ const _postTwitter = (req, res) => {
   rest.get(`http://${Config.cdnUrl}/${req.body.file}`)
     .on('success', (data, response) => {
       Twitter.tweetMedia(twAuth, req.body.tweet, response.raw)
-        .then(results => {
+        .then((results) => {
           res.send(results);
         });
     })

@@ -10,7 +10,7 @@
  *
  */
 
-const Config = require('node-env-obj')('../../');
+// const Config = require('node-env-obj')('../../');
 
 const Logging = require('./logging');
 const Queue = require('./api-queue');
@@ -36,7 +36,7 @@ module.exports.updateProfile = (user, imgBuffer) => {
     params: {
       image: imgBuffer.toString('base64'),
       include_entities: false, // eslint-disable-line camelcase
-      skip_statuses: true // eslint-disable-line camelcase
+      skip_statuses: true, // eslint-disable-line camelcase
     },
     token: user.token,
     tokenSecret: user.tokenSecret
@@ -112,13 +112,13 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
     method: 'POST',
     api: 'media/upload.json',
     params: {
-      media: imgBuffer
+      media: imgBuffer,
     },
     token: user.token,
-    tokenSecret: user.tokenSecret
+    tokenSecret: user.tokenSecret,
   })
-    .then(qi => {
-      let mediaId = qi.results.media_id_string;
+    .then((qi) => {
+      const mediaId = qi.results.media_id_string;
       Logging.logDebug(`Media ID: ${mediaId} [${qi.results.image.image_type}], Expires: ${qi.results.expires_after_secs}`);
       return Queue.Manager.exec({
         app: Queue.Constants.App.TWITTER,
@@ -129,25 +129,25 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
           status: tweet,
           media_ids: mediaId, // eslint-disable-line camelcase
           include_entities: false, // eslint-disable-line camelcase
-          skip_statuses: true // eslint-disable-line camelcase
+          skip_statuses: true, // eslint-disable-line camelcase
         },
         token: user.token,
-        tokenSecret: user.tokenSecret
+        tokenSecret: user.tokenSecret,
       });
     })
-    .then(qi => {
+    .then((qi) => {
       if (!qi.completed) {
         return {
           err: true,
-          res: qi.error
+          res: qi.error,
         };
       }
       Logging.log(`Created a tweet: ${qi.results.id}`);
       return {
         err: false,
         res: {
-          tweetId: qi.results.id_str
-        }
+          tweetId: qi.results.id_str,
+        },
       };
     })
     .catch(Logging.Promise.logError());
@@ -156,6 +156,6 @@ module.exports.tweetMedia = (user, tweet, imgBuffer) => {
 /**
  * @param {Object} app - ExpressJS app object
  */
-module.exports.init = app => {
+module.exports.init = (app) => {
 
 };
