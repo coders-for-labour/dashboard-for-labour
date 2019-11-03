@@ -47,7 +47,13 @@ winston.add(new winston.transports.Console({
     winston.format.colorize(),
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),
-    winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    winston.format.printf(info => {
+      if (info.stack) {
+        return `${info.timestamp} ${info.level}: ${info.message}\n${info.stack}`;
+      }
+
+      return `${info.timestamp} ${info.level}: ${info.message}`;
+    })
   )
 }));
 // winston.add(new winston.transports.Rotate({
