@@ -98,6 +98,7 @@ const __initWorker = () => {
   Uploads.init(app);
 
   const tasks = [
+    Helpers.AppData.createFolder('/'),
     Helpers.AppData.createFolder('/image_cache'),
     Helpers.AppData.createFolder('/uploads')
   ];
