@@ -43,6 +43,10 @@ Polymer({
     isMobile: {
       type: Boolean,
       value: false
+    },
+    __userImage: {
+      type: String,
+      computed: '__computeUserImage(auth.user.profiles.0.images.profile)'
     }
   },
 
@@ -63,6 +67,15 @@ Polymer({
 
   __computeResponsivePageTitle: function(title, isMobile) {
     return !isMobile ? Sugar.String.truncate(title, 35) : Sugar.String.truncate(title, 17);
+  },
+
+  __computeUserImage: function(image){
+    const imageSize = /_normal/i;
+    if (!image) {
+      return;
+    }
+
+    return image.replace(imageSize, '');
   }
 
 });

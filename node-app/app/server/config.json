@@ -10,6 +10,10 @@
     "D4L_RHIZOME_DEV_URL": "",
     "D4L_RHIZOME_PROD_URL": "",
     "D4L_RHIZOME_TEST_URL": "",
+    "D4L_CDN_PROD_URL": "",
+    "D4L_CDN_DEV_URL": "",
+    "D4L_CDN_PROD_BUCKET": "",
+    "D4L_CDN_DEV_BUCKET": "",
     "D4L_FB_APP_ID": "",
     "D4L_FB_APP_SECRET": "",
     "D4L_TW_CONSUMER_KEY": "",
@@ -17,18 +21,23 @@
     "D4L_TW_ACCESS_TOKEN": "",
     "D4L_TW_ACCESS_TOKEN_SECRET": "",
     "D4L_SESSION_SECRET": "",
-    "D4L_TWFY_API_KEY": ""
+    "D4L_TWFY_API_KEY": "",
+    "D4L_REDIS_HOST": "127.0.0.1",
+    "D4L_REDIS_PORT": "6379",
+    "D4L_CLUSTER_APP": "primary",
+    "D4L_APP_SUBDOMAIN": "dashboard",
+    "D4L_APP_DOMAIN": "forlabour.com"
   },
   "global": {
     "env": "%NODE_ENV%",
     "app": {
-      "title": "Dashboard for Labour",
+      "title": "Amplify",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
-      "version": "1.1.0",
-      "protocol": "http",
-      "subdomain": "dashboard",
-      "domain": "forlabour.com"
+      "version": "1.3.7",
+      "protocol": "https",
+      "subdomain": "amplify",
+      "domain": "labour.org.uk"
     },
     "api": {
       "key": "%D4L_TEAM_API_TOTP_KEY%",
@@ -41,10 +50,9 @@
       "sessionSecret": "%D4L_SESSION_SECRET%",
       "rhizome": {
         "url": {
-          "dev": "%D4L_RHIZOME_DEV_URL%",
-          "prod": "%D4L_RHIZOME_PROD_URL%",
-          "test": "%D4L_RHIZOME_TEST_URL%"
-
+          "dev": "%D4L_RHIZOME_DEV_URL%/api/v1",
+          "prod": "%D4L_RHIZOME_PROD_URL%/api/v1",
+          "test": "%D4L_RHIZOME_TEST_URL%/api/v1"
         },
         "appToken": {
           "dev": "%D4L_RHIZOME_DEV_APP_TOKEN%",
@@ -66,46 +74,62 @@
         "apiUrl": "https://www.theyworkforyou.com/api",
         "apiKey": "%D4L_TWFY_API_KEY%"
       }
+    },
+    "cluster": {
+      "app": "%D4L_CLUSTER_APP%"
+    },
+    "redis": {
+      "host": "%D4L_REDIS_HOST%"
+    },
+    "cdnUrl": {
+      "dev": "%D4L_CDN_DEV_URL%",
+      "prod": "%D4L_CDN_PROD_URL%",
+      "test": "%D4L_CDN_DEV_URL%"
+    },
+    "cdnBucket": {
+      "dev": "%D4L_CDN_DEV_BUCKET%",
+      "prod": "%D4L_CDN_PROD_BUCKET%",
+      "test": "%D4L_CDN_DEV_BUCKET%"
     }
   },
   "local": {
     "workstation1": {
       "logPath": {
-        "dev":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/dev",
-        "prod":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/prod",
-        "test":"/home/chris/Work/Workspaces/WebStorm/d4l/node-app/logs/test"
+        "dev":"/home/chris/Work/Workspaces/WebStorm/amplify/node-app/logs/dev",
+        "prod":"/home/chris/Work/Workspaces/WebStorm/amplify/node-app/logs/prod",
+        "test":"/home/chris/Work/Workspaces/WebStorm/amplify/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data",
-        "prod": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data",
-        "test": "/home/chris/Work/Workspaces/WebStorm/d4l/node-app/app_data/test"
+        "dev": "/home/chris/Work/Workspaces/WebStorm/amplify/node-app/app_data",
+        "prod": "/home/chris/Work/Workspaces/WebStorm/amplify/node-app/app_data",
+        "test": "/home/chris/Work/Workspaces/WebStorm/amplify/node-app/app_data/test"
       },
       "listenPort": {
         "dev": 6041,
         "prod": 6040,
         "test": 6042
-      },
-      "cdn": {
-        "dev": "http://cdn-forlabour-com.wearelightenclients.co.uk",
-        "prod": "http://cdn-forlabour-com.wearelightenclients.co.uk",
-        "test": "http://cdn-forlabour-com.wearelightenclients.co.uk"
       }
     },
     "workstation2": {
       "logPath": {
-        "dev":"/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/dev",
-        "prod":"/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/prod",
-        "test":"/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/logs/test"
+        "dev":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/logs/dev",
+        "prod":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/logs/prod",
+        "test":"/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/logs/test"
       },
       "appDataPath": {
-        "dev": "/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "prod": "/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data",
-        "test": "/home/tom/Work/Workspaces/WebStorm/dashboard-for-labour/node-app/app_data/test"
+        "dev": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/app_data",
+        "prod": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/app_data",
+        "test": "/home/tom/Work/Workspaces/WebStorm/labourdigital/digital-hub/node-app/app_data/test"
       },
       "listenPort": {
         "dev": 6021,
         "prod": 6020,
         "test": 6022
+      },
+      "cdn": {
+        "dev": "http://cdn-forlabour-com.wearelightenclients.co.uk",
+        "prod": "http://cdn-forlabour-com.wearelightenclients.co.uk",
+        "test": "http://cdn-forlabour-com.wearelightenclients.co.uk"
       }
     },
     "yubaba": {
@@ -123,11 +147,6 @@
         "dev": 6041,
         "prod": 6040,
         "test": 6042
-      },
-      "cdn": {
-        "dev": "http://cdn.forlabour.com",
-        "prod": "http://cdn.forlabour.com",
-        "test": "http://cdn.forlabour.com"
       }
     }
   }

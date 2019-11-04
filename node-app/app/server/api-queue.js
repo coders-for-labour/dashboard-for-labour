@@ -11,9 +11,15 @@
  */
 
 const Logging = require('./logging');
+const Helpers = require('./helpers');
 const Config = require('./config');
 const Twitter = require('twitter');
 const Sugar = require('sugar');
+const redis = require('redis');
+const UUID = require('uuid');
+
+const redisClient = redis.createClient(Config.redis);
+// redisClient.on('error', err => console.log(err));
 
 /**
  *
@@ -24,6 +30,10 @@ const Constants = {
   App: {
     TWITTER: 'twitter',
     FACEBOOK: 'facebook'
+  },
+  Queue: {
+    API: 'api-queue',
+    ERROR: 'api-queue-error'
   }
 };
 module.exports.Constants = Constants;
@@ -51,6 +61,7 @@ const _twitterAPITask = qi => {
       Logging.logSilly(data);
       if (error) {
         Logging.logError(error);
+        qi.error = error;
         resolve(qi);
         return;
       }
@@ -72,27 +83,39 @@ const _appTasks = {
 class APIQueueManager {
   constructor() {
     this._rateLimiter = {};
-    this._queue = [];
+    this._queueTimeout = null;
+    // this._queue = [];
   }
 
   /**
    * @description Start processing the queue
-   * @param {object} app - express instance
+   * @param {boolean} isPrimary - is primary cluster instance
    */
-  init(app) {
-    this._flush();
+  init(isPrimary) {
+    if (isPrimary) {
+      this._flush();
+    }
   }
 
-  /**
+  /* *
    * @description Add to the queue, defer execution, honor rate limits
    * @param {object} qi - contains all parameters for api call
+   * @return {Promise} - Resolves with result from redis
    */
-  add(qi) {
+  add(qi, key) {
+    qi.id = UUID.v1();
     qi.method = qi.method ? qi.method : 'GET';
-    this._queue.push(qi);
+
+    let score = 0;
+    if (qi.processAfter) {
+      const date = Sugar.Date.create(qi.processAfter);
+      score = Sugar.Date.format(date, '{X}');
+    }
+
+    return this._addQueueItem(key, score, qi);
   }
 
-  /**
+  /* *
    * @description Immediately execute a queue Item, ignore rate limits
    * @param {object} qi - Queue Item
    * @return {Promise} - Resolves to the QI with .completed true and .results if successful
@@ -102,7 +125,7 @@ class APIQueueManager {
     return _appTasks[qi.app](qi);
   }
 
-  /**
+  /* *
    * @param {object} qi - Queue Item
    * @return {boolean} - true if rate limited
    * @private
@@ -128,29 +151,168 @@ class APIQueueManager {
     return false;
   }
 
+  /* *
+   * @description Fetch the length of the api-queue
+   * @return {Promise} - Resolves with the length of the redis api-queue
+   * @private
+   */
+  _queueLength(key) {
+    const now = Sugar.Date.create('now');
+    const nowEpoch = Sugar.Date.format(now, '{X}');
+    return new Promise(resolve => {
+      redisClient.zcount(key, -1, nowEpoch, (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  /* *
+   * @description Push a queue item into the redis queue, returns a promise
+   * @param {object} item - contains all parameters for api call
+   * @return {Promise} - Resolves with result from redis
+   * @private
+   */
+  _fetchQueue(key) {
+    const now = Sugar.Date.create('now');
+    const nowEpoch = Sugar.Date.format(now, '{X}');
+    const limit = 1000;
+
+    return new Promise(resolve => {
+      redisClient.zrangebyscore(key, -1, nowEpoch, 'LIMIT', 0, limit, (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  /* *
+   * @description Push a queue item into the redis queue, returns a promise
+   * @param {object} item - contains all parameters for api call
+   * @return {Promise} - Resolves with result from redis
+   * @private
+   */
+  _addQueueItem(key, score, item) {
+    return new Promise(resolve => {
+      redisClient.zadd(key, score, JSON.stringify(item), (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  /**
+   * @description Remove an item from the redis api-queue using itemId
+   * @param {object} key - redis list key
+   * @param {object} jsonItem - json object
+   * @return {Promise} - Resolves with result from redis
+   * @private
+   */
+  _deleteQueueItem(key, jsonItem) {
+    return new Promise(resolve => {
+      redisClient.zrem(key, jsonItem, (err, result) => {
+        if (err) {
+          Logging.logError(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  }
+
+  _recallQueueTimeout() {
+    if (!this._queueTimeout) {
+      this._queueTimeout = setTimeout(() => this._flush(), Constants.INTERVAL);
+    }
+  }
+
   /**
    *
    * @private
    */
   _flush() {
-    Logging.logSilly(`Queue Manager: ${this._queue.length}`);
-    if (this._queue.length === 0) {
-      setTimeout(() => this._flush(), Constants.INTERVAL);
-      return;
-    }
+    const timer = new Helpers.Timer();
+    this._queueTimeout = null;
 
-    let tasks = this._queue.filter(qi => {
-      return this._isRateLimited(qi) === false;
-    }).map(qi => _appTasks[qi.app](qi));
-
-    Logging.logDebug(`Attempting ${tasks.length} Twitter`);
-    Promise.all(tasks)
-      .then(Logging.Promise.logProp('Twitter Called: ', 'length', Logging.Constants.LogLevel.VERBOSE))
-      .then(qis => {
-        this._queue = this._queue.filter(qi => qi.completed !== true);
+    this._queueLength(Constants.Queue.API)
+      .then(queueLength => {
+        timer.start();
+        if (queueLength === 0) {
+          return false;
+        }
+        return this._fetchQueue(Constants.Queue.API);
       })
-      .then(() => setTimeout(() => this._flush(), Constants.INTERVAL))
-      .catch(err => Logging.log(err));
+      .then(queue => {
+        let tasks = [];
+        if (queue) {
+          Logging.logDebug(`FETCHED QUEUE: ${queue.length} - ${timer.interval}`);
+
+          tasks = queue.reduce((arr, jsonItem) => {
+            let item = JSON.parse(jsonItem);
+            item.queueState = JSON.stringify(item);
+            arr.push(item);
+            return arr;
+          }, []).filter(qi => {
+            // if (qi.error) {
+            //   return false;
+            // }
+            if (qi.processAfter) {
+              const time = Sugar.Date.create('now');
+              const itemDate = Sugar.Date.create(qi.processAfter);
+
+              if (!Sugar.Date.isAfter(time, itemDate)) {
+                return false;
+              }
+            }
+            return this._isRateLimited(qi) === false;
+          }).map(qi => _appTasks[qi.app](qi));
+          Logging.logInfo(`PROCESSED QUEUE: ${tasks.length} - ${timer.interval}`);
+        }
+
+        return tasks;
+      })
+      .then(tasks => {
+        if (!tasks || !tasks.length) {
+          return false;
+        }
+
+        Logging.logDebug(`CALLING TASKS: ${tasks.length}`);
+        return Promise.all(tasks);
+      })
+      .then(Logging.Promise.logTimer('CALLED TASKS', timer))
+      .then((qis) => {
+        if (!qis) {
+          return;
+        }
+
+        Logging.logDebug(`CALLED TASKS: ${qis.length} - ${timer.lapTime}`);
+
+        qis.forEach(item => {
+          if (item.error) {
+            this._deleteQueueItem(Constants.Queue.API, item.queueState);
+            delete item.queueState;
+            this.add(item, Constants.Queue.ERROR);
+          }
+          if (item.completed) {
+            this._deleteQueueItem(Constants.Queue.API, item.queueState);
+          }
+        });
+        return qis;
+      })
+      .then(() => this._recallQueueTimeout())
+      .catch(err => {
+        Logging.logError(err);
+        this._recallQueueTimeout();
+      });
   }
 }
 

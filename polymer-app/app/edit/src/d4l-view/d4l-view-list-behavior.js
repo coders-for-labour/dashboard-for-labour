@@ -156,18 +156,22 @@ Polymer.D4LViewList = {
   __navBack: function() {
     this.__debug('__navBack', this.__subPageMode);
 
-    if(!this.pageFirstLoad && window.history.length > 0){
-      return window.history.back();
+    // if(!this.pageFirstLoad && window.history.length > 0){
+    //   return window.history.back();
+    // }
+
+    if (this.subrouteData && this.subrouteData.id) {
+      this.set('subrouteData.id', null);
+    } else if (this.routeData && this.routeData.page) {
+      this.set('routeData.page', null);
     }
 
-    if (this.__subPageMode && this.__subPageMode !== 'info') {
-      this.set('subrouteAction.path', '');
-      this.set('subrouteActionData.action', '');
-      return;
-    }
+    let path = [
+      this.get('routeData.page'),
+      this.get('subrouteData.id')
+    ];
 
-    this.set('subroute.path','/');
-    this.set('subrouteData.id','');
+    this.fire('view-entity', path.join('/'));
   },
 
   __openTasks: function() {

@@ -30,28 +30,11 @@ Polymer({
       type: Object,
       notify: true
     },
-    io: {
-      type: Object,
-      value: function() {
-        return {
-          endpoint: 'http://dashboard.forlabour.com',
-          connected: false,
-          tx: [],
-          rxEvents: [
-            'add-user',
-            'message',
-            'chat',
-            'rm-user'
-          ],
-          rx: []
-        };
-      }
-    },
     iodb: {
       type: Object,
       value: function() {
         return {
-          endpoint: 'http://rhizome.codersforlabour.com',
+          endpoint: '//%{D4L_RHIZOME_URL}%',
           connected: false,
           rxEvents: [
             'db-activity'
@@ -62,30 +45,38 @@ Polymer({
     },
 
     route: {
-      type: Object
+      type: Object,
+      notify: true,
     },
     routeData: {
       type: Object,
+      notify: true,
       observer: '__routePageChanged'
     },
     subroute: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteData: {
       type: Object,
+      notify: true,
       observer: '__subrouteChanged'
     },
     subrouteAction: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteActionData: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteActionId: {
-      type: Object
+      type: Object,
+      notify: true
     },
     subrouteActionIdData: {
-      type: Object
+      type: Object,
+      notify: true
     },
 
     page: {
@@ -246,6 +237,10 @@ Polymer({
       return window.location = '/logout';
     }
 
+    if (page === 'storm') {
+      page = 'thunderclap';
+    }
+
     let resolvedPageUrl = this.resolveUrl(`../views/${page}/d4l-${page}.html`);
     this.importHref(resolvedPageUrl, null, this.__showPage404, true);
   },
@@ -270,7 +265,7 @@ Polymer({
       return this.subPageTitle;
     }
     let titles = {
-      'dashboard': 'Dashboard For Labour'
+      'dashboard': 'Amplify'
     };
     if (!page || !titles[page]) {
       return 'Admin';

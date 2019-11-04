@@ -13,8 +13,6 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
-script(src="/bower_components/sugar/dist/sugar.min.js")
-
 dom-module#d4l-header
   style(is="custom-style", include="iron-flex iron-positioning iron-flex-alignment")
   style(is="custom-style", include="d4l-theme")
@@ -22,13 +20,15 @@ dom-module#d4l-header
     :host {
     }
     app-header {
-      background: var(--default-primary-color);
+      @apply(--d4l-app-header);
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      color: var(--text-light-primary-color);
       z-index: 105;
+    }
+    app-toolbar {
+      font-size:24px;
     }
     .header-toolbar {
       width: 100%;
@@ -51,12 +51,12 @@ dom-module#d4l-header
       app-toolbar
         .layout.horizontal.center.header-toolbar
           paper-icon-button.header-logo(icon="d4l-icons:arrow-back", hidden$="[[!allowBack]]", on-click="__back")
-          iron-icon.header-logo(icon="d4l-icons:c4l", hidden$="[[allowBack]]", on-tap="__viewHome")
+          iron-icon.header-logo(icon="d4l-icons:labour", hidden$="[[allowBack]]", on-tap="__viewHome")
           div.flex(main-title) [[responsivePageTitle]]
           //.flex
           //  .layout.horizontal.center-center.header-menu
           //    paper-icon-button(icon="d4l-icons:local")
           //    paper-icon-button(icon="d4l-icons:national")
-          img(src="{{auth.user.profiles.0.images.profile}}", width=42, height=42, style="width: 42px; height; 42px; border-radius:50%;")
+          img(src="{{__userImage}}", width=42, height=42, style="width: 42px; height; 42px; border-radius:50%;")
 
   script(src="d4l-header.js")

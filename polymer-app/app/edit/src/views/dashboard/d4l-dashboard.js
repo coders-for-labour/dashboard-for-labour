@@ -16,7 +16,7 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Dashboard for Labour'
+      value: 'Amplify'
     },
 
     __users: {
@@ -47,7 +47,7 @@ Polymer({
     this.fire('view-entity', '/twibbyn');
   },
   __viewThunderclap: function () {
-    this.fire('view-entity', '/thunderclap');
+    this.fire('view-entity', '/storm');
   },
   __viewMemes: function () {
     this.fire('view-entity', '/meme');

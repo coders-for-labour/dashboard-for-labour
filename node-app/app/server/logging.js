@@ -340,3 +340,18 @@ module.exports.Promise.logError = () => {
     return err;
   };
 };
+
+/**
+ * @param {string} log - Text to log
+ * @param {Object} timer - Object with an 'interval' property
+ * @param {string} level - level to log at
+ * @return {function(*)} - returns a function for chaining into a promise
+ */
+module.exports.Promise.logTimer = (log, timer, level) => {
+  level = level || LogLevel.INFO;
+  return res => {
+    _log(`${log} [${timer.lapTime.toFixed(6)}s] [${timer.interval.toFixed(6)}s]`, level);
+    return res;
+  };
+};
+

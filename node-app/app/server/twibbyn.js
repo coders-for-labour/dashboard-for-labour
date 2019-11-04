@@ -10,26 +10,30 @@
  *
  */
 
-const fs = require('fs');
 const path = require('path');
-
 const Config = require('./config');
 const Logging = require('./logging');
 const Helpers = require('./helpers');
 const Composer = require('./composer');
 const Twitter = require('./twitter');
+const Facebook = require('./facebook');
+const Rhizome = require('rhizome-api-js');
 const rest = require('restler');
+const Storage = require('@google-cloud/storage');
+const storage = Storage(); // eslint-disable-line new-cap
 
 /* ************************************************************
  *
  * COMPOSE
  *
  **************************************************************/
-const _composeTwibbyn = (rearImgBuffer, rearImgBufferUid, frontImgUrl, toBuffer) => {
-  let composer = new Composer(500, 500, toBuffer);
+const _composeTwibbyn = (rearImgBuffer, rearImgBufferUid, frontImgUrl, options) => {
+  options = options || {};
+
+  let composer = new Composer(500, 500, options.toBuffer);
   composer.params('antialias', 'subpixel');
-  composer.params('patternQuality', 'best');
-  composer.imageFromBuffer(rearImgBuffer, rearImgBufferUid, {gravity: 'mid'});
+  composer.params('patternQuality', 'bilinear');
+  composer.imageFromBuffer(rearImgBuffer, rearImgBufferUid, {preserveAspect: true, gravity: options.gravity});
   composer.params('globalAlpha', 1);
   composer.imageFromUrl(frontImgUrl, {
     width: 1.0, height: 1.0, gravity: 'bottom'
@@ -38,42 +42,38 @@ const _composeTwibbyn = (rearImgBuffer, rearImgBufferUid, frontImgUrl, toBuffer)
   return composer.render();
 };
 
-const _getAvatar = (pathname, imgUrl) => {
-  return new Promise((resolve, reject) => {
-    fs.access(pathname, 'r', err => {
-      if (err) {
-        if (err.code === 'ENOENT') {
-          Logging.logDebug('Fetching user avatar');
-          rest.get(imgUrl)
-            .on('success', (data, response) => {
-              fs.writeFile(pathname, response.raw, err => {
-                if (err) {
-                  throw err;
-                }
-                resolve(response.raw);
-              });
-            })
-            .on('error', err => {
-              Logging.log(err, Logging.Constants.LogLevel.ERR);
-              reject(err);
-            });
-        } else {
-          Logging.log(err, Logging.Constants.LogLevel.ERR);
-          reject(err);
-        }
-      } else {
-        Logging.logDebug('Fetching local user avatar');
-        fs.readFile(pathname, (err, data) => {
-          if (err) {
-            Logging.log(err, Logging.Constants.LogLevel.ERR);
-            reject(err);
-            return;
-          }
-          resolve(data);
-        });
+const _getAvatar = (filename, imgUrl, ignoreBackup) => {
+  Logging.log(`Checking ${Config.cdnBucket} for backup of ${filename}`);
+
+  const file = storage.bucket(Config.cdnBucket).file(`b/${filename}`);
+  return file.exists()
+    .then(exists => {
+      if (exists[0] && !ignoreBackup) {
+        Logging.log(`Backup avatar exists. Loading that.`);
+        return file.download()
+          .then(contents => contents[0]);
       }
+
+      Logging.log(`Backup avatar doesn't exist. Loading external.`);
+      let rex = /\.(\w+)$/;
+      let matches = rex.exec(imgUrl);
+      let subType = 'jpg';
+      if (matches) {
+        subType = matches[1];
+      }
+
+      return new Promise((resolve, reject) => {
+        rest.get(imgUrl)
+          .on('success', (data, response) => {
+            Helpers.GCloud.Storage.saveBuffer(file, response.raw, {
+              contentType: `image/${subType}`
+            }, true).then(() => {
+              resolve(response.raw);
+            });
+          })
+          .on('error', reject);
+      });
     });
-  });
 };
 
 /* ************************************************************
@@ -109,6 +109,12 @@ const _saveTwibbyn = (req, res) => {
     res.sendStatus(403);
     return;
   }
+  if (!req.body || !req.body.campaignId) {
+    res.sendStatus(400);
+    return;
+  }
+
+  const campaignId = req.body.campaignId;
 
   const twAuth = req.user.auth.find(a => a.app === 'twitter');
   if (!twAuth) {
@@ -118,18 +124,23 @@ const _saveTwibbyn = (req, res) => {
   Logging.logDebug(twAuth.images);
 
   const imgUrl = twAuth.images.profile.replace('_normal', '');
-  const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
+  const filename = `${req.user.id}_twibbyn_twitter_avatar_backup`;
 
-  _getAvatar(pathname, imgUrl)
+  _getAvatar(filename, imgUrl, req.body.ignoreBackup)
     .then(avatarBuffer => {
       Logging.logDebug('Composing Twibbyn');
-      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn}/${req.body.file}`, true)
+      _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.body.file}`, {toBuffer: true, gravity: req.body.gravity})
         .then(twibbyn => {
-          Logging.logDebug(`Got Twibbyn: ${twibbyn.fileName}`);
+          Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
+          Rhizome.Campaign.Metadata.load(campaignId, 'userCount', 0)
+            .then(count => {
+              Rhizome.Campaign.Metadata.save(campaignId, 'userCount', count + 1);
+            });
+
           res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
-          res.sendStatus(200);
         });
-    });
+    })
+    .catch(Logging.Promise.logError());
 };
 
 /* ************************************************************
@@ -151,15 +162,21 @@ const _getFbTwibbyn = (req, res) => {
   Logging.logDebug(fbAuth.images);
 
   const imgUrl = `https://graph.facebook.com/${fbAuth.appId}/picture?width=500`;
-  const pathname = `${Config.appDataPath}/user_data/${req.user.id}_twibbyn_facebook_avatar_backup`;
+  const filename = `${req.user.id}_twibbyn_facebook_avatar_backup`;
 
-  _getAvatar(pathname, imgUrl)
+  _getAvatar(filename, imgUrl, req.query.ignoreBackup)
     .then(avatarBuffer => {
       Logging.logDebug(`Composing Twibbyn: ${imgUrl}`);
-      _composeTwibbyn(avatarBuffer, imgUrl, `${Config.cdn}/${req.query.file}`)
+      _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.query.file}`, {gravity: req.query.gravity})
         .then(twibbyn => {
           Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
-          // twibbyn.stream.pipe(res);
+          if (req.query.campaign && req.query.campaign != -1) { // eslint-disable-line eqeqeq
+            Rhizome.Campaign.Metadata.load(req.query.campaign, 'userCount', 0)
+              .then(count => {
+                Rhizome.Campaign.Metadata.save(req.query.campaign, 'userCount', count + 1);
+              });
+          }
+
           res.json({file: path.basename(twibbyn.pathName)});
         });
     });
@@ -182,8 +199,17 @@ const _postTwitter = (req, res) => {
     return;
   }
 
-  Logging.logDebug(`Tweeting: ${req.body.tweet}, ${Config.cdn}/${req.body.file}`);
-  rest.get(`${Config.cdn}/${req.body.file}`)
+  if (!req.body.file) {
+    Logging.logDebug(`Tweeting: ${req.body.tweet}`);
+    Twitter.tweet(twAuth, req.body.tweet)
+      .then(results => {
+        res.send(results);
+      });
+    return;
+  }
+
+  Logging.logDebug(`Tweeting: ${req.body.tweet}, http://${Config.cdnUrl}/${req.body.file}`);
+  rest.get(`http://${Config.cdnUrl}/${req.body.file}`)
     .on('success', (data, response) => {
       Twitter.tweetMedia(twAuth, req.body.tweet, response.raw)
         .then(results => {
@@ -194,6 +220,25 @@ const _postTwitter = (req, res) => {
     .on('error', () => res.send(false));
 };
 
+const _postFacebook = (req, res) => {
+  if (!req.user) {
+    res.sendStatus(403);
+    return;
+  }
+
+  const fbAuth = req.user.auth.find(a => a.app === 'facebook');
+  if (!fbAuth) {
+    res.send(400);
+    return;
+  }
+
+  Logging.logDebug(`Posting: ${req.body.message}, http://${Config.cdnUrl}/${req.body.file}`);
+  Facebook.postMedia(fbAuth, req.body.message, req.body.file)
+    .then(results => {
+      res.send(results);
+    });
+};
+
 module.exports.init = app => {
   Helpers.AppData.createFolder('/user_data');
 
@@ -202,4 +247,5 @@ module.exports.init = app => {
   app.put(`/twibbyn/twitter/restore`, _restoreBackup);
   app.get(`/twibbyn/twitter/hasbackup`, _hasBackup);
   app.post(`/twitter`, _postTwitter);
+  app.post(`/facebook`, _postFacebook);
 };

@@ -1,7 +1,8 @@
 Polymer({
   is: 'd4l-meme-detail',
   behaviors: [
-    Polymer.D4LLogging
+    Polymer.D4LLogging,
+    Polymer.D4LFacebook
   ],
   properties: {
     logLevel: {
@@ -85,7 +86,7 @@ Polymer({
     },
     __memeEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com'
+      value: '//%{D4L_CDN_URL}%'
     },
 
 
@@ -188,43 +189,16 @@ Polymer({
     }
     this.set('__uploadStatus', 'uploading');
 
-    FB.login(response => {
-      this.__debug(response);
-      if (response.status !== 'connected') {
-        this.__warn('cancelled login');
+    let cdnUrl = this.get('__memeEndpoint');
+    let image = this.get('__selectedMeme');
+    let postText = this.get('__postText.fb');
+    this.sharePhoto(`${cdnUrl}/${image}`, postText, (err, postResponse) => {
+      if (err) {
+        this.__err(err);
         return;
       }
-
-      let cdnUrl = this.get('__memeEndpoint');
-      let image = this.get('__selectedMeme');
-      FB.api('/me/photos', 'post', {
-        url: `${cdnUrl}/${image}`,
-        no_story: true
-      }, response => {
-        this.set('__uploadStatus', 'uploaded');
-        if (!response.id) {
-          this.__debug(response);
-          this.__err('Failed to upload photo to Facebook');
-          return;
-        }
-
-        FB.api('/me/feed', 'post', {
-          message: this.get('__postText.fb'),
-          object_attachment: response.id
-        }, postResponse => {
-          if (!postResponse.id) {
-            this.__debug(postResponse);
-            this.__err('Failed to post to Facebook');
-            return;
-          }
-
-          this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
-        });
-      });
-
-
-    }, {
-      scope: 'publish_actions'
+      this.set('__uploadStatus', 'uploaded');
+      this.push('auth.metadata.postIds', {type: 'facebook', id: postResponse.id});
     });
   },
 

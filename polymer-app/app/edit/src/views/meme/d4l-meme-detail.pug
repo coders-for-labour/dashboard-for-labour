@@ -80,7 +80,7 @@ dom-module#d4l-meme-detail
       h1 Platform
       d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
 
-      h1 Meme
+      h1 Images
       .layout.horizontal.center-center
         .flex.text-right
           paper-icon-button(icon="d4l-icons:arrow-back", on-tap="__prevMeme") Prev
@@ -97,7 +97,7 @@ dom-module#d4l-meme-detail
             paper-button(on-tap="__saveFacebook") Post Image
 
           .layout.vertical.center(hidden$="[[__hideUploading]]")
-            h2 Uploading the meme to Facebook...
+            h2 Uploading the image to Facebook...
             paper-spinner(active)
 
           .layout.vertical.center(hidden$="[[__hideUploaded]]")

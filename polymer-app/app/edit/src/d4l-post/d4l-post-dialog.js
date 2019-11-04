@@ -8,6 +8,12 @@ Polymer({
       type: Number,
       value: 4,
     },
+    open: {
+      type: Boolean,
+      value: false,
+      notify: true,
+      observer: '__onOpenChanged'
+    },
     title: {
       type: String,
       value: 'Post'
@@ -16,6 +22,15 @@ Polymer({
       type: String,
       value: '',
     },
+
+    hasTwitter: {
+      type: Boolean
+    },
+
+    __text: {
+      type: String,
+      value: ''
+    },
     __image: {
       type: String,
       value: ''
@@ -23,12 +38,6 @@ Polymer({
     __hasImage: {
       type: Boolean,
       computed: '__computeHasImage(__image)'
-    },
-    open: {
-      type: Boolean,
-      value: false,
-      notify: true,
-      observer: '__onOpenChanged'
     },
     __uploadResponse: {
       type: Object,
@@ -44,10 +53,15 @@ Polymer({
   __onOpenChanged: function() {
     this.__debug('__onOpenChanged', 'state', this.open);
     if (this.open) {
+      this.__text = this.text;
       this.$.dialog.open();
     } else {
       this.$.dialog.close();
     }
+  },
+
+  __connectTwitter: function () {
+    window.location = '/auth/twitter';
   },
 
   __onUploadResponse: function(response) {
@@ -61,7 +75,7 @@ Polymer({
 
   __save: function() {
     this.fire('save', {
-      text: this.text,
+      text: this.__text,
       image: this.__image
     });
     this.open = false;

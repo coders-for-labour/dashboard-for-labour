@@ -2,7 +2,9 @@ Polymer({
   is: 'd4l-twibbyn',
   behaviors: [
     Polymer.D4LLogging,
-    Polymer.D4LViewList
+    Polymer.D4LViewList,
+    Polymer.D4LFacebook,
+    Polymer.D4LShare
   ],
   properties: {
     logLevel: {
@@ -48,7 +50,7 @@ Polymer({
   },
 
   __computePageTitle: function (campaign) {
-    let title = 'Twibbyn for Labour';
+    let title = 'Twibbyn';
 
     if (campaign && campaign.name) {
       title = `${title} - ${campaign.name}`
