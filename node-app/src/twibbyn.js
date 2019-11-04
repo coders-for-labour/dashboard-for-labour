@@ -20,7 +20,7 @@ const Helpers = require('./helpers');
 const Composer = require('./composer');
 const Twitter = require('./twitter');
 const Facebook = require('./facebook');
-const Rhizome = require('rhizome-api-js');
+const Buttress = require('buttress-js-api');
 const rest = require('restler');
 const Storage = require('@google-cloud/storage');
 const storage = Storage(); // eslint-disable-line new-cap
@@ -135,9 +135,9 @@ const _saveTwibbyn = (req, res) => {
       _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.body.file}`, {toBuffer: true, gravity: req.body.gravity})
         .then((twibbyn) => {
           Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
-          Rhizome.Campaign.Metadata.load(campaignId, 'userCount', 0)
+          Buttress.Campaign.Metadata.load(campaignId, 'userCount', 0)
             .then((count) => {
-              Rhizome.Campaign.Metadata.save(campaignId, 'userCount', count + 1);
+              Buttress.Campaign.Metadata.save(campaignId, 'userCount', count + 1);
             });
 
           res.send(Twitter.updateProfile(twAuth, twibbyn.buffer));
@@ -174,9 +174,9 @@ const _getFbTwibbyn = (req, res) => {
         .then((twibbyn) => {
           Logging.logDebug(`Got Twibbyn: ${path.basename(twibbyn.pathName)}`);
           if (req.query.campaign && req.query.campaign != -1) { // eslint-disable-line eqeqeq
-            Rhizome.Campaign.Metadata.load(req.query.campaign, 'userCount', 0)
+            Buttress.Campaign.Metadata.load(req.query.campaign, 'userCount', 0)
               .then((count) => {
-                Rhizome.Campaign.Metadata.save(req.query.campaign, 'userCount', count + 1);
+                Buttress.Campaign.Metadata.save(req.query.campaign, 'userCount', count + 1);
               });
           }
 

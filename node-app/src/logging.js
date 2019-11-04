@@ -13,6 +13,7 @@
 // const Config = require('node-env-obj')('../../');
 
 // const proxyquire = require('proxyquire');
+const cluster = require('cluster');
 const winston = require('winston');
 // proxyquire('winston-logrotate', {
 //   winston: winston
@@ -39,49 +40,55 @@ module.exports.Constants = {
 /**
  *
  */
+let _logLabel = 'MASTER';
+const _checkIsCluster = () => {
+  if (cluster.isWorker) {
+    _logLabel = `${cluster.worker.id}`;
+  }
+};
 
-// winston.remove(winston.transports.Console);
-winston.add(new winston.transports.Console({
-  level: 'debug',
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.timestamp(),
-    winston.format.errors({stack: true}),
-    winston.format.printf((info) => {
-      if (info.stack) {
-        return `${info.timestamp} ${info.level}: ${info.message}\n${info.stack}`;
-      }
+/**
+ *
+ */
+module.exports.init = () => {
+  _checkIsCluster();
 
-      return `${info.timestamp} ${info.level}: ${info.message}`;
-    })
-  ),
-}));
-// winston.add(new winston.transports.Rotate({
-//   name: 'debug-file',
-//   json: false,
-//   file: `${Config.log.path}/log-debug.log`,
-//   level: 'debug',
-//   size: '1m',
-//   keep: 2,
-//   colorize: 'all',
-//   timestamp: true
-// }));
-// winston.add(new winston.transports.Rotate({
-//   name: 'error-file',
-//   json: false,
-//   file: `${Config.log.path}/log-err.log`,
-//   level: 'err',
-//   size: '1m',
-//   keep: 10,
-//   timestamp: true
-// }));
-winston.addColors({
-  info: 'white',
-  error: 'red',
-  warn: 'yellow',
-  verbose: 'white',
-  debug: 'white',
-});
+  // winston.remove(winston.transports.Console);
+  winston.add(new winston.transports.Console({
+    level: 'debug',
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.timestamp(),
+      winston.format.errors({stack: true}),
+      winston.format.printf((info) => {
+        if (info.stack) {
+          return `${info.timestamp} [${_logLabel}] ${info.level}: ${info.message}\n${info.stack}`;
+        }
+
+        return `${info.timestamp} [${_logLabel}] ${info.level}: ${info.message}`;
+      })
+    ),
+  }));
+  // winston.add(new winston.transports.Rotate({
+  //   name: 'debug-file',
+  //   json: false,
+  //   file: `${Config.log.path}/log-debug.log`,
+  //   level: 'debug',
+  //   size: '1m',
+  //   keep: 2,
+  //   colorize: 'all',
+  //   timestamp: true
+  // }));
+  // winston.add(new winston.transports.Rotate({
+  //   name: 'error-file',
+  //   json: false,
+  //   file: `${Config.log.path}/log-err.log`,
+  //   level: 'err',
+  //   size: '1m',
+  //   keep: 10,
+  //   timestamp: true
+  // }));
+};
 
 /**
  *

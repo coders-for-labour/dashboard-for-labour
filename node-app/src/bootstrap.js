@@ -48,7 +48,8 @@ const passport = require('passport');
  *
  *
  **********************************************************************************/
-const processes = os.cpus().length;
+// const processes = os.cpus().length;
+const processes = 1;
 const _workers = [];
 
 /* ********************************************************************************
@@ -59,7 +60,7 @@ const _workers = [];
 const __spawnWorkers = () => {
   Logging.log(`Spawning ${processes} REST Workers`);
 
-  const __spawn = idx => {
+  const __spawn = (idx) => {
     _workers[idx] = cluster.fork();
   };
 
@@ -74,7 +75,7 @@ const __spawnWorkers = () => {
  *
  **********************************************************************************/
 const __initWorker = () => {
-  let app = express();
+  const app = express();
   app.enable('trust proxy', 1);
   app.use(morgan('short'));
   app.use(bodyParser.json({limit: '5mb'}));
@@ -85,8 +86,8 @@ const __initWorker = () => {
     resave: false,
     secret: Config.auth.sessionSecret,
     store: new RedisStore({
-      logErrors: true
-    })
+      logErrors: true,
+    }),
   }));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -100,22 +101,13 @@ const __initWorker = () => {
   // Constituency.init(app);
   Uploads.init(app);
 
-      Auth.init(app);
-      // Twibbyn.init(app);
-      // Queue.Manager.init(app);
-      // Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
-      // Constituency.init(app);
-      // Uploads.init(app);
+  const tasks = [
+    Helpers.AppData.createFolder('/'),
+    Helpers.AppData.createFolder('/image_cache'),
+    Helpers.AppData.createFolder('/uploads'),
+  ];
 
-      const tasks = [
-        Helpers.AppData.createFolder('/'),
-        Helpers.AppData.createFolder('/image_cache'),
-        Helpers.AppData.createFolder('/uploads'),
-      ];
-
-      return Promise.all(tasks);
-    })
-    .catch(Logging.Promise.logError());
+  return Promise.all(tasks);
 };
 
 /* ********************************************************************************
@@ -137,24 +129,30 @@ const __initMaster = () => {
  * BOOTSTRAP
  *
  **************************************************************/
-const _installApp = app => {
-  let p = null;
+const _installApp = () => {
+  let processInit = null;
 
-  const url = `http://${Config.auth.rhizome.url}`;
-  Logging.logDebug(`Attempting to connect to Rhizome using: ${url}`);
+  Logging.logDebug(`Attempting to connect to Buttress using: ${Config.buttress.url}`);
 
-  Rhizome.init({
-    rhizomeUrl: url,
-    appToken: Config.auth.rhizome.appToken
+  Buttress.init({
+    buttressUrl: Config.buttress.url,
+    appToken: Config.buttress.token,
+    schema: Schema,
+    roles: AppRoles,
+    apiPath: Config.buttress.apiPath,
+    version: Config.buttress.apiVersion,
   });
 
   if (cluster.isMaster) {
-    p = __initMaster();
+    processInit = () => __initMaster();
   } else {
-    p = __initWorker();
+    processInit = () => __initWorker();
   }
 
-  return p.then(() => cluster.isMaster);
+  return Buttress.initSchema()
+    .then(processInit)
+    .then(() => cluster.isMaster)
+    .catch(Logging.logError);
 };
 
 module.exports = {

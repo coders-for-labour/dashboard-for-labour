@@ -13,7 +13,7 @@
 // const path = require('path');
 const Helpers = require('./helpers');
 const Logging = require('./logging');
-const Rhizome = require('rhizome-api-js');
+const Buttress = require('buttress-js-api');
 const Queue = require('./api-queue');
 const Sugar = require('sugar');
 
@@ -47,7 +47,7 @@ const _subscribeThunderclap = (req, res) => {
   const message = req.body.message;
   let supporters = [];
 
-  Rhizome.Campaign.Metadata.load(campaignId, 'supporters', [])
+  Buttress.Campaign.Metadata.load(campaignId, 'supporters', [])
     .then((s) => {
       Logging.logDebug(req.user.id);
       Logging.logDebug(s);
@@ -56,7 +56,7 @@ const _subscribeThunderclap = (req, res) => {
       }
       supporters = s;
 
-      return Rhizome.Campaign.Metadata.load(campaignId, 'thunderclapTime', '');
+      return Buttress.Campaign.Metadata.load(campaignId, 'thunderclapTime', '');
     })
     .then((timeString) => {
       if (!timeString) {
@@ -70,7 +70,7 @@ const _subscribeThunderclap = (req, res) => {
       }
 
       supporters.push(req.user.id);
-      Rhizome.Campaign.Metadata.save(campaignId, 'supporters', supporters);
+      Buttress.Campaign.Metadata.save(campaignId, 'supporters', supporters);
 
       return Queue.Manager.add({
         app: Queue.Constants.App.TWITTER,
