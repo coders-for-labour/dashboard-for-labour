@@ -16,7 +16,9 @@
     "type": "git",
     "url": "ssh://git@github.com:coders-for-labour/dashboard-for-labour.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "node-env-obj": "^0.1.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",

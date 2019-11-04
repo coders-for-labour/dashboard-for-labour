@@ -10,7 +10,8 @@ const gulpPug = require('gulp-pug');
 const mainBowerFiles = require('main-bower-files');
 const imagemin = require('gulp-imagemin');
 const babel = require('gulp-babel');
-const replace = require('gulp-replace');
+const gulpReplace = require('gulp-replace');
+const Config = require('node-env-obj')('../');
 
 const Paths = {
   SOURCE: 'app/edit',
@@ -36,44 +37,20 @@ const Globs = {
   IMAGES: [`${Paths.SOURCE}/images/**/*.png`,`${Paths.SOURCE}/images/**/*.jpg`,`${Paths.SOURCE}/images/**/*.svg`,`${Paths.SOURCE}/images/**/*.gif`,`${Paths.SOURCE}/images/**/*.ico`]
 };
 
-let Environment = {
-  NODE_ENV: '',
-  D4L_CDN_DEV_URL: '',
-  D4L_CDN_PROD_URL: '',
-  D4L_RHIZOME_DEV_URL: '',
-  D4L_RHIZOME_PROD_URL: '',
-  D4L_RHIZOME_TEST_URL: '',
-  D4L_FB_APP_ID: ''
-};
+const buildDate = new Date().toLocaleString('en-GB');
+const EnvReplacments = [
+  { key: 'D4L_CDN_URL', value: Config.cdn.url },
+  { key: 'D4L_BUTTRESS_URL', value: Config.buttress.url },
+  { key: 'D4L_BUTTRESS_PUBLIC_ID', value: Config.buttress.publicId },
+  { key: 'D4L_FACEBOOK_APP_ID', value: Config.auth.facebook.appId },
+  { key: 'D4L_BUILD_DATE', value: buildDate },
+  { key: 'D4L_BUILD_MODE', value: Config.env }
+];
 
-for (let variable in Environment) {
-  if (!process.env[variable]) {
-    throw new Error(`You must specify the ${variable} environment variable`);
-  }
-  if (process.env[variable]) {
-    Environment[variable] = process.env[variable];
-  }
-}
-
-function environmentReplace(stream) {
-  let outStr = null;
-  switch (Environment.NODE_ENV) {
-    case 'production':
-      outStr = stream.pipe(replace('%{D4L_CDN_URL}%', Environment.D4L_CDN_PROD_URL))
-        .pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_PROD_URL))
-        .pipe(replace('%{D4L_FACEBOOK_APP_ID}%', Environment.D4L_FB_APP_ID));
-      break;
-    case 'development':
-      outStr = stream.pipe(replace('%{D4L_CDN_URL}%', Environment.D4L_CDN_DEV_URL))
-        .pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL))
-        .pipe(replace('%{D4L_FACEBOOK_APP_ID}%', Environment.D4L_FB_APP_ID));
-      break;
-    case 'test':
-      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
-      break;
-  }
-
-  return outStr;
+function configReplacer(stream) {
+  return EnvReplacments.reduce((out, replacment) => {
+    return out.pipe(gulpReplace(`%{${replacment.key}}%`, replacment.value));
+  }, stream);
 }
 
 //
@@ -84,7 +61,7 @@ const js = function() {
     .pipe(eslint())
     .pipe(eslint.format());
 
-  return environmentReplace(content)
+  return configReplacer(content)
     .pipe(babel({
       presets: ['@babel/env']
     }))
@@ -105,7 +82,7 @@ const pug = function() {
   let content = gulp.src(Globs.PUG, {base: Paths.SOURCE})
     .pipe(gulpPug());
 
-  return environmentReplace(content)
+  return configReplacer(content)
     .pipe(gulp.dest(Paths.DEST));
 };
 const markup = function(done) {
