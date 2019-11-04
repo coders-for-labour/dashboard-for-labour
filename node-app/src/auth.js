@@ -19,15 +19,18 @@ const Buttress = require('buttress-js-api');
 
 const Logging = require('./logging');
 
+const AppRoles = require('../schema/appRoles');
+
 /* ************************************************************
  *
  * BUTTRESS AUTHENTICATION
  *
  **************************************************************/
-const __authenticateRihzomeUser = (appAuth, existingUser) => {
+const __authenticateUser = (appAuth, existingUser) => {
   const authentication = {
     authLevel: 1,
-    domains: [`${Config.app.subdomain}.${Config.app.domain}`],
+    domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
+    role: AppRoles.default,
     permissions: [
       {route: 'user', permission: 'list'},
       {route: 'user/me/metadata/:key', permission: 'add'},
@@ -188,7 +191,7 @@ module.exports.init = (app) => {
       Logging.logSilly('AUTHENTICATE: Authenticated');
       if (err) throw err;
 
-      __authenticateRihzomeUser(appAuth, req.user)
+      return __authenticateUser(appAuth, req.user)
         .then((user) => {
           Logging.logDebug(user);
           req.login(user, (err) => {
@@ -219,7 +222,7 @@ module.exports.init = (app) => {
     passport.authenticate('facebook', (err, appAuth, info) => {
       if (err) throw err;
 
-      __authenticateRihzomeUser(appAuth, req.user)
+      __authenticateUser(appAuth, req.user)
         .then((user) => {
           Logging.logSilly(user);
           req.login(user, (err) => {
