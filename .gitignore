@@ -1,6 +1,6 @@
 #IDE
 .idea
-node-app/nginx
+.vscode
 
 # Logs
 logs
@@ -38,19 +38,19 @@ polymer-app/node_modules
 polymer-app/app/edit/bower_components
 jspm_packages
 
-
 # Optional npm cache directory
 .npm
 
 # Optional REPL history
 .node_repl_history
 
-node-app/app_data
-.vscode
-
 # Env files
 *.env
 !.example.env
 
+# Nginx 
+nginx/*
+!nginx/example.conf
+
 # App Data
-app_data/*
+node-app/app_data/*
