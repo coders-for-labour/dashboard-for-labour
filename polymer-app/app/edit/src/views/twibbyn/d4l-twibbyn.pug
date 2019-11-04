@@ -9,12 +9,11 @@ link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-social/d4l-social.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-
-link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-account-selector/d4l-account-selector.html")
@@ -42,7 +41,7 @@ dom-module#d4l-twibbyn
 
     iron-media-query(query="(max-width: 800px)", query-matches="{{isMobile}}")
 
-    d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
+    buttress-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
 
     iron-ajax#ajaxTweet(
       handleAs="json",

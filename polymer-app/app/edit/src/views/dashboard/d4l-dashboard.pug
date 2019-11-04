@@ -9,11 +9,10 @@ link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-
-link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 
@@ -40,7 +39,7 @@ dom-module#d4l-dashboard
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    d4l-app-db-query(db="[[db]]", doc="[[db.user]]", query="[[__userQuery]]", find-all="{{__users}}")
+    buttress-db-query(db="[[db]]", doc="[[db.user]]", query="[[__userQuery]]", find-all="{{__users}}")
 
     d4l-header(
       auth="[[auth]]",

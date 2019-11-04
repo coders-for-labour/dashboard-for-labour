@@ -21,7 +21,6 @@ link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.htm
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 link(rel="import", href="/bower_components/iron-image/iron-image.html")
-//-link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-icons/social-icons.html")
 link(rel="import", href="/bower_components/iron-icons/communication-icons.html")
 link(rel="import", href="/bower_components/paper-input/paper-input.html")
@@ -29,13 +28,14 @@ link(rel="import", href="/bower_components/paper-item/paper-icon-item.html")
 link(rel="import", href="/bower_components/paper-icon-button/paper-icon-button.html")
 link(rel="import", href="/bower_components/paper-toast/paper-toast.html")
 link(rel="import", href="/bower_components/paper-styles/typography.html")
+link(rel="import" href="/bower_components/buttress-js-db/buttress-db.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 
 link(rel="import", href="/src/d4l-auth/d4l-auth.html")
-link(rel="import", href="/src/d4l-app-db/d4l-app-db.html")
-link(rel="import", href="/src/d4l-app-db/d4l-realtime-db-behaviors.html")
-link(rel="import", href="/src/d4l-socket-io/d4l-socket-io.html")
+//- link(rel="import", href="/src/d4l-app-db/d4l-app-db.html")
+//- link(rel="import", href="/src/d4l-app-db/d4l-realtime-db-behaviors.html")
+//- link(rel="import", href="/src/d4l-socket-io/d4l-socket-io.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
@@ -114,28 +114,27 @@ dom-module#d4l-app
       pattern="/:id",
       data="{{subrouteActionIdData}}"
     )
-    d4l-socket-io#db(
-      auth="[[auth]]",
-      endpoint="{{iodb.endpoint}}",
-      connected="{{iodb.connected}}",
-      rx-events="{{iodb.rxEvents}}",
-      rx="{{iodb.rx}}",
-      on-rx-event="__dbRxEvent"
-    )
     d4l-auth-service#authService(
       db="{{db}}",
       status="{{authStatus}}",
       auth="{{auth}}",
       login-details="[[loginDetails]]"
     )
-    d4l-app-db#db(
-      status="{{dbStatus}}",
-      auth="[[auth]]",
+
+    buttress-db#bJSDB(
+      endpoint="%{D4L_BUTTRESS_URL}%",
+      app-id="%{D4L_BUTTRESS_PUBLIC_ID}%",
+      api-path="D4L",
+      user-id="[[auth.user.id]]",
+      token="[[auth.user.tokens.0.value]]",
+      loaded="{{dbLoaded}}",
+      error="{{dbError}}",
+      settings="{{dbSettings}}",
       db="{{db}}",
-      on-error="__dataServiceError"
+      core-collections="[[dbCoreCollections]]"
     )
 
-    iron-pages.fullbleed(attr-for-selected="name", selected="{{mode}}")
+    iron-pages.fullbleed(attr-for-selected="name", selected="[[mode]]")
       section(name="authenticating")
       section(name="authenticate")
         d4l-auth(auth="[[auth]]")
@@ -157,18 +156,18 @@ dom-module#d4l-app
             db="{{db}}",
             mobile="[[isMobile]]"
           )
-          d4l-twibbyn.fullbleed.layout.vertical(
-            name="twibbyn",
-            title="Twibbyn",
-            db="{{db}}",
-            doc="{{db.campaign}}",
-            auth="[[auth]]",
-            route="[[route]]",
-            route-data="[[routeData]]",
-            subroute="[[subroute]]",
-            subroute-data="[[subrouteData]]",
-            mobile="[[isMobile]]"
-          )
+          //- d4l-twibbyn.fullbleed.layout.vertical(
+          //-   name="twibbyn",
+          //-   title="Twibbyn",
+          //-   db="{{db}}",
+          //-   doc="{{db.campaign}}",
+          //-   auth="[[auth]]",
+          //-   route="[[route]]",
+          //-   route-data="[[routeData]]",
+          //-   subroute="[[subroute]]",
+          //-   subroute-data="[[subrouteData]]",
+          //-   mobile="[[isMobile]]"
+          //- )
           //-d4l-meme.fullbleed.layout.vertical(
             name="meme",
             title="Images",

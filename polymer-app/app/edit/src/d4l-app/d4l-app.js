@@ -1,8 +1,7 @@
 Polymer({
   is: 'd4l-app',
   behaviors: [
-    Polymer.D4LLogging,
-    Polymer.D4LRealtimeDbMsgHandler
+    Polymer.D4LLogging
   ],
   properties: {
     logLevel: {
