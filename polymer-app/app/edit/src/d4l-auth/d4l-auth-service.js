@@ -42,20 +42,6 @@ Polymer({
     if (!userId) {
       return;
     }
-
-    let meta = this.get(['db.user.metadata', userId]);
-    if (!meta) {
-      const metaDefault = Object.assign({}, {
-        __populate__: true,
-        constituencyName: '',
-        membershipNumber: '',
-        postCode: '',
-        postIds: []
-      });
-      this.set(['db.user.metadata', userId], metaDefault);
-    }
-    this.set('auth.metadata', this.get(['db.user.metadata', userId]));
-    this.linkPaths('auth.metadata', `db.user.metadata.${userId}`);
   },
 
   onAjaxError: function() {
