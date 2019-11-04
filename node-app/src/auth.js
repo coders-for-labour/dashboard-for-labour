@@ -33,16 +33,13 @@ const __authenticateUser = (appAuth, existingUser) => {
     domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
     role: AppRoles.default,
     permissions: [
-      {route: 'user', permission: 'list'},
-      {route: 'user/me/metadata/:key', permission: 'add'},
-      {route: 'user/me/metadata/:key', permission: 'write'},
-      {route: 'user/me/metadata/:key?', permission: 'read'},
-      {route: 'campaign', permission: 'list'},
-      {route: 'campaign/:id/metadata/:key?', permission: 'read'},
-      {route: 'post', permission: 'list'},
-      {route: 'post', permission: 'read'},
-      {route: 'post', permission: 'add'},
-      {route: 'post', permission: 'write'},
+      {'route': 'campaign', 'permission': 'list'},
+      {'route': 'post', 'permission': 'list'},
+      {'route': 'post', 'permission': 'read'},
+      {'route': 'post', 'permission': 'add'},
+      {'route': 'post', 'permission': 'write'},
+      {'route': 'people', 'permission': 'list'},
+      {'route': 'app/schema', 'permission': 'read'},
     ],
   };
 
