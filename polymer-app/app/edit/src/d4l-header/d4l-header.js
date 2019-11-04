@@ -46,7 +46,7 @@ Polymer({
     },
     __userImage: {
       type: String,
-      computed: '__computeUserImage(auth.user.profiles.0.images.profile)'
+      computed: '__computeUserImage(auth.user.person.avatar)'
     }
   },
 

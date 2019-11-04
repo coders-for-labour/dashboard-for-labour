@@ -73,7 +73,7 @@ Polymer({
       type: Boolean,
       notify: true,
       value: false,
-      computed: '__computeHasUserTwitter(auth.user, auth.user.profiles.*)'
+      computed: '__computeHasUserTwitter(auth.user, auth.user.auth.*)'
     }
   },
 
@@ -139,7 +139,7 @@ Polymer({
   },
 
   __computeHasUserTwitter: function(authUser){
-    return authUser.profiles.reduce((outcome, profile) => {
+    return authUser.auth.reduce((outcome, profile) => {
       if (profile.app === 'twitter') {
         return true;
       }

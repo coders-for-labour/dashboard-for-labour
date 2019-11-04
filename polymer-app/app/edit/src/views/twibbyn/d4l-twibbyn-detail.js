@@ -33,7 +33,7 @@ Polymer({
     },
     __selectedProfileImg: {
       type: String,
-      computed: '__computeSelectedProfileImg(auth.user.profiles.*, __selectedPlatform)'
+      computed: '__computeSelectedProfileImg(auth.user.auth.*, __selectedPlatform)'
     },
     twibbyns: {
       type: Array,
@@ -120,7 +120,7 @@ Polymer({
 
   observers: [
     '__campaignChanged(campaign, db.campaign.data.*)',
-    '__authUser(auth.user.profiles.*)'
+    '__authUser(auth.user.auth.*)'
   ],
 
   __campaignChanged: function(){
@@ -147,7 +147,7 @@ Polymer({
   },
 
   __authUser: function() {
-    let profiles = this.get('auth.user.profiles');
+    let profiles = this.get('auth.user.auth');
     if (!profiles || !profiles.length) {
       this.__warn('No user profiles!');
       return;
@@ -336,7 +336,7 @@ Polymer({
       return false;
     }
 
-    return user.profiles.findIndex(a => a.app === app) !== -1;
+    return user.auth.findIndex(a => a.app === app) !== -1;
   },
 
   __computeTwitterConnected: function() {
@@ -381,14 +381,14 @@ Polymer({
   },
 
   __computeSelectedProfileImg: function(cr, platform) {
-    //user.profiles.0.images.profile
+    //user.auth.0.images.profile
     let user = this.get('auth.user');
     if (!user) {
       return '';
     }
-    let profile = user.profiles.find(p => p.app === platform);
+    let profile = user.auth.find(p => p.app === platform);
     if (!profile) {
-      profile = user.profiles[0];
+      profile = user.auth[0];
     }
 
     if (profile.app === 'facebook') {

@@ -50,7 +50,7 @@ Polymer.D4LShare = {
 
   __shareAmplify: function(){
     let user = this.get('auth.user');
-    if (!user || !user.profiles.length) {
+    if (!user || !user.auth.length) {
       this.__warn('No auth');
       return;
     }
@@ -59,8 +59,8 @@ Polymer.D4LShare = {
     const url = 'https://amplify.labour.org.uk';
     this.set('__shareTwStatus', 'sharing');
 
-    let authFb = user.profiles.find(p => p.app === 'facebook') !== -1;
-    let authTw = user.profiles.find(p => p.app === 'twitter') !== -1;
+    let authFb = user.auth.find(p => p.app === 'facebook') !== -1;
+    let authTw = user.auth.find(p => p.app === 'twitter') !== -1;
 
     this.__debug(`AuthFb: ${authFb}`, `AuthTw: ${authTw}`);
 

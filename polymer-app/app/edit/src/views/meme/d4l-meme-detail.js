@@ -236,7 +236,7 @@ Polymer({
       return false;
     }
 
-    return user.profiles.findIndex(a => a.app === app) !== -1;
+    return user.auth.findIndex(a => a.app === app) !== -1;
   },
 
   __computeTwitterConnected: function() {

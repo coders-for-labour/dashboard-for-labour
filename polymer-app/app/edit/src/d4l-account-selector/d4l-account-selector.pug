@@ -60,7 +60,7 @@ dom-module#d4l-account-selector
           return false;
         }
 
-        return user.profiles.findIndex(a => a.app === app) !== -1;
+        return user.auth.findIndex(a => a.app === app) !== -1;
       },
 
       __connectTwitter: function () {

@@ -24,7 +24,7 @@ Polymer({
     },
     __userQuery: {
       type: String,
-      computed: '__computeUserQuery(db.user.data.*)'
+      computed: '__computeUserQuery(db.people.data.*)'
     },
 
     __post: {
