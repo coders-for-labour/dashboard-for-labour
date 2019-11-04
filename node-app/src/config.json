@@ -90,15 +90,9 @@
     "redis": {
       "host": "%D4L_REDIS_HOST%"
     },
-    "cdnUrl": {
-      "dev": "%D4L_CDN_DEV_URL%",
-      "prod": "%D4L_CDN_PROD_URL%",
-      "test": "%D4L_CDN_DEV_URL%"
-    },
-    "cdnBucket": {
-      "dev": "%D4L_CDN_DEV_BUCKET%",
-      "prod": "%D4L_CDN_PROD_BUCKET%",
-      "test": "%D4L_CDN_DEV_BUCKET%"
+    "cdn": {
+      "url": "D4L_CDN_URL",
+      "bucket": "D4L_CDN_BUCKET"
     }
   }
 }
