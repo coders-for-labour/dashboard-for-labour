@@ -11,11 +11,15 @@
  */
 
 const Config = require('node-env-obj')('../../');
+const Buttress = require('buttress-js-api');
 
 const os = require('os');
 const cluster = require('cluster');
 const Helpers = require('./helpers');
-const Buttress = require('buttress-js-api');
+
+const Schema = require('../schema');
+const AppRoles = require('../schema/appRoles.json');
+
 const Auth = require('./auth');
 // const Cache = require('./cache');
 const Twibbyn = require('./twibbyn');
@@ -23,6 +27,7 @@ const Thunderclap = require('./thunderclap');
 const Queue = require('./api-queue');
 const Uploads = require('./uploads');
 // const Constituency = require('./constituency');
+const Logging = require('./logging');
 
 const express = require('express');
 const session = require('express-session');
@@ -95,13 +100,22 @@ const __initWorker = () => {
   // Constituency.init(app);
   Uploads.init(app);
 
-  const tasks = [
-    Helpers.AppData.createFolder('/'),
-    Helpers.AppData.createFolder('/image_cache'),
-    Helpers.AppData.createFolder('/uploads'),
-  ];
+      Auth.init(app);
+      // Twibbyn.init(app);
+      // Queue.Manager.init(app);
+      // Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
+      // Constituency.init(app);
+      // Uploads.init(app);
 
-  return Promise.all(tasks);
+      const tasks = [
+        Helpers.AppData.createFolder('/'),
+        Helpers.AppData.createFolder('/image_cache'),
+        Helpers.AppData.createFolder('/uploads'),
+      ];
+
+      return Promise.all(tasks);
+    })
+    .catch(Logging.Promise.logError());
 };
 
 /* ********************************************************************************

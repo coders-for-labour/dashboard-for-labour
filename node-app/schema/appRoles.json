@@ -1,0 +1,8 @@
+{
+  "default": "public",
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": "denyAll",
+    "dataDisposition": "denyAll"
+  }]
+}
