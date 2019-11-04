@@ -84,7 +84,7 @@ const __authenticateUser = (appAuth, existingUser) => {
           initials: name.initials,
           surname: name.lastName,
           suffix: name.suffix,
-          avatar: appAuth.profileURL,
+          avatar: appAuth.profileImgUrl,
           type: 'CLIENT',
           role: 'CLIENT',
         });
