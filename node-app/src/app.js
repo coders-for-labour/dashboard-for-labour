@@ -23,11 +23,9 @@ Bootstrap
   .app()
   .then((isMaster) => {
     if (isMaster) {
-      Logging.log(`${Config.app.title} REST Server Master v${Config.app.version} listening on port ` +
-        `${Config.app.port} in ${Config.env} mode.`);
+      Logging.log(`${Config.app.title} REST Server Master v${Config.app.version} in ${Config.env} mode.`);
     } else {
-      Logging.log(`${Config.app.title} REST Server Worker v${Config.app.version} ` +
-        `in ${Config.env} mode.`);
+      Logging.log(`${Config.app.title} REST Server Worker v${Config.app.version} listening on port ${Config.app.port} in ${Config.env} mode.`);
     }
   })
   .catch(Logging.Promise.logError());

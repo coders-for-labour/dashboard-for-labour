@@ -77,7 +77,7 @@ const __spawnWorkers = () => {
 const __initWorker = () => {
   const app = express();
   app.enable('trust proxy', 1);
-  app.use(morgan('short'));
+  app.use(morgan(`:date[iso] [${cluster.worker.id}] :method :status :url :res[content-length] - :response-time ms - :remote-addr`));
   app.use(bodyParser.json({limit: '5mb'}));
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(methodOverride());
@@ -91,15 +91,15 @@ const __initWorker = () => {
   }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.listen(Config.listenPort);
+  app.listen(Config.app.port);
 
   Auth.init(app);
-  Twibbyn.init(app);
-  Thunderclap.init(app);
+  // Twibbyn.init(app);
+  // Thunderclap.init(app);
   // Queue.Manager.init(app);
   // Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   // Constituency.init(app);
-  Uploads.init(app);
+  // Uploads.init(app);
 
   const tasks = [
     Helpers.AppData.createFolder('/'),

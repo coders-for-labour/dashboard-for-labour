@@ -16,6 +16,7 @@ const passport = require('passport');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const Buttress = require('buttress-js-api');
+const Humanname = require('humanname');
 
 const Logging = require('./logging');
 
@@ -45,8 +46,59 @@ const __authenticateUser = (appAuth, existingUser) => {
     ],
   };
 
-  Logging.logDebug(`Authenticating User`);
-  return Buttress.Auth.findOrCreateUser(appAuth, authentication);
+  Logging.logDebug(`AUTH: Pending ${appAuth.name} using ${appAuth.username}`);
+
+  let user = null;
+  return Buttress.Auth.findOrCreateUser(appAuth, authentication)
+    .then((_user) => {
+      if (!_user) {
+        Logging.logError(`AUTH: User ${appAuth.name} profile doesn\'t exist using ${appAuth.username}`);
+        return cb(null, null);
+      }
+
+      user = _user;
+      Logging.logDebug(`AUTH: Success ${appAuth.name} using ${user.id}`);
+
+      if (!user.tokens || user.tokens.length < 1) {
+        Logging.logDebug(`AUTH: Missing token for ${user.id}:${appAuth.name}`);
+        return Buttress.Auth.createToken(user.id, authentication)
+          .then((token) => {
+            user.tokens.push(token);
+            return user;
+          });
+      }
+    })
+    .then(() => Buttress.getCollection('people').getAll())
+    .then((people) => {
+      const person = people.find((p) => p.authId === user.id);
+
+      if (!person) {
+        const name = Humanname.parse(appAuth.name);
+
+        const title = name.salutation ? name.salutation + ' ' : '';
+        const initials = name.initials ? name.initials + ' ' : '';
+
+        return Buttress.getCollection('people').save({
+          authId: user.id,
+          title: name.salutation,
+          formalName: `${title}${name.firstName} ${initials}${name.lastName}`.trim(),
+          name: `${name.firstName} ${name.lastName}`.trim(),
+          forename: name.firstName,
+          initials: name.initials,
+          surname: name.lastName,
+          suffix: name.suffix,
+          avatar: appAuth.profileURL,
+          type: 'CLIENT',
+          role: 'CLIENT',
+        });
+      }
+
+      return false;
+    })
+    .then(() => user)
+    .catch((err) => {
+      Logging.logError(err);
+    });
 };
 
 module.exports.init = (app) => {
@@ -131,7 +183,38 @@ module.exports.init = (app) => {
       return;
     }
 
-    Logging.logSilly(req.user);
+    let _user = null;
+    return Buttress.App.getSchema()
+      .then(() => Buttress.User.get(req.user.id))
+      .then((user) => {
+        if (!user) {
+          throw new Error(`Unable to find user ${req.user.id}`);
+        }
+
+        _user = user;
+      })
+      .then(() => Buttress.getCollection('people').getAll())
+      .then((people) => {
+        const person = people.find((p) => p.authId === _user.id);
+        if (!person) {
+          throw new Error(`AUTH: No profile found for user id: ${_user.id}`);
+        }
+
+        _user.person = person;
+
+        return res.json({
+          user: _user,
+        });
+      })
+      .catch((err) => {
+        if (err instanceof Error) {
+          Logging.logError(err);
+          res.status(503).end();
+        } else {
+          res.json(null).end();
+          return null;
+        }
+      });
 
     Buttress.User.load(req.user.id)
       .then((user) => {
