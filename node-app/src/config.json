@@ -12,7 +12,8 @@
     "D4L_TEAM_API_TOTP_KEY": "",
     "D4L_TEAM_API_URL": "",
 
-    "D4L_BUTTRESS_URL": "",
+    "D4L_BUTTRESS_PROTOCOL": "https",
+    "D4L_BUTTRESS_HOST": "",
     "D4L_BUTTRESS_API_TOKEN": "",
     "D4L_BUTTRESS_API_PATH": "D4L",
     "D4L_BUTTRESS_API_VERSION": 1,
@@ -59,7 +60,9 @@
       }
     },
     "buttress": {
-      "url": "%D4L_BUTTRESS_URL%",
+      "url": "%D4L_BUTTRESS_PROTOCOL%://%D4L_BUTTRESS_HOST%",
+      "protocol": "%D4L_BUTTRESS_HOST%",
+      "host": "%D4L_BUTTRESS_HOST%",
       "token": "%D4L_BUTTRESS_API_TOKEN%",
       "apiPath": "%D4L_BUTTRESS_API_PATH%",
       "apiVersion": "%D4L_BUTTRESS_API_VERSION%"
