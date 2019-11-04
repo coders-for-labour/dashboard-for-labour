@@ -34,7 +34,7 @@ const Constants = {
   Queue: {
     API: 'api-queue',
     ERROR: 'api-queue-error',
-  }
+  },
 };
 module.exports.Constants = Constants;
 
@@ -159,7 +159,7 @@ class APIQueueManager {
   _queueLength(key) {
     const now = Sugar.Date.create('now');
     const nowEpoch = Sugar.Date.format(now, '{X}');
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       redisClient.zcount(key, -1, nowEpoch, (err, result) => {
         if (err) {
           Logging.logError(err);
@@ -181,7 +181,7 @@ class APIQueueManager {
     const nowEpoch = Sugar.Date.format(now, '{X}');
     const limit = 1000;
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       redisClient.zrangebyscore(key, -1, nowEpoch, 'LIMIT', 0, limit, (err, result) => {
         if (err) {
           Logging.logError(err);
@@ -199,7 +199,7 @@ class APIQueueManager {
    * @private
    */
   _addQueueItem(key, score, item) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       redisClient.zadd(key, score, JSON.stringify(item), (err, result) => {
         if (err) {
           Logging.logError(err);
@@ -218,7 +218,7 @@ class APIQueueManager {
    * @private
    */
   _deleteQueueItem(key, jsonItem) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       redisClient.zrem(key, jsonItem, (err, result) => {
         if (err) {
           Logging.logError(err);
@@ -244,24 +244,24 @@ class APIQueueManager {
     this._queueTimeout = null;
 
     this._queueLength(Constants.Queue.API)
-      .then(queueLength => {
+      .then((queueLength) => {
         timer.start();
         if (queueLength === 0) {
           return false;
         }
         return this._fetchQueue(Constants.Queue.API);
       })
-      .then(queue => {
+      .then((queue) => {
         let tasks = [];
         if (queue) {
           Logging.logDebug(`FETCHED QUEUE: ${queue.length} - ${timer.interval}`);
 
           tasks = queue.reduce((arr, jsonItem) => {
-            let item = JSON.parse(jsonItem);
+            const item = JSON.parse(jsonItem);
             item.queueState = JSON.stringify(item);
             arr.push(item);
             return arr;
-          }, []).filter(qi => {
+          }, []).filter((qi) => {
             // if (qi.error) {
             //   return false;
             // }
@@ -274,13 +274,13 @@ class APIQueueManager {
               }
             }
             return this._isRateLimited(qi) === false;
-          }).map(qi => _appTasks[qi.app](qi));
+          }).map((qi) => _appTasks[qi.app](qi));
           Logging.logInfo(`PROCESSED QUEUE: ${tasks.length} - ${timer.interval}`);
         }
 
         return tasks;
       })
-      .then(tasks => {
+      .then((tasks) => {
         if (!tasks || !tasks.length) {
           return false;
         }
@@ -296,7 +296,7 @@ class APIQueueManager {
 
         Logging.logDebug(`CALLED TASKS: ${qis.length} - ${timer.lapTime}`);
 
-        qis.forEach(item => {
+        qis.forEach((item) => {
           if (item.error) {
             this._deleteQueueItem(Constants.Queue.API, item.queueState);
             delete item.queueState;
@@ -309,7 +309,7 @@ class APIQueueManager {
         return qis;
       })
       .then(() => this._recallQueueTimeout())
-      .catch(err => {
+      .catch((err) => {
         Logging.logError(err);
         this._recallQueueTimeout();
       });

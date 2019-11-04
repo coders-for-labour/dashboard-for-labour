@@ -37,7 +37,7 @@ const _subscribeThunderclap = (req, res) => {
     return;
   }
 
-  const twitterAuth = req.user.auth.find(a => a.app === 'twitter');
+  const twitterAuth = req.user.auth.find((a) => a.app === 'twitter');
   if (!twitterAuth) {
     res.send(400);
     return;
@@ -48,17 +48,17 @@ const _subscribeThunderclap = (req, res) => {
   let supporters = [];
 
   Rhizome.Campaign.Metadata.load(campaignId, 'supporters', [])
-    .then(s => {
+    .then((s) => {
       Logging.logDebug(req.user.id);
       Logging.logDebug(s);
-      if (s.findIndex(id => id == req.user.id) !== -1) { // eslint-disable-line eqeqeq
+      if (s.findIndex((id) => id == req.user.id) !== -1) { // eslint-disable-line eqeqeq
         throw new Error('already_subscribed');
       }
       supporters = s;
 
       return Rhizome.Campaign.Metadata.load(campaignId, 'thunderclapTime', '');
     })
-    .then(timeString => {
+    .then((timeString) => {
       if (!timeString) {
         throw new Error('invalid_timestamp');
       }
@@ -81,26 +81,26 @@ const _subscribeThunderclap = (req, res) => {
         params: {
           status: `${message}`,
           include_entities: false, // eslint-disable-line camelcase
-          skip_statuses: true // eslint-disable-line camelcase
+          skip_statuses: true, // eslint-disable-line camelcase
         },
         token: twitterAuth.token,
-        tokenSecret: twitterAuth.tokenSecret
+        tokenSecret: twitterAuth.tokenSecret,
       }, Queue.Constants.Queue.API);
     })
-    .then(result => {
+    .then((result) => {
       if (!result) {
         throw new Error('failed_to_queue');
       }
 
       res.json({res: true});
     })
-    .catch(err => {
+    .catch((err) => {
       Logging.log(`Thunderclap Subscribe Failed: ${err.message}`);
       res.json({res: false, err: err.message});
     });
 };
 
-module.exports.init = app => {
+module.exports.init = (app) => {
   Helpers.AppData.createFolder('/user_data');
 
   app.put('/thunderclap/twitter/subscribe', _subscribeThunderclap);

@@ -64,12 +64,12 @@ class Composer {
         Logging.log(`Rendering Image From URL ${imgUrl}`);
         rest.get(imgUrl)
           .on('success', (data, response) => {
-            let image = new Image();
+            const image = new Image();
             image.dataMode = Image.MODE_IMAGE;
             image.onload = () => {
               options.srcWidth = image.width;
               options.srcHeight = image.height;
-              let o = this._options(options);
+              const o = this._options(options);
 
               Logging.logDebug(`Loaded Image [${image.width},${image.height}]`);
               Logging.logSilly(o);
@@ -108,12 +108,12 @@ class Composer {
     this._renderQueue.push((context) => {
       return new Promise((resolve, reject) => {
         Logging.logDebug(`Rendering Image From Buffer`);
-        let image = new Image();
+        const image = new Image();
         image.dataMode = Image.MODE_IMAGE;
         image.onload = () => {
           options.srcWidth = image.width;
           options.srcHeight = image.height;
-          let o = this._options(options);
+          const o = this._options(options);
 
           Logging.logDebug(`Loaded Image [${image.width},${image.height}]`);
           Logging.logSilly(o);
@@ -159,7 +159,7 @@ class Composer {
 
   render() {
     return this._cache.tryLoadCachedImage(this._id)
-      .then(cachedFile => {
+      .then((cachedFile) => {
         if (this._noCache || cachedFile === false) {
           if (this._noCache === true) {
             Logging.logWarn(`COMPOSER: FORCE NO CACHE`);
@@ -176,7 +176,7 @@ class Composer {
               resolve({
                 stream: null,
                 buffer: data,
-                pathName: cachedFile
+                pathName: cachedFile,
               });
             });
           });
@@ -185,7 +185,7 @@ class Composer {
         return Promise.resolve({
           stream: fs.createReadStream(cachedFile),
           buffer: null,
-          pathName: cachedFile
+          pathName: cachedFile,
         });
       });
   }
@@ -200,10 +200,10 @@ class Composer {
 
     if (options.preserveAspect) {
       if (options.srcWidth <= options.srcHeight) {
-        let aspect = options.srcWidth / options.srcHeight;
+        const aspect = options.srcWidth / options.srcHeight;
         options.height = options.width / aspect;
       } else {
-        let aspect = options.srcHeight / options.srcWidth;
+        const aspect = options.srcHeight / options.srcWidth;
         options.width = options.height / aspect;
       }
     }
@@ -219,10 +219,10 @@ class Composer {
     const canvas = new Canvas(this._width, this._height);
     const p = Promise.resolve({canvas: canvas, ctx: canvas.getContext('2d')});
 
-    this._renderQueue.push(context => {
-      let buffer = canvas.toBuffer();
+    this._renderQueue.push((context) => {
+      const buffer = canvas.toBuffer();
       return this._cache.addImage(buffer, this._id)
-        .then(cachedFile => {
+        .then((cachedFile) => {
           Logging.logDebug(`Outputting: ${cachedFile}`);
           if (this._toBuffer) {
             return new Promise((resolve, reject) => {
@@ -231,7 +231,7 @@ class Composer {
                 resolve({
                   stream: null,
                   buffer: data,
-                  pathName: cachedFile
+                  pathName: cachedFile,
                 });
               });
             });
@@ -240,7 +240,7 @@ class Composer {
           return Promise.resolve({
             stream: fs.createReadStream(cachedFile),
             buffer: null,
-            pathName: cachedFile
+            pathName: cachedFile,
           });
         });
     });
@@ -313,10 +313,10 @@ class Cache {
   }
 
   tryLoadCachedImage(options) {
-    let filename = this._genFilename(options);
+    const filename = this._genFilename(options);
 
     return new Promise((resolve, reject) => {
-      fs.access(`${this.__cachePath}/${filename}`, 'r', err => {
+      fs.access(`${this.__cachePath}/${filename}`, 'r', (err) => {
         if (err) {
           if (err.code !== 'ENOENT') {
             Logging.logDebug(`Image Cache MISS: ${filename}`);
@@ -336,15 +336,15 @@ class Cache {
   addImage(buffer, id) {
     return new Promise((resolve, reject) => {
       Logging.logSilly(`Hash Input: ${id}`);
-      let filename = this._genFilename(id);
+      const filename = this._genFilename(id);
       Logging.logSilly(`Hash Output: ${filename}`);
-      fs.writeFile(`${this.__cachePath}/${filename}`, buffer, err => {
+      fs.writeFile(`${this.__cachePath}/${filename}`, buffer, (err) => {
         if (err) throw err;
         Logging.logSilly(`Hash Pathname: ${this.__cachePath}/${filename}`);
 
         const gfile = storage.bucket(Config.cdnBucket).file(`c/${filename}`);
         Helpers.GCloud.Storage.saveBuffer(gfile, buffer, {
-          contentType: `image/png`
+          contentType: `image/png`,
         }).then(() => {
           resolve(`${this.__cachePath}/${filename}`);
         });

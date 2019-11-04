@@ -96,7 +96,7 @@ module.exports.init = (app) => {
       name: p.name,
       email: p.email,
       profileImgUrl: p.picture.data.url,
-      bannerImgUrl: p.cover ? p.cover.source : ''
+      bannerImgUrl: p.cover ? p.cover.source : '',
     };
 
     Logging.logSilly(user);
@@ -206,7 +206,7 @@ module.exports.init = (app) => {
   });
 
   const FB_AUTH_SCOPE = [
-    'public_profile', 'email', 'publish_actions'
+    'public_profile', 'email', 'publish_actions',
   ];
   app.get('/auth/facebook', (req, res, next) => {
     req.session.returnPath = req.get('Referer');

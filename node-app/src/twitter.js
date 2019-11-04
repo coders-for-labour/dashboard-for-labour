@@ -39,7 +39,7 @@ module.exports.updateProfile = (user, imgBuffer) => {
       skip_statuses: true, // eslint-disable-line camelcase
     },
     token: user.token,
-    tokenSecret: user.tokenSecret
+    tokenSecret: user.tokenSecret,
   }, Queue.Constants.Queue.API);
 
   Logging.logDebug(imgBuffer);
@@ -69,24 +69,24 @@ module.exports.tweet = (user, tweet) => {
     params: {
       status: tweet,
       include_entities: false, // eslint-disable-line camelcase
-      skip_statuses: true // eslint-disable-line camelcase
+      skip_statuses: true, // eslint-disable-line camelcase
     },
     token: user.token,
-    tokenSecret: user.tokenSecret
+    tokenSecret: user.tokenSecret,
   })
-    .then(qi => {
+    .then((qi) => {
       if (!qi.completed) {
         return {
           err: true,
-          res: qi.error
+          res: qi.error,
         };
       }
       Logging.log(`Created a tweet: ${qi.results.id}`);
       return {
         err: false,
         res: {
-          tweetId: qi.results.id_str
-        }
+          tweetId: qi.results.id_str,
+        },
       };
     })
     .catch(Logging.Promise.logError());

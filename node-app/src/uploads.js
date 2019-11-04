@@ -53,13 +53,13 @@ const __initUploads = (app) => {
     hash.update(data);
     const digest = hash.digest('hex');
 
-    let fname = `u/${digest}.${fileType[1]}`;
-    let gfile = storage
+    const fname = `u/${digest}.${fileType[1]}`;
+    const gfile = storage
       .bucket(Config.cdnBucket)
       .file(fname);
 
     gfile.exists()
-      .then(exists => {
+      .then((exists) => {
         console.log(exists);
         if (exists[0]) {
           Logging.log(`File ${fname} already exists.`);

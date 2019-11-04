@@ -43,20 +43,20 @@ class Timer {
   }
 
   start() {
-    let hrTime = process.hrtime();
+    const hrTime = process.hrtime();
     this._last = this._start = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
   }
 
   get lapTime() {
-    let hrTime = process.hrtime();
-    let time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
-    let lapTime = time - this._last;
+    const hrTime = process.hrtime();
+    const time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
+    const lapTime = time - this._last;
     this._last = time;
     return (lapTime / 1000000);
   }
   get interval() {
-    let hrTime = process.hrtime();
-    let time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
+    const hrTime = process.hrtime();
+    const time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
     return ((time - this._start) / 1000000);
   }
 }
@@ -74,19 +74,19 @@ module.exports.GCloud = {
       const isPublic = isPrivate !== true;
 
       return new Promise((resolve, reject) => {
-        let sbuffer = new sb.ReadableStreamBuffer();
+        const sbuffer = new sb.ReadableStreamBuffer();
         sbuffer.put(buffer);
         sbuffer.stop();
 
         sbuffer.pipe(file.createWriteStream({
           public: isPublic,
-          metadata: metadata
+          metadata: metadata,
         }))
           .on('finish', resolve)
           .on('err', reject);
       });
-    }
-  }
+    },
+  },
 };
 
 /* ************************************************************

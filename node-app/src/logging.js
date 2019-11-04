@@ -355,7 +355,7 @@ module.exports.Promise.logError = () => {
  */
 module.exports.Promise.logTimer = (log, timer, level) => {
   level = level || LogLevel.INFO;
-  return res => {
+  return (res) => {
     _log(`${log} [${timer.lapTime.toFixed(6)}s] [${timer.interval.toFixed(6)}s]`, level);
     return res;
   };

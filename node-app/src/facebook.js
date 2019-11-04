@@ -35,18 +35,18 @@ module.exports.postMedia = (user, message, imgUrl) => {
     params: {
       caption: message,
       url: message,
-      no_story: false // eslint-disable-line camelcase
+      no_story: false, // eslint-disable-line camelcase
     },
     token: user.token,
-    tokenSecret: user.tokenSecret
+    tokenSecret: user.tokenSecret,
   };
 
   return Queue.Manager.exec(queueItem)
-    .then(qi => {
+    .then((qi) => {
       if (!qi.completed) {
         return {
           err: true,
-          res: qi.error
+          res: qi.error,
         };
       }
       Logging.logDebug(qi.results);
@@ -54,8 +54,8 @@ module.exports.postMedia = (user, message, imgUrl) => {
       return {
         err: false,
         res: {
-          postId: qi.results.id
-        }
+          postId: qi.results.id,
+        },
       };
     })
     .catch(Logging.Promise.logError());
@@ -64,6 +64,6 @@ module.exports.postMedia = (user, message, imgUrl) => {
 /**
  * @param {Object} app - ExpressJS app object
  */
-module.exports.init = app => {
+module.exports.init = (app) => {
 
 };
