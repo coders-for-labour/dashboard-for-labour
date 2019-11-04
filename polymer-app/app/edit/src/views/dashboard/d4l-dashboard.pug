@@ -23,21 +23,21 @@ link(rel="import", href="/src/shared-styles.html")
 link(rel="import", href="./d4l-dashboard-card.html")
 
 dom-module#d4l-dashboard
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="shared-styles")
-  style(include="shared-layout-styles").
-    :host {
-      display: block;
-
-      padding: var(--default-page-padding);
-      padding-top: 95px;
-    }
-
-    .members-stat {
-      font-size: 50px;
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+
+        padding: var(--default-page-padding);
+        padding-top: 95px;
+      }
+
+      .members-stat {
+        font-size: 50px;
+      }
+
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     d4l-app-db-query(db="[[db]]", doc="[[db.user]]", query="[[__userQuery]]", find-all="{{__users}}")

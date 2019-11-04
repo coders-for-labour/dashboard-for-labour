@@ -25,24 +25,24 @@ link(rel="import", href="/src/views/meme/d4l-meme-campaign-card.html")
 link(rel="import", href="/src/views/meme/d4l-meme-detail.html")
 
 dom-module#d4l-meme
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="d4l-theme")
-  style(include="shared-styles")
-  style(include="shared-layout-styles").
-    :host {
-      display: block;
-
-      padding: var(--default-page-padding);
-      padding-top: 95px;
-    }
-
-    paper-fab {
-      position: fixed;
-      bottom: 60px;
-      right: 30px;
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+
+        padding: var(--default-page-padding);
+        padding-top: 95px;
+      }
+
+      paper-fab {
+        position: fixed;
+        bottom: 60px;
+        right: 30px;
+      }
+
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
