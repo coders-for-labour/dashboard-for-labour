@@ -5,48 +5,44 @@
   ],
   "private": true,
   "dependencies": {
-    "app-layout": "PolymerElements/app-layout#^0.10.0",
-    "app-route": "PolymerElements/app-route#^0.9.0",
-    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
-    "iron-icon": "PolymerElements/iron-icon#^1.0.0",
-    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
-    "iron-icons": "^1.2.0",
-    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^1.0.0",
-    "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.0",
-    "iron-media-query": "PolymerElements/iron-media-query#^1.0.0",
-    "iron-pages": "PolymerElements/iron-pages#^1.0.0",
-    "iron-selector": "PolymerElements/iron-selector#^1.0.0",
-    "paper-icon-button": "PolymerElements/paper-icon-button#~1.1.0",
-    "polymer": "Polymer/polymer#^1.7.0",
-    "paper-button": "^1.0.14",
-    "paper-fab": "^1.2.1",
-    "paper-dialog": "^1.1.0",
-    "iron-form": "^1.1.4",
-    "paper-input": "^1.1.22",
-    "app-storage": "^0.9.7",
-    "paper-dropdown-menu": "^1.4.2",
-    "paper-menu": "^1.2.2",
-    "paper-item": "^1.2.1",
-    "neon-animation": "^1.2.4",
-    "iron-image": "^1.2.5",
-    "paper-toast": "^1.3.0",
-    "paper-spinner": "^1.2.1",
+    "polymer": "Polymer/polymer#^2.8.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.3.3",
+    "app-layout": "PolymerElements/app-layout#^2.0.0",
+    "app-route": "PolymerElements/app-route#^2.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
+    "iron-icon": "PolymerElements/iron-icon#^2.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^2.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^2.1.1",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^2.0.0",
+    "iron-localstorage": "PolymerElements/iron-localstorage#^2.0.0",
+    "iron-media-query": "PolymerElements/iron-media-query#^2.0.0",
+    "iron-pages": "PolymerElements/iron-pages#^2.0.0",
+    "iron-selector": "PolymerElements/iron-selector#^2.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^2.0.0",
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
+    "paper-fab": "PolymerElements/paper-fab#^2.0.0",
+    "paper-dialog": "PolymerElements/paper-dialog#^2.1.1",
+    "iron-form": "PolymerElements/iron-form#^2.3.0",
+    "paper-input": "PolymerElements/paper-input#^2.2.2",
+    "app-storage": "PolymerElements/app-storage#^2.0.0",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.1.0",
+    "paper-item": "PolymerElements/paper-item#^2.1.1",
+    "neon-animation": "PolymerElements/neon-animation#^2.0.0",
+    "iron-image": "PolymerElements/iron-image#^2.2.1",
+    "paper-toast": "PolymerElements/paper-toast#^2.1.1",
+    "paper-spinner": "PolymerElements/paper-spinner#^2.1.0",
+    "iron-a11y-keys": "PolymerElements/iron-a11y-keys#^2.0.0",
+    "iron-scroll-target-behavior": "PolymerElements/iron-scroll-target-behavior#^2.0.0",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.4",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.1.1",
+    "paper-slider": "PolymerElements/paper-slider#^2.0.0",
+    "iron-list": "PolymerElements/iron-list#^2.0.18",
+    "paper-badge": "PolymerElements/paper-badge#^2.0.0",
+    "paper-date-picker": "polymer-paper-date-picker#^2.0.0",
+    "paper-tooltip": "PolymerElements/paper-tooltip#^2.0.0",
     "sugar": "^2.0.4",
-    "iron-a11y-keys": "^1.0.6",
-    "iron-scroll-target-behavior": "^1.1.1",
-    "paper-checkbox": "^1.4.2",
-    "paper-toggle-button": "^1.2.1",
-    "paper-slider": "^1.0.12",
-    "iron-list": "^1.3.15",
-    "paper-badge": "^1.1.4",
-    "paper-date-picker": "polymer-paper-date-picker#^1.2.0",
-    "socket.io-client": "^1.7.2",
-    "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.3",
-    "google-apis": "^1.1.7",
-    "bwt-uploader": "^0.9.9"
-  },
-  "devDependencies": {
-    "web-component-tester": "^4.0.0"
+    "buttress-js-db": "^2.1.0",
+    "google-apis": "^1.1.7"
   },
   "overrides": {
     "bwt-uploader": {
@@ -67,7 +63,13 @@
     },
     "webcomponentsjs": {
       "main": [
-        "webcomponents-lite.min.js"
+        "./**/*.js"
+      ]
+    },
+    "shadycss": {
+      "main": [
+        "./**/*.html",
+        "./**/*.js"
       ]
     },
     "web-animations-js": {
@@ -80,6 +82,32 @@
         "./**/*.html",
         "./**/*.js"
       ]
+    },
+    "socket.io-client": {
+      "main": [
+        "./dist/*.map",
+        "./dist/*.js"
+      ]
+    },
+    "sugar": {
+      "main": [
+        "./dist/sugar.js",
+        "./dist/sugar.min.js"
+      ]
+    },
+    "fingerprintjs2": {
+      "main": [
+        "./dist/fingerprint2.min.js"
+      ]
+    },
+    "buttress-js-db": {
+      "main": [
+        "./**/*.html",
+        "./**/*.js"
+      ]
+    },
+    "polymer": {
+      "main": "./**/*.html"
     },
     "app-layout": {
       "main": "./**/*.html"
@@ -152,23 +180,6 @@
     },
     "paper-tooltip": {
       "main": "./**/*.html"
-    },
-    "socket-io": {
-      "main": [
-        "./**/*.html",
-        "./**/*.js"
-      ]
-    },
-    "socket.io-client": {
-      "main": [
-        "./dist/*.map",
-        "./dist/*.js"
-      ]
-    },
-    "sugar": {
-      "main": [
-        "./dist/sugar.min.js"
-      ]
     }
   },
   "resolutions": {
