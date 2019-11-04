@@ -69,25 +69,27 @@ dom-module#d4l-dashboard-card
         background-image: url('/images/cards/card-meme.jpg');
       }
 
-      :host ::content h1, :host ::content h2, :host ::content h3{
+      :host ::slotted(h1),
+      :host ::slotted(h2),
+      :host :::slotted(h3) {
         color: var(--text-light-primary-color);
       }
-      :host ::content iron-icon{
+      :host ::slotted(iron-icon) {
         width: 35px;
         height: 35px;
         margin-right: 15px;
         color: var(--text-light-primary-color);
       }
-      :host ::content paper-input{
+      :host ::slotted(paper-input) {
         color: var(--text-light-primary-color);
       }
-      :host ::content paper-button{
+      :host :::slotted(paper-button) {
         @apply(--d4l-button-primary);
       }
 
     .card(background$="[[background]]", disabled$="[[disabled]]")
       .card-content
-        content
+        slot
 
   script(src="./d4l-dashboard-card.js")
 

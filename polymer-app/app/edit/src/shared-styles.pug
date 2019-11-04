@@ -56,12 +56,16 @@ dom-module(id="shared-card-styles")
         color: var(--text-dark-primary-color);
         /*margin-bottom:10px;*/
       }
-      p, .third-line ::content span {
+      p,
+      .third-line ::slotted(span) {
         @apply(--d4l-font-common-base);
         @apply(--d4l-font-small-card-primary-text);
         color: var(--text-dark-primary-color);
       }
-      p.secondary, p[secondary], .third-line ::content span.secondary, .third-line ::content span[secondary] {
+      p.secondary,
+      p[secondary],
+      .third-line ::slotted(span.secondary),
+      .third-line ::slotted(span[secondary]) {
         @apply(--d4l-font-common-base);
         @apply(--d4l-font-small-card-secondary-text);
         color: var(--text-dark-secondary-color);
