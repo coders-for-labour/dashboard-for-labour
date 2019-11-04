@@ -90,30 +90,39 @@ dom-module#d4l-app
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    app-location(route="{{route}}")
-    app-route(
-      route="{{route}}",
-      pattern="/:page",
-      data="{{routeData}}",
-      tail="{{subroute}}"
+    app-location(
+      route="{{__routesData.route.route}}"
+      url-space-regex="^[[rootPath]]",
+      query-params="{{__routesData.route.queryParams}}"
     )
     app-route(
-      route="{{subroute}}",
-      pattern="/:id",
-      data="{{subrouteData}}"
-      tail="{{subrouteAction}}"
+      route="{{__routesData.route.route}}"
+      pattern="[[rootPath]]:data"
+      data="{{__routesData.route.parts}}",
+      active="{{__routesData.route.active}}"
+      tail="{{__routesData.subroute.route}}"
     )
     app-route(
-      route="{{subrouteAction}}",
-      pattern="/:action",
-      data="{{subrouteActionData}}",
-      tail="{{subrouteActionId}}"
+      route="{{__routesData.subroute.route}}",
+      pattern="/:data",
+      data="{{__routesData.subroute.parts}}",
+      active="{{__routesData.subroute.active}}",
+      tail="{{__routesData.action.route}}"
     )
     app-route(
-      route="{{subrouteActionId}}",
-      pattern="/:id",
-      data="{{subrouteActionIdData}}"
+      route="{{__routesData.action.route}}",
+      pattern="/:data",
+      data="{{__routesData.action.parts}}",
+      active="{{__routesData.action.active}}",
+      tail="{{__routesData.id.route}}"
     )
+    app-route(
+      route="{{__routesData.id.route}}",
+      pattern="/:data",
+      data="{{__routesData.id.parts}}",
+      active="{{__routesData.id.active}}"
+    )
+
     d4l-auth-service#authService(
       db="{{db}}",
       status="{{authStatus}}",
@@ -141,7 +150,7 @@ dom-module#d4l-app
       section.fullbleed(name="application")
 
         iron-pages.fullbleed#app-pages(
-          selected="[[page]]",
+          selected="[[__appRoute]]",
           attr-for-selected="name",
           fallback-selection="view404",
           role="main"
@@ -156,39 +165,22 @@ dom-module#d4l-app
             db="{{db}}",
             mobile="[[isMobile]]"
           )
-          //- d4l-twibbyn.fullbleed.layout.vertical(
-          //-   name="twibbyn",
-          //-   title="Twibbyn",
-          //-   db="{{db}}",
-          //-   doc="{{db.campaign}}",
-          //-   auth="[[auth]]",
-          //-   route="[[route]]",
-          //-   route-data="[[routeData]]",
-          //-   subroute="[[subroute]]",
-          //-   subroute-data="[[subrouteData]]",
-          //-   mobile="[[isMobile]]"
-          //- )
-          //-d4l-meme.fullbleed.layout.vertical(
+          d4l-meme.fullbleed.layout.vertical(
             name="meme",
             title="Images",
             db="{{db}}",
             doc="{{db.campaign}}",
             auth="{{auth}}",
-            route="[[route]]",
-            route-data="[[routeData]]",
-            subroute="[[subroute]]",
-            subroute-data="[[subrouteData]]",
-            mobile="[[isMobile]]")
+            routes="[[routes]]",
+            mobile="[[isMobile]]"
+          )
           d4l-thunderclap.fullbleed.layout.vertical(
             name="storm",
             title="Storm",
             db="{{db}}",
             doc="{{db.campaign}}",
             auth="{{auth}}",
-            route="[[route]]",
-            route-data="[[routeData]]",
-            subroute="[[subroute]]",
-            subroute-data="[[subrouteData]]",
+            routes="[[routes]]",
             mobile="[[isMobile]]"
           )
           d4l-view404(

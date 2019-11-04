@@ -29,62 +29,52 @@ Polymer({
       type: Object,
       notify: true
     },
-    iodb: {
+
+    routes: {
       type: Object,
       value: function() {
         return {
-          endpoint: '//%{D4L_RHIZOME_URL}%',
-          connected: false,
-          rxEvents: [
-            'db-activity'
-          ],
-          rx: []
-        };
+          route: null,
+          subroute: null,
+          action: null,
+          id: null
+        }
+      }
+    },
+    rootPath: String,
+    __routesData: {
+      type: Object,
+      value: function() {
+        return {
+          route: {
+            route: null,
+            parts: null,
+            active: false,
+            queryParams: null
+          },
+          subroute: {
+            route: null,
+            parts: null,
+            active: false
+          },
+          action: {
+            route: null,
+            parts: null,
+            active: false
+          },
+          id: {
+            route: null,
+            parts: null,
+            active: false
+          }
+        }
       }
     },
 
-    route: {
-      type: Object,
-      notify: true,
-    },
-    routeData: {
-      type: Object,
-      notify: true,
-      observer: '__routePageChanged'
-    },
-    subroute: {
-      type: Object,
-      notify: true
-    },
-    subrouteData: {
-      type: Object,
-      notify: true,
-      observer: '__subrouteChanged'
-    },
-    subrouteAction: {
-      type: Object,
-      notify: true
-    },
-    subrouteActionData: {
-      type: Object,
-      notify: true
-    },
-    subrouteActionId: {
-      type: Object,
-      notify: true
-    },
-    subrouteActionIdData: {
-      type: Object,
-      notify: true
-    },
-
-    page: {
+    __appRoute: {
       type: String,
       reflectToAttribute: true,
-      observer: '__pageChanged'
-    },
-    pageMode: {
-      type: String
+      observer: '__pageChanged',
     },
     pageFirstLoad: {
       type: Boolean,
@@ -110,8 +100,8 @@ Polymer({
 
   observers: [
     '__authChanged(authStatus)',
-    '__dbConnected(iodb.connected)',
-    '__ioConnected(io.connected)'
+    '__routePathChanged(__routesData.route.route.path, __routesData.route.queryParams)',
+    '__routesRouteChanged(routes.route)',
   ],
   listeners: {
     'view-entity': '__viewEntity'
@@ -133,101 +123,47 @@ Polymer({
     }
   },
 
-  __dbConnected: function(connected) {
-    this.__debug(`db: connected: ${connected}`);
-  },
-  __ioConnected: function(connected) {
-    this.__debug(`io: connected: ${connected}`);
-    if (connected !== true) {
+  __routePathChanged: function() {
+    const route = this.get('__routesData.route');
+    const subroute = this.get('__routesData.subroute');
+    const action = this.get('__routesData.action');
+    const id = this.get('__routesData.id');
+
+    if (!route || !subroute || !action || !id) {
       return;
     }
 
-    this.push('io.tx', {type: 'add-user', payload: {userId: this.get('auth.user.id')}});
-  },
-  __dbRxEvent: function(ev) {
-    let authUser = this.get('auth.user');
-    if (!authUser) {
-      return;
+    if (this.get('navDrawerOpened')) {
+      this.set('navDrawerOpened', false);
     }
 
-    this.__handleRxEvent(ev, authUser);
-  },
-  __rxEvent: function(ev) {
-    let type = ev.detail.type;
-    let payload = ev.detail.payload;
-    if (payload.userId === this.get('auth.user.id')) {
-      return;
+    if (route && route.active) {
+      this.set('routes.route', route.parts.data);
+    } else {
+      this.set('routes.route', false);
     }
-    this.__debug(`receiving message: ${type}`);
-    this.__debug(payload);
-
-    let user = this.db.user.data.find(u => u.id == payload.userId);
-    switch (type) {
-      default: {
-        this.__err(new Error('SocketIO: Unhandled message type'));
-      } break;
-      case 'chat': {
-        if (this.chats.length > 0) {
-          this.push('chats.0.messages', {
-            user: user,
-            text: payload.text,
-            timestamp: payload.timestamp,
-          });
-        }
-      } break;
-      case 'message': {
-      } break;
-      case 'add-user': {
-        if (user && user.person) {
-          this.fire('create-action-toast', {
-            label: '',
-            text: `${user.person.name} just connected...`
-          });
-        }
-      } break;
-      case 'rm-user': {
-        if (user && user.person) {
-          this.fire('create-action-toast', {
-            label: '',
-            text: `${user.person.name} just left...`
-          });
-        }
-      } break;
+    if (subroute && subroute.active) {
+      this.set('routes.subroute', subroute.parts.data);
+    } else {
+      this.set('routes.subroute', false);
+    }
+    if (action && action.active) {
+      this.set('routes.action', action.parts.data);
+    } else {
+      this.set('routes.action', false);
+    }
+    if (id && id.active) {
+      this.set('routes.id', id.parts.data);
+    } else {
+      this.set('routes.id', false);
     }
   },
-  __dataServiceError: function(ev) {
-    this.__silly(ev);
 
-    this.fire('create-action-toast', {
-      label: '',
-      text: ev.detail.error.message
-    });
-  },
+  __routesRouteChanged: function(next) {
+    const current = this.get('__appRoute');
+    if (current && next === current) return;
 
-  __routePageChanged: function(data, prevData) {
-    const page = data.page;
-
-    if(prevData && data.page !== prevData.page && this.pageFirstLoad){
-      this.__debug('No longer first load');
-      this.pageFirstLoad = false;
-    }
-
-    this.page = page || 'dashboard';
-    this.navDrawerOpened = false;
-    this.chatDrawerOpened = false;
-  },
-  __subrouteChanged: function(data, prevData) {
-    const id = data.id;
-    if (!id) {
-      return;
-    }
-
-    if(prevData && data.id !== prevData.id && this.pageFirstLoad){
-      this.pageFirstLoad = false;
-    }
-
-    this.navDrawerOpened = false;
-    this.chatDrawerOpened = false;
+    this.set('__appRoute', next || 'dashboard');
   },
 
   __pageChanged: function(page) {
@@ -240,8 +176,12 @@ Polymer({
       page = 'thunderclap';
     }
 
-    let resolvedPageUrl = this.resolveUrl(`../views/${page}/d4l-${page}.html`);
-    this.importHref(resolvedPageUrl, null, this.__showPage404, true);
+    Polymer.importHref(
+      this.resolveUrl(`/src/views/${page}/d4l-${page}.html`),
+      null,
+      () => this.set('__appRoute', 'view404'),
+      true
+    );
   },
   __showPage404: function() {
     this.page = 'view404';
@@ -251,12 +191,15 @@ Polymer({
   },
 
   __viewEntity: function(ev) {
-    let path = ev.detail;
-    if (!path) {
-      return;
+    let path = ev.detail || ev;
+    if (!path) return;
+
+    if (path.indexOf('/') !== 0) {
+      path = `/${path}`;
     }
 
-    this.set('route.path', path);
+    window.history.pushState({}, null, path);
+    this.fire('location-changed');
   },
 
   __computeMainTitle: function(page) {
