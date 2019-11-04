@@ -5,10 +5,9 @@
 
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
-const clean = require('gulp-clean');
-const pug = require('gulp-pug');
-const htmlPrettify = require('gulp-html-prettify');
-const bowerFiles = require('main-bower-files');
+const gulpClean = require('gulp-clean');
+const gulpPug = require('gulp-pug');
+const mainBowerFiles = require('main-bower-files');
 const imagemin = require('gulp-imagemin');
 const babel = require('gulp-babel');
 const replace = require('gulp-replace');
@@ -80,95 +79,85 @@ function environmentReplace(stream) {
 //
 // Scripts
 //
-gulp.task('js', function() {
+const js = function() {
   let content = gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
-		.pipe(eslint())
-		.pipe(eslint.format());
+    .pipe(eslint())
+    .pipe(eslint.format());
 
   return environmentReplace(content)
     .pipe(babel({
-      presets: ['es2015']
+      presets: ['@babel/env']
     }))
-		.pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('scripts', function() {
-  return gulp.start(['js']);
-});
+    .pipe(gulp.dest(Paths.DEST));
+};
+const scripts = function(done) {
+	return gulp.series('js')(done);
+};
 
 //
 // Markup
 //
-gulp.task('html', function() {
+const html = function() {
   return gulp.src(Globs.HTML, {base: Paths.SOURCE})
 		.pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('pug', function() {
+};
+const pug = function() {
   let content = gulp.src(Globs.PUG, {base: Paths.SOURCE})
-		.pipe(pug())
-    .pipe(htmlPrettify());
+    .pipe(gulpPug());
 
   return environmentReplace(content)
-		.pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('markup', function() {
-  return gulp.start(['pug', 'html']);
-});
+    .pipe(gulp.dest(Paths.DEST));
+};
+const markup = function(done) {
+	return gulp.series('html', 'pug')(done);
+};
 
 //
 // images
 //
-gulp.task('png', function() {
+const png = function() {
   return gulp.src(Globs.PNG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('jpg', function() {
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+};
+const jpg = function() {
   return gulp.src(Globs.JPG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('ico', function() {
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+};
+const ico = function() {
   return gulp.src(Globs.ICO)
     .pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('svg', function() {
+};
+const svg = function() {
   return gulp.src(Globs.SVG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('images', function() {
-  return gulp.start(['png','jpg','ico','svg']);
-});
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+};
+const images = function(done) {
+	return gulp.series('png','jpg','ico','svg')(done);
+};
 
 //
 // videos
 //
-gulp.task('mp4', function() {
+const mp4 = function() {
   return gulp.src(Globs.MP4)
     .pipe(gulp.dest(Paths.DEST_VIDEOS));
-});
-
-gulp.task('videos', function() {
-  return gulp.start(['mp4']);
-});
+};
+const videos = function(done) {
+	return gulp.series('mp4')(done);
+};
 
 //
 // Static resources
 //
-gulp.task('json', function() {
+const json = function() {
   return gulp.src(Globs.JSON)
     .pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('bower-files', function() {
-  return gulp.src(bowerFiles({
+};
+const bowerFiles = function() {
+  return gulp.src(mainBowerFiles({
     paths: {
       bowerDirectory: `${Paths.SOURCE}/bower_components`,
       bowerJson: `${Paths.SOURCE}/bower.json`
@@ -176,46 +165,55 @@ gulp.task('bower-files', function() {
   }), {
     base: `${Paths.SOURCE}/bower_components`
   }).pipe(gulp.dest(`${Paths.DEST}/bower_components`));
-});
-
-gulp.task('resources', function() {
-  return gulp.start(['json', 'bower-files']);
-});
+};
+const resources = function(done) {
+	return gulp.series('json', 'bowerFiles')(done);
+};
 
 //
 //
 //
-gulp.task('clean', function() {
-  return gulp.src([`${Paths.DEST}/*`], {read: false})
-  .pipe(clean())
-});
+const clean = function() {
+	return gulp.src([`${Paths.DEST}/*`], {read: false})
+		.pipe(gulpClean());
+};
+const build = function(done) {
+	return gulp.series('clean', gulp.parallel('resources', 'scripts', 'images', 'videos', 'markup'))(done);
+};
+const watch = function(done) {
+  return gulp.series('build', function() {
+    gulp.watch(['src/**/*.js'], gulp.series('scripts'));
+    gulp.watch('src/**/*.json', gulp.series('resources'));
+    gulp.watch(Globs.SCRIPTS, gulp.series('scripts'));
+    gulp.watch(Globs.MP4, gulp.series('mp4'));
+    gulp.watch(Globs.MARKUP, gulp.series('markup'));
+    gulp.watch(Globs.BOWER_JSON, gulp.series('bowerFiles'));
+    gulp.watch(Globs.JSON, gulp.series('json'));
+  })(done);
+};
 
-gulp.task('build', ['clean'], function() {
-  return gulp.start(['resources', 'scripts', 'images', 'videos', 'markup']);
-});
+module.exports = {
+	js,
+	scripts,
 
-gulp.task('build-sw', function(cb){
-  var swPrecache = require('sw-precache');
-  var rootDir = Paths.BUNDLED;
+	html,
+  pug,
+  markup,
 
-  swPrecache.write(`${rootDir}/service-worker.js`, {
-    staticFileGlobs: [
-      `${Paths.BUNDLED}/manifest.json`,
-      `${Paths.BUNDLED}/bower_components/webcomponentsjs/webcomponents-lite.min.js`,
-      `${Paths.BUNDLED}/src/**/*`,
-      `${Paths.BUNDLED}/images/**/*`,
-      `${Paths.BUNDLED}/videos/**/*`
-    ],
-    stripPrefix: rootDir
-  }, cb);
-});
+  png,
+  jpg,
+  ico,
+  svg,
+  images,
 
+  mp4,
+  videos,
 
-gulp.task('watch', ['build'], function() {
-  gulp.watch(Globs.SCRIPTS, ['scripts']);
-  gulp.watch(Globs.MP4, ['MP4']);
-  gulp.watch(Globs.VIDEOS, ['videos']);
-  gulp.watch(Globs.MARKUP, ['markup']);
-  gulp.watch(Globs.BOWER_JSON, ['bower-files']);
-  gulp.watch(Globs.JSON, ['json']);
-});
+  json,
+  bowerFiles,
+  resources,
+
+	clean,
+	build,
+	watch
+};
