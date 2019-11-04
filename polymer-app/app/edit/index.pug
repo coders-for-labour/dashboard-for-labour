@@ -65,49 +65,17 @@ html(lang="en")
     link(href="https://fonts.googleapis.com/css?family=Raleway:300,500,700", rel="stylesheet")
 
     script.
-      // Setup Polymer options
-      window.Polymer = {
-        dom: 'shadow',
-        lazyRegister: true
-      };
+      window.Polymer = {rootPath: '/'};
 
-      // Load webcomponentsjs polyfill if browser does not support native Web Components
-      (function() {
-        'use strict';
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('service-worker.js', {
+            scope: Polymer.rootPath,
+          });
+        });
+      }
 
-        var onload = function() {
-          // For native Imports, manually fire WebComponentsReady so user code
-          // can use the same code path for native and polyfill'd imports.
-          if (!window.HTMLImports) {
-            document.dispatchEvent(
-              new CustomEvent('WebComponentsReady', {bubbles: true})
-            );
-          }
-        };
-
-        var webComponentsSupported = (
-          'registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')
-        );
-
-        if (!webComponentsSupported) {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
-          script.onload = onload;
-          document.head.appendChild(script);
-        } else {
-          onload();
-        }
-      })();
-
-      // Load pre-caching Service Worker
-      //if ('serviceWorker' in navigator) {
-      //  window.addEventListener('load', function() {
-      //    navigator.serviceWorker.register('/service-worker.js');
-      //  });
-      //}
+    script(src="/bower_components/webcomponentsjs/webcomponents-loader.js")
 
     link(rel="import" href="/src/d4l-app/d4l-app.html")
 
@@ -139,12 +107,5 @@ html(lang="en")
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-    style(is="custom-style").
-      iron-overlay-backdrop {
-        --iron-overlay-backdrop-opacity: 0.0;
-      }
-
     d4l-app
-
-    script(src="/bower_components/sugar/dist/sugar.min.js")
 
