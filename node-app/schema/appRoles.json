@@ -2,7 +2,7 @@
   "default": "public",
   "roles": [{
     "name": "public",
-    "endpointDisposition": "denyAll",
-    "dataDisposition": "denyAll"
+    "endpointDisposition": "allowAll",
+    "dataDisposition": "allowAll"
   }]
 }
