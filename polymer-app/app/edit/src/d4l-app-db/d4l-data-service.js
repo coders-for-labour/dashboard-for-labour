@@ -54,7 +54,7 @@ Polymer({
     urlPrefix: {
       type: String,
       value: function() {
-        return 'http://rhizome.codersforlabour.com/api/v1';
+        return '//%{D4L_RHIZOME_URL}%/api/v1';
       }
     },
     vectorBaseUrl: {

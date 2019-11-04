@@ -40,11 +40,56 @@ module.exports.updateProfile = (user, imgBuffer) => {
     },
     token: user.token,
     tokenSecret: user.tokenSecret
-  });
+  }, Queue.Constants.Queue.API);
 
   Logging.logDebug(imgBuffer);
 
   return true;
+};
+
+/**
+ *
+ * @param {object} user - Authenticated user for whom the media will be uploaded
+ * @param {String} tweet - string representing the message
+ * @param {Buffer} imgBuffer - Buffer containing image data for the media
+ * @return {boolean} - true if successfully queued the api call
+ */
+module.exports.tweet = (user, tweet) => {
+  if (!user) {
+    return false;
+  }
+
+  Logging.logInfo(`Tweeting media for user : ${user.username}.`);
+
+  return Queue.Manager.exec({
+    app: Queue.Constants.App.TWITTER,
+    username: user.username,
+    method: 'POST',
+    api: 'statuses/update.json',
+    params: {
+      status: tweet,
+      include_entities: false, // eslint-disable-line camelcase
+      skip_statuses: true // eslint-disable-line camelcase
+    },
+    token: user.token,
+    tokenSecret: user.tokenSecret
+  })
+    .then(qi => {
+      if (!qi.completed) {
+        return {
+          err: true,
+          res: qi.error
+        };
+      }
+      Logging.log(`Created a tweet: ${qi.results.id}`);
+      return {
+        err: false,
+        res: {
+          tweetId: qi.results.id_str
+        }
+      };
+    })
+    .catch(Logging.Promise.logError());
 };
 
 /**

@@ -22,8 +22,6 @@ link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="./d4l-dashboard-card.html")
 
-script(src="/bower_components/sugar/dist/sugar.min.js")
-
 dom-module#d4l-dashboard
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
   style(include="shared-styles")
@@ -55,34 +53,32 @@ dom-module#d4l-dashboard
 
     .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
       .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
+        d4l-dashboard-card.card.flex(background="twibbyn")
+          .layout.horizontal.center
+            iron-icon(icon="d4l-social-icons:social")
+            h1 Twibbyns
+          p Change your profile pictures to show your support.
+          paper-button(on-tap="__viewTwibbyn") Get Started
+
+        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap")
+          .layout.horizontal.center
+            iron-icon(icon="d4l-social-icons:storm")
+            h1 Storm
+          p Sign up to tweet our important messages.
+          paper-button(on-tap="__viewThunderclap") Get Started
+
+        //-d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme", disabled)
+          .layout.horizontal.center
+            iron-icon(icon="d4l-icons:picture")
+            h1 Images
+          p Gorgeous covers, posters and infographics to share
+          paper-button(on-tap="__viewMemes") Get Started
+
+      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(background="members")
           .layout.horizontal.center
             iron-icon(icon="d4l-icons:member")
             h1 Members
           h2.members-stat [[__users.length]]
-
-        d4l-dashboard-constituency-card.card.flex(auth="{{auth}}")
-
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
-        d4l-dashboard-card.card.flex(background="twibbyn")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-social-icons:social")
-            h1 Twibbyns
-          p Show your support with social media avatars
-          paper-button(on-tap="__viewTwibbyn") Get Started
-
-        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap", disabled)
-          .layout.horizontal.center
-            iron-icon(icon="d4l-social-icons:thunderclap")
-            h1 Thunderclap
-          p Rally together to show your support for Labour
-          paper-button(on-tap="__viewThunderclap") Get Started
-
-        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-social-icons:meme")
-            h1 Latest Memes
-          p Create your own, or post existing memes on social media
-          paper-button(on-tap="__viewMemes") Get Started
 
   script(src="d4l-dashboard.js")

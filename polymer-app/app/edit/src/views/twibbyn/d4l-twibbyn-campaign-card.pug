@@ -1,4 +1,7 @@
 link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-card/d4l-card-behaviors.html")
@@ -7,36 +10,91 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
+link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
+
 dom-module#d4l-twibbyn-campaign-card
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
-  style(include="d4l-theme")
-  style(include="shared-styles")
-  style(include="shared-card-styles").
-    :host {
-      display: block;
-    }
-
-    .card {
-      position: relative;
-      -webkit-background-size: cover;
-      background-size: cover;
-      padding: 10px 20px 10px;
-      color: var(--text-light-primary-color);
-    }
-    .footer.tray{
-      margin: 10px -20px -10px;
-    }
-    .footer.tray paper-icon-button {
-      color: var(--app-color-secondary-grey);
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-card-styles").
+      :host {
+        display: block;
+        min-width: 350px;
+      }
+
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 0px;
+      }
+      .card .card-content {
+        position: relative;
+        padding: 10px 20px;
+      }
+      .user-count {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+      }
+
+      .footer.tray {
+        position: absolute;
+        width: 100%;
+        bottom: 0px;
+        left: 0px;
+      }
+      .footer.tray paper-icon-button {
+        color: var(--app-color-secondary-grey);
+      }
+
+      d4l-twibbyn-overlay {
+        display: block;
+        width: 150px;
+        height: 150px;
+      }
+
+      iron-icon[name='d4l-icons:member'] {
+        color: var(--text-dark-secondary-color);
+        margin: 5px;
+      }
+
+      p.userCount {
+        margin-left: 5px;
+        font-size: 1.25em;
+      }
+
+      p.userCount.dark {
+        color: var(--text-light-primary-color);
+        margin-right: 10px;
+      }
+
+    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+
     .card
-      h1 [[campaign.name]]
-      p [[campaign.description]]
+      .layout.horizontal.top
+        .card-image
+          d4l-twibbyn-overlay(
+            image="[[__selectedProfileImg]]",
+            twibbyn="[[__selectedTwibbyn]]"
+          )
+        .card-content
+          .layout.vertical
+            h1 [[campaign.name]]
+            p [[campaign.description]]
+
+      .layout.horizontal.center.user-count
+        iron-icon(icon="d4l-icons:member")
+        p.userCount.light [[metadata.userCount]]
+
       .footer.tray(hidden$="[[!__showButtons]]")
         .layout.horizontal.center
           paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTwibbyn")
+          .flex
+          iron-icon(icon="d4l-icons:member")
+          p.userCount.dark [[metadata.userCount]]
+
 
 
   script(src="./d4l-twibbyn-campaign-card.js")

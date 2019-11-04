@@ -1,7 +1,10 @@
 Polymer({
   is: 'd4l-twibbyn-detail',
   behaviors: [
-    Polymer.D4LLogging
+    Polymer.D4LLogging,
+    Polymer.D4LFacebook,
+    Polymer.D4LFacebook,
+    Polymer.D4LShare
   ],
   properties: {
     logLevel: {
@@ -21,16 +24,16 @@ Polymer({
       notify: true
     },
     campaign: {
-      type: Object,
-      observer: '__campaignChanged'
+      type: Object
     },
     __selectedPlatform: {
       type: String,
-      value: ''
+      value: '',
+      observer: '__selectedPlatformChanged'
     },
     __selectedProfileImg: {
       type: String,
-      computed: '__computeSelectedProfileImg(auth.user, __selectedPlatform)'
+      computed: '__computeSelectedProfileImg(auth.user.profiles.*, __selectedPlatform)'
     },
     twibbyns: {
       type: Array,
@@ -40,7 +43,12 @@ Polymer({
       type: String,
       notify: true
     },
-
+    __twibbynPosition: {
+      type: String,
+    },
+    __squareAvatar: {
+      type: Boolean
+    },
     __uploadStatus: {
       type: String,
       value: 'ready' // ready | uploading | uploaded
@@ -58,6 +66,20 @@ Polymer({
       type: Boolean,
       computed: '__computeHideUploaded(__uploadStatus)'
     },
+    __hideReauth: {
+      type: Boolean,
+      computed: '__computeHideReauth(__uploadStatus, __fbReauthRequired)'
+    },
+    __hideError: {
+      type: Boolean,
+      notify: true,
+      computed: '__computeHideError(__twibbynError)'
+    },
+
+    __fbReauthRequired: {
+      type: Boolean,
+      value: false
+    },
 
     __configureFacebookPhotoId: {
       type: String,
@@ -69,7 +91,7 @@ Polymer({
     },
     __twibbynEndpoint: {
       type: String,
-      value: 'http://cdn.forlabour.com/'
+      value: '//%{D4L_CDN_URL}%'
     },
 
     __twitterSaveUrlPrefix: {
@@ -83,14 +105,23 @@ Polymer({
 
     __fbGetTwibbynUrl: {
       type: String,
-      computed: '__computeFbGetTwibbynUrl(__selectedTwibbyn)'
+      computed: '__computeFbGetTwibbynUrl(__selectedTwibbyn, campaign, __twibbynPosition)'
     },
 
     __twibbynSaveBody: {
       type: Object
-    }
+    },
 
+    __twibbynError: {
+      type: String,
+      value: ''
+    }
   },
+
+  observers: [
+    '__campaignChanged(campaign, db.campaign.data.*)',
+    '__authUser(auth.user.profiles.*)'
+  ],
 
   __campaignChanged: function(){
     const campaignId = this.get('campaign.id');
@@ -115,6 +146,18 @@ Polymer({
     this.linkPaths('metadata', `db.campaign.metadata.${campaignId}`);
   },
 
+  __authUser: function() {
+    let profiles = this.get('auth.user.profiles');
+    if (!profiles || !profiles.length) {
+      this.__warn('No user profiles!');
+      return;
+    }
+
+    //-if (profiles[0].app !== 'facebook') {
+    this.__selectedPlatform = profiles[0].app;
+    //-}
+  },
+
   __connectTwitter: function() {
     window.location = '/auth/twitter';
   },
@@ -122,14 +165,24 @@ Polymer({
     window.location = '/auth/facebook';
   },
 
+  __selectedPlatformChanged: function (platform) {
+    this.__silly('__selectedPlatformChanged', platform);
+
+    this.set('__twibbynPosition', 'center');
+    this.set('__uploadStatus', 'ready');
+    this.set('__twibbynError', '');
+  },
+
   __selectTwitter: function() {
     this.set('__selectedPlatform', 'twitter');
+    this.set('__twibbynPosition', 'center');
     this.set('__uploadStatus', 'ready');
     this.__silly(`Selected: ${this.__selectedPlatform}`);
   },
 
   __selectFacebook: function() {
     this.set('__selectedPlatform', 'facebook');
+    this.set('__twibbynPosition', 'center');
     this.set('__uploadStatus', 'ready');
     this.__silly(`Selected: ${this.__selectedPlatform}`);
   },
@@ -174,12 +227,19 @@ Polymer({
       return;
     }
 
+    const campaign = this.get('campaign');
     const selected = this.get('__selectedTwibbyn');
+    let gravity = this.get('__twibbynPosition');
+    if (gravity === 'center') {
+      gravity = 'mid';
+    }
 
     this.set('__uploadStatus', 'uploading');
     this.set('__twibbynSaveUrl', this.get('__twitterSaveUrlPrefix'));
     this.set('__twibbynSaveBody', {
-      file: selected
+      campaignId: campaign.id,
+      file: selected,
+      gravity: gravity
     });
   },
   __saveFacebook: function() {
@@ -191,6 +251,17 @@ Polymer({
     }
     this.set('__uploadStatus', 'uploading');
 
+    const reAuth = this.get('__fbReauthRequired');
+
+    let fbOptions = {
+      return_scopes: true,
+      scope: 'publish_actions'
+    };
+
+    // if (reAuth) {
+    //   fbOptions['auth_type'] = 'rerequest';
+    // }
+
     FB.login(response => {
       this.__debug(response);
       if (response.status !== 'connected') {
@@ -198,10 +269,21 @@ Polymer({
         return;
       }
 
+      // if (response.authResponse.grantedScopes
+      //   && !response.authResponse.grantedScopes.includes('publish_actions')) {
+      //
+      //     this.set('__uploadStatus', 'ready');
+      //     this.set('__fbReauthRequired', true);
+      //
+      //   return;
+      // }
+
+      // if (reAuth) {
+      //   this.set('__fbReauthRequired', false);
+      // }
+
       this.$.ajaxGetFbTwibbyn.generateRequest();
-    }, {
-      scope: 'publish_actions'
-    });
+    }, fbOptions);
 
     this.__debug('__saveFacebook');
   },
@@ -216,13 +298,13 @@ Polymer({
   __saveFbResponse: function(ev){
     this.__debug(ev.detail.response);
     FB.api('/me/photos', 'post', {
-      url: `http://cdn.forlabour.com/c/${ev.detail.response.file}`,
+      url: `http://%{D4L_CDN_URL}%/c/${ev.detail.response.file}`,
       no_story: true
     }, response => {
       this.set('__uploadStatus', 'uploaded');
       if (!response.id) {
         this.__debug(response);
-        this.__err('Failed to upload photo to Facebook');
+        this.__twibbynFlowError('Failed to upload photo to Facebook');
         return;
       }
 
@@ -234,10 +316,19 @@ Polymer({
     this.set('__uploadStatus', 'ready');
   },
 
-  __ajaxError: function(ev){
-    this.__err(ev);
+  __resetTwibbynFlow: function(){
+    this.set('__uploadStatus', 'ready');
+    this.set('__twibbynError', '');
   },
 
+  __twibbynFlowError: function (msg) {
+    this.set('__twibbynError', msg);
+    this.set('__uploadStatus', 'ready');
+  },
+  __ajaxError: function(ev){
+    this.set('__uploadStatus', 'ready');
+    this.fire('appViewError', ev);
+  },
 
   checkAuthApp: function(app) {
     let user = this.get('auth.user');
@@ -277,15 +368,27 @@ Polymer({
     return metaImages;
   },
 
-  __computeFbGetTwibbynUrl: function(selectedTwibbyn) {
-    return `/twibbyn/facebook?file=${selectedTwibbyn}`;
+  __computeFbGetTwibbynUrl: function(selectedTwibbyn, campaign, position) {
+    let gravity = position;
+    if (gravity === 'center') {
+      gravity = 'mid';
+    }
+
+    let url = `/twibbyn/facebook?file=${selectedTwibbyn}&campaign=${campaign ? campaign.id : -1}&gravity=${gravity}`;
+    this.__silly(url);
+
+    return url;
   },
 
-  __computeSelectedProfileImg: function(user, platform) {
+  __computeSelectedProfileImg: function(cr, platform) {
     //user.profiles.0.images.profile
+    let user = this.get('auth.user');
+    if (!user) {
+      return '';
+    }
     let profile = user.profiles.find(p => p.app === platform);
     if (!profile) {
-      return user.profiles[0].images.profile;
+      profile = user.profiles[0];
     }
 
     if (profile.app === 'facebook') {
@@ -308,4 +411,11 @@ Polymer({
   __computeHideUploaded: function(status) {
     return status === 'ready' || status === 'uploading';
   },
+  __computeHideReauth: function(status, reAuth) {
+    return !reAuth;
+  },
+  __computeHideError: function(msg) {
+    this.__warn(msg);
+    return !msg || msg === '';
+  }
 });

@@ -21,11 +21,8 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
-link(rel="import", href="/src/views/meme/d4l-meme-card.html")
 link(rel="import", href="/src/views/meme/d4l-meme-campaign-card.html")
 link(rel="import", href="/src/views/meme/d4l-meme-detail.html")
-
-script(src="/bower_components/sugar/dist/sugar.min.js")
 
 dom-module#d4l-meme
   style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
@@ -53,7 +50,7 @@ dom-module#d4l-meme
     d4l-header(
       auth="[[auth]]",
       db="{{db}}",
-      page="Meme",
+      page="Images",
       page-title="[[__pageTitle]]",
       page-mode="[[__pageMode]]",
       header="{{header}}",
@@ -61,7 +58,7 @@ dom-module#d4l-meme
       on-back-button-clicked="__navBack"
     )
 
-    d4l-post-dialog(title="Add Meme", open="{{__openPostDialog}}", on-save="__saveUserMeme")
+    d4l-post-dialog(title="Add Images", open="{{__openPostDialog}}", on-save="__saveUserMeme")
 
     iron-pages(
       selected='[[__loadMode]]',
@@ -81,8 +78,8 @@ dom-module#d4l-meme
               .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
                 d4l-dashboard-card.card.flex(background="meme")
                   .layout.horizontal.center
-                    iron-icon(icon="d4l-social-icons:social")
-                    h1 Memes
+                    iron-icon(icon="d4l-icons:picture")
+                    h1 Images
                   p Have some fun, share important messages.
 
               .page-content.flex-2(mobile$="[[isMobile]]")

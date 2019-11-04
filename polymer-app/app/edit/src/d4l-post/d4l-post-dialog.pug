@@ -8,6 +8,7 @@ link(rel="import" href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import" href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import" href="/bower_components/bwt-uploader/bwt-uploader.html")
 
+link(rel="import" href="../d4l-logging/d4l-logging.html")
 link(rel="import" href="../d4l-theme.html")
 link(rel="import" href="../d4l-icons.html")
 link(rel="import" href="../shared-styles.html")
@@ -42,6 +43,11 @@ dom-module#d4l-post-dialog
         --preview-height: 50px;
       }
 
+      .twitter-msg {
+        margin-top: 10px;
+        margin-left: 6px;
+      }
+
     paper-dialog#dialog(on-iron-overlay-closed="__dialogClosed", with-backdrop)
       .dialog-header
         .layout.horizontal.center
@@ -50,14 +56,18 @@ dom-module#d4l-post-dialog
           paper-icon-button#close(icon="d4l-icons:close", on-click="__closeDialog")
 
       .dialog-body
-        bwt-uploader#uploader(target="/image/upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png,image/jpg,image/jpeg,image/gif", max-file-size="3000")
-        p(hidden$="[[!__hasImage]]") Your image has been successfully uploaded.
+        //-bwt-uploader#uploader(target="/image/upload", method="POST", body="{{__uploadResponse}}", placeholder="", accepted-file-types="image/png,image/jpg,image/jpeg,image/gif", max-file-size="3000")
+        //-p(hidden$="[[!__hasImage]]") Your image has been successfully uploaded.
 
-        h3 Message
-        paper-textarea(no-label-float, rows="2", max-rows="5", value="{{text}}", placeholder="" autofocus)
-
+        h3 Make the message your own!
+        paper-textarea(no-label-float, rows="2", max-rows="3", value="{{text}}", placeholder="", autofocus)
 
       .dialog-footer
-        paper-button#send(disabled="[[!__hasImage]]", autofocus, on-click="__save") Save
+        //-paper-button#send(disabled="[[!__hasImage]]", autofocus, on-click="__save") Save
+        .layout.horizontal.center
+          paper-button#send(autofocus, disabled$="[[!hasTwitter]]", on-click="__save") Subscribe
+          paper-button#send(autofocus, hidden$="[[hasTwitter]]", on-click="__connectTwitter") Sign-in with Twitter
+        .layout.horizontal.center
+          p(hidden$="[[hasTwitter]]", class="twitter-msg") Please sign-in with a twitter account to subscribe to a storm
 
   script(src="d4l-post-dialog.js")
