@@ -14,8 +14,7 @@ const Config = require('node-env-obj')('../../');
 
 const EventEmitter = require('events');
 const rest = require('restler');
-const levelup = require('levelup');
-const leveldown = require('leveldown');
+const level = require('level');
 
 const Logging = require('./logging');
 const otp = require('./stotp');
@@ -58,21 +57,15 @@ const Constants = {
   },
 };
 
-/* ****************************************************************
- *
- * DB
- *
- ******************************************************************/
-const db = levelup(leveldown(`${Config.data.path}/cache`));
-
-/* ****************************************************************
- *
- * Cache
- *
- ******************************************************************/
+/**
+ * Cache class
+ * @class
+ */
 class Cache extends EventEmitter {
   constructor(type) {
     super();
+
+    const db = level(`${Config.data.path}/cache`);
 
     if (!type || !_Constants.URLS[type]) {
       throw new Error(`Invalid or missing type ${type}`);

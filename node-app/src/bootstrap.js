@@ -21,12 +21,12 @@ const Schema = require('../schema');
 const AppRoles = require('../schema/appRoles.json');
 
 const Auth = require('./auth');
-// const Cache = require('./cache');
-const Twibbyn = require('./twibbyn');
+const Cache = require('./cache');
+// const Twibbyn = require('./twibbyn');
 const Thunderclap = require('./thunderclap');
 const Queue = require('./api-queue');
-const Uploads = require('./uploads');
-// const Constituency = require('./constituency');
+// const Uploads = require('./uploads');
+const Constituency = require('./constituency');
 const Logging = require('./logging');
 
 const express = require('express');

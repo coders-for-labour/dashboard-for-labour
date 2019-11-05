@@ -15,11 +15,19 @@ const Config = require('node-env-obj')('../../');
 const rest = require('restler');
 
 const Logging = require('./logging');
-const Cache = require('./cache');
+// const Cache = require('./cache');
 
+/**
+ * Constituency class
+ * @class
+ */
 class Constituency {
+  /**
+   * Init REST Api
+   * @param {Object} app
+   */
   init(app) {
-    app.get('/constituency', (req, res) => {
+    app.get('/api/v1/constituency', (req, res) => {
       if (!req.user) {
         return res.status(403).json({message: 'sign in first'});
       }
@@ -72,6 +80,11 @@ class Constituency {
     });
   }
 
+  /**
+   * Lookup a constituency from the data cache
+   * @param {String} name
+   * @return {Object} constituency
+   */
   lookup(name) {
     return Cache.Manager.getData(Cache.Constants.Type.CONSTITUENCY)
       .then((constituencies) => {
