@@ -4,6 +4,7 @@ link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-cla
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-card/d4l-card-behaviors.html")
 
 link(rel="import", href="/src/d4l-theme.html")
@@ -56,7 +57,7 @@ dom-module#d4l-thunderclap-card
     .card
       .thunderclap-content
         div.thunderclap-text "[[thunderclap.description]]"
-        div.text-right [[__thunderClapFormatted]]
+        div.text-right [[computeDateFormat(thunderclap.scheduledExecution)]]
       .thunderclap-footer
         .layout.horizontal.center
           .flex-2.layout.horizontal.wrap
@@ -67,7 +68,7 @@ dom-module#d4l-thunderclap-card
 
           .flex.layout.horizontal.center
             iron-icon(icon="d4l-icons:time")
-            div [[__thunderClapDaysLeft]]
+            div [[computeDateFormatRelative(thunderclap.scheduledExecution)]]
 
         .footer.tray(hidden$="[[!__showButtons]]")
           .layout.horizontal.center

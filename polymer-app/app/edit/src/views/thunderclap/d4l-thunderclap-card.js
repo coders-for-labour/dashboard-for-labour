@@ -2,6 +2,7 @@ Polymer({
   is: 'd4l-thunderclap-card',
   behaviors: [
     D4L.Logging,
+    D4L.Helpers,
     Polymer.D4LCardBehavior
   ],
   properties: {
@@ -18,23 +19,10 @@ Polymer({
     },
 
     __userCountLabel: {
-      type: String,
+      type: Number,
+      value: 0,
       computed: '__computeUserCountLabel(thunderclap, thunderclap.supporters.length)'
-    },
-
-    __thunderclapTime: {
-      type: String,
-      computed: '__computeThunderclapTime(thunderclap.thunderclapTime, thunderclap)'
-    },
-    __thunderClapDaysLeft: {
-      type: String,
-      computed: '__computeThunderClapLeft(__thunderclapTime)'
-    },
-    __thunderClapFormatted: {
-      type: String,
-      computed: '__computeThunderClapFormatted(__thunderclapTime)'
     }
-
   },
   observers: [
   ],
@@ -55,22 +43,8 @@ Polymer({
 
   __computeUserCountLabel: function(){
     const count = this.get('thunderclap.supporters.length');
-    if (!count) return ;0;
+    if (!count) return 0;
     return count;
-  },
-
-  __computeThunderclapTime: function(time) {
-    if (!time || !time === '') {
-      return Sugar.Date.create('now');
-    }
-
-    return Sugar.Date.create(time);
-  },
-  __computeThunderClapLeft: function(time) {
-    return Sugar.Date.relative(time);
-  },
-  __computeThunderClapFormatted: function(time) {
-    return Sugar.Date.format(time, '{Dow} {do} {Month}, {12hr}:{mm}{tt}');
   }
 
 });

@@ -14,10 +14,6 @@ Polymer({
       type: Object,
       notify: true
     },
-    authStatus: {
-      type: String,
-      value: "idle",
-    },
     mode: {
       type: String,
       value: "authenticating"
@@ -97,7 +93,7 @@ Polymer({
   },
 
   observers: [
-    '__authChanged(authStatus)',
+    '__authChanged(auth.status)',
     '__routePathChanged(__routesData.route.route.path, __routesData.route.queryParams)',
     '__routesRouteChanged(routes.route)',
   ],
@@ -107,18 +103,16 @@ Polymer({
   },
 
   attached: function() {
-    this.authStatus = "begin";
+    this.set('auth.status', 'begin');
+
+    if (Sugar) {
+      Sugar.Date.setLocale('en-GB');
+    }
   },
 
   __authChanged: function() {
-    if ( this.authStatus !== "done") {
+    if ( this.get('auth.status') !== "done") {
       return;
-    }
-    this.__silly(this.auth.user);
-    if (this.auth.user) {
-      this.mode = "application";
-    } else {
-      this.mode = "authenticate";
     }
   },
 

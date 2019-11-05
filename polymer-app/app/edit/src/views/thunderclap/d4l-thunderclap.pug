@@ -13,11 +13,14 @@ link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-social/d4l-social.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-post/d4l-post-dialog.html")
+
+link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
@@ -79,6 +82,8 @@ dom-module#d4l-thunderclap
       on-save="__saveThunderclap"
     )
 
+    ltn-dialog#dialog
+
     iron-pages(
       selected='[[__loadMode]]',
       attr-for-selected='name',
@@ -115,6 +120,11 @@ dom-module#d4l-thunderclap
                       thunderclap="[[item]]",
                       on-subscribe="__subscribeThunderclap"
                     )
+                  paper-fab(
+                    icon="add"
+                    hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+                    on-tap="__addThunderclap"
+                  )
 
           div(name="detail", mobile$="[[isMobile]]")
             d4l-thunderclap-detail(

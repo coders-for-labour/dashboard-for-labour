@@ -11,6 +11,8 @@
     "D4L_BUTTRESS_HOST": "",
     "D4L_BUTTRESS_API_TOKEN": "",
     "D4L_BUTTRESS_PUBLIC_ID": "",
+    "D4L_BUTTRESS_PUBLIC_USER_ID": "",
+    "D4L_BUTTRESS_PUBLIC_USER_TOKEN": "",
 
     "D4L_FB_APP_ID": ""
   },
@@ -30,7 +32,9 @@
       "protocol": "%D4L_BUTTRESS_HOST%",
       "host": "%D4L_BUTTRESS_HOST%",
       "token": "%D4L_BUTTRESS_API_TOKEN%",
-      "publicId": "%D4L_BUTTRESS_PUBLIC_ID%"
+      "publicId": "%D4L_BUTTRESS_PUBLIC_ID%",
+      "publicUserId": "%D4L_BUTTRESS_PUBLIC_USER_ID%",
+      "publicUserToken": "%D4L_BUTTRESS_PUBLIC_USER_TOKEN%"
     },
     "cdn": {
       "url": "%D4L_CDN_URL%"
