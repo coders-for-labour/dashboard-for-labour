@@ -64,9 +64,9 @@ const js = function() {
     .pipe(eslint.format());
 
   return configReplacer(content)
-    .pipe(babel({
-      presets: ['@babel/env']
-    }))
+    // .pipe(babel({
+    //   presets: ['@babel/env']
+    // }))
     .pipe(gulp.dest(Paths.DEST));
 };
 const scripts = function(done) {
