@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-post-dialog',
   behaviors: [
-    Polymer.D4LLogging
+    D4L.Logging
   ],
   properties: {
     logLevel: {

@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-thunderclap-detail',
   behaviors: [
-    Polymer.D4LLogging
+    D4L.Logging
   ],
   properties: {
     logLevel: {

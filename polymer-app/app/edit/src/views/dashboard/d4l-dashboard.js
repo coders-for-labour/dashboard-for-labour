@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-dashboard',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
     Polymer.D4LViewList
   ],
   properties: {

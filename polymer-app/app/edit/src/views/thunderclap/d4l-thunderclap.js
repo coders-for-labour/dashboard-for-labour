@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-thunderclap',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
     Polymer.D4LViewList,
     Polymer.D4LFacebook,
     Polymer.D4LShare

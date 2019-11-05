@@ -1,7 +1,9 @@
+window.D4L = window.D4L || {};
+
 /**
- * @polymerBehavior Polymer.D4LLogging
+ * @polymerBehavior D4L.Logging
  */
-Polymer.D4LLogging = {
+D4L.Logging = {
   properties: {
     LogLevel: {
       type: Object,
