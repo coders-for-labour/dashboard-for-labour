@@ -104,7 +104,8 @@ Polymer({
     '__routesRouteChanged(routes.route)',
   ],
   listeners: {
-    'view-entity': '__viewEntity'
+    'view-entity': '__viewEntity',
+    'back-button-clicked': '__viewBack',
   },
 
   attached: function() {
@@ -172,10 +173,6 @@ Polymer({
       return window.location = '/logout';
     }
 
-    if (page === 'storm') {
-      page = 'thunderclap';
-    }
-
     Polymer.importHref(
       this.resolveUrl(`/src/views/${page}/d4l-${page}.html`),
       null,
@@ -200,6 +197,21 @@ Polymer({
 
     window.history.pushState({}, null, path);
     this.fire('location-changed');
+  },
+  __viewBack: function() {
+    const routes = this.get('routes');
+    const pageFirstLoad = this.get('pageFirstLoad');
+
+    if(!pageFirstLoad && window.history.length > 0){
+      return window.history.back();
+    }
+
+    if (routes.subroute) {
+      this.__viewEntity(`/${routes.route}`);
+      return;
+    }
+
+    this.__viewEntity('/');
   },
 
   __computeMainTitle: function(page) {

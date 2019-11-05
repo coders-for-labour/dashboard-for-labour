@@ -28,7 +28,7 @@ const _subscribeThunderclap = (req, res) => {
     res.sendStatus(403);
     return;
   }
-  if (!req.body || !req.body.campaignId) {
+  if (!req.body || !req.body.id) {
     res.sendStatus(400);
     return;
   }
@@ -43,41 +43,33 @@ const _subscribeThunderclap = (req, res) => {
     return;
   }
 
-  const campaignId = req.body.campaignId;
+  const id = req.body.id;
   const message = req.body.message;
-  let supporters = [];
 
-  Buttress.Campaign.Metadata.load(campaignId, 'supporters', [])
-    .then((s) => {
-      Logging.logDebug(req.user.id);
-      Logging.logDebug(s);
-      if (s.findIndex((id) => id == req.user.id) !== -1) { // eslint-disable-line eqeqeq
-        throw new Error('already_subscribed');
-      }
-      supporters = s;
-
-      return Buttress.Campaign.Metadata.load(campaignId, 'thunderclapTime', '');
-    })
-    .then((timeString) => {
-      if (!timeString) {
-        throw new Error('invalid_timestamp');
+  return Buttress.getCollection('thunderclap').get(id)
+    .then((thunderclap) => {
+      if (thunderclap.supporters.findIndex((id) => id == req.user.id) !== -1) {
+        // throw new Error('already_subscribed');
       }
 
       const time = Sugar.Date.create('now');
-      const itemDate = Sugar.Date.create(timeString);
+      const itemDate = Sugar.Date.create(thunderclap.scheduledExecution);
       if (!Sugar.Date.isAfter(itemDate, time)) {
         throw new Error('campaign_elapsed');
       }
 
-      supporters.push(req.user.id);
-      Buttress.Campaign.Metadata.save(campaignId, 'supporters', supporters);
+      // Update supporters
+      Buttress.getCollection('thunderclap').update(id, {
+        path: 'supporters',
+        value: req.user.id,
+      });
 
       return Queue.Manager.add({
         app: Queue.Constants.App.TWITTER,
         username: twitterAuth.username,
         method: 'POST',
         api: 'statuses/update.json',
-        processAfter: timeString,
+        processAfter: thunderclap.scheduledExecution,
         params: {
           status: `${message}`,
           include_entities: false, // eslint-disable-line camelcase
@@ -95,7 +87,7 @@ const _subscribeThunderclap = (req, res) => {
       res.json({res: true});
     })
     .catch((err) => {
-      Logging.log(`Thunderclap Subscribe Failed: ${err.message}`);
+      Logging.logError(`Thunderclap Subscribe Failed: ${err.message}`);
       res.json({res: false, err: err.message});
     });
 };
@@ -103,5 +95,5 @@ const _subscribeThunderclap = (req, res) => {
 module.exports.init = (app) => {
   Helpers.AppData.createFolder('/user_data');
 
-  app.put('/thunderclap/twitter/subscribe', _subscribeThunderclap);
+  app.put('/api/v1/thunderclap/twitter/subscribe', _subscribeThunderclap);
 };

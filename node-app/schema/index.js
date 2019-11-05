@@ -11,6 +11,7 @@
 
 const Schema = [
   require('./people.json'),
+  require('./thunderclap.json'),
 ];
 
 module.exports = Schema;

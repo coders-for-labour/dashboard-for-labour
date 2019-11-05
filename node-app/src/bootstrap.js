@@ -95,7 +95,7 @@ const __initWorker = () => {
 
   Auth.init(app);
   // Twibbyn.init(app);
-  // Thunderclap.init(app);
+  Thunderclap.init(app);
   // Queue.Manager.init(app);
   // Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   // Constituency.init(app);

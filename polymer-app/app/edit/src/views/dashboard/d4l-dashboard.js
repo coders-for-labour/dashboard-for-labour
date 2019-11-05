@@ -47,7 +47,7 @@ Polymer({
     this.fire('view-entity', '/twibbyn');
   },
   __viewThunderclap: function () {
-    this.fire('view-entity', '/storm');
+    this.fire('view-entity', '/thunderclap');
   },
   __viewMemes: function () {
     this.fire('view-entity', '/meme');

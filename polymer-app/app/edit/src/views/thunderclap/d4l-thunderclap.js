@@ -48,7 +48,7 @@ Polymer({
     },
     __thunderclapTwitterUrl: {
       type: String,
-      value: '/thunderclap/twitter/subscribe'
+      value: '/api/v1/thunderclap/twitter/subscribe'
     },
 
     __thunderclapSubscribeUrl: {
@@ -60,13 +60,8 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Storm',
+      value: 'Thunderclap',
       computed: '__computePageTitle(__selectedItem)'
-    },
-
-    __campaignsQuery: {
-      type: Object,
-      computed: '__computeCampaignsQuery(db.campaign.data.*)'
     },
 
     __hasUserTwitter: {
@@ -75,6 +70,11 @@ Polymer({
       value: false,
       computed: '__computeHasUserTwitter(auth.user, auth.user.auth.*)'
     }
+  },
+
+  __test() {
+    console.log(this.get('db.thunderclap.data.0.supporters'));
+    this.push('db.thunderclap.data.0.supporters', 'test');
   },
 
   __subscribeThunderclap: function(ev) {
@@ -93,7 +93,7 @@ Polymer({
 
     this.set('__thunderclapSubscribeUrl', this.get('__thunderclapTwitterUrl'));
     this.set('__thunderclapSubscribeBody', {
-      campaignId: this.__campaignId,
+      id: this.__campaignId,
       message: ev.detail.text
     });
 
@@ -115,19 +115,14 @@ Polymer({
     this.set('__shareTwStatus', 'ready');
   },
 
-  __computeCampaignsQuery: function () {
+  __computeThunderclapQuery: function () {
+    console.log('__computeThunderclapQuery');
     return {
-      type: {
-        $eq: 'thunderclap'
-      },
-      status: {
-        $eq: 'published'
-      }
     }
   },
 
   __computePageTitle: function (campaign) {
-    let title = 'Storm';
+    let title = 'Thunderclap';
 
     this.__debug(title);
 

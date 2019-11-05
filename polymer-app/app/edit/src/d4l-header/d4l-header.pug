@@ -53,10 +53,6 @@ dom-module#d4l-header
           paper-icon-button.header-logo(icon="d4l-icons:arrow-back", hidden$="[[!allowBack]]", on-click="__back")
           iron-icon.header-logo(icon="d4l-icons:labour", hidden$="[[allowBack]]", on-tap="__viewHome")
           div.flex(main-title) [[responsivePageTitle]]
-          //.flex
-          //  .layout.horizontal.center-center.header-menu
-          //    paper-icon-button(icon="d4l-icons:local")
-          //    paper-icon-button(icon="d4l-icons:national")
           img(src="{{__userImage}}", width=42, height=42, style="width: 42px; height; 42px; border-radius:50%;")
 
   script(src="d4l-header.js")

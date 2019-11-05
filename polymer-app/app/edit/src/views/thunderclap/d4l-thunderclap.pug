@@ -1,4 +1,5 @@
 link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
@@ -40,8 +41,6 @@ dom-module#d4l-thunderclap
 
     iron-media-query(query="(max-width: 800px)", query-matches="{{isMobile}}")
 
-    buttress-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
-
     iron-ajax#ajaxSubscribeThunderclap(
       handleAs="json",
       content-type="application/json",
@@ -81,12 +80,13 @@ dom-module#d4l-thunderclap
     )
 
     iron-pages(
-    selected='[[__loadMode]]',
-    attr-for-selected='name',
-    role='loading'
+      selected='[[__loadMode]]',
+      attr-for-selected='name',
+      role='loading'
     )
       div(name="loading", style="height: 90vh;").layout.horizontal.center.center-justified
         paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
+
       div(name="loaded")
         iron-pages(
           selected='[[__pageMode]]',
@@ -99,7 +99,7 @@ dom-module#d4l-thunderclap
                 d4l-dashboard-card.card.flex(background="thunderclap")
                   .layout.horizontal.center
                     iron-icon(icon="d4l-social-icons:storm")
-                    h1 Storm
+                    h1 Thunderclap
                   p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
                   p Think your friends want to Amplify Labour’s message?
                   .share-buttons
@@ -108,11 +108,11 @@ dom-module#d4l-thunderclap
 
               .page-content.flex-2(mobile$="[[isMobile]]")
                 .layout.horizontal.wrap.card-group.group-2
-                  template(is="dom-repeat", items="[[campaigns]]", as="campaign")
+                  template(is="dom-repeat" items="[[db.thunderclap.data]]")
                     d4l-thunderclap-card.card(
                       db="{{db}}",
                       auth="[[auth]]",
-                      campaign="[[campaign]]",
+                      thunderclap="[[item]]",
                       on-subscribe="__subscribeThunderclap"
                     )
 
