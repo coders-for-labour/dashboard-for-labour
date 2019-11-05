@@ -173,11 +173,11 @@ dom-module#d4l-dashboard-constituency-card
       }
 
     iron-ajax#findConstituency(
-      url="/constituency",
+      url="/api/v1/constituency",
       handleAs="json",
       params="{{__rqParams}}",
-      last-response="{{__rqResponse}}")
-
+      last-response="{{__rqResponse}}"
+    )
 
     .card(background="find-mp", disabled$="[[disabled]]")
       .card-content
