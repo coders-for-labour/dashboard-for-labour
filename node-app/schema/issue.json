@@ -1,0 +1,54 @@
+{
+  "name": "issue",
+  "type": "collection",
+  "collection": "issue",
+  "extends": [
+    "timestamps"
+  ],
+  "roles": [],
+  "properties": {
+    "name": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "topicId": {
+      "__type": "id",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "description": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "links": {
+      "__type": "array",
+      "__default": [],
+      "__allowUpdate": true,
+      "__schema": {
+        "id": {
+          "__type": "id",
+          "__required": true,
+          "__allowUpdate": false
+        },
+        "link": {
+          "__type": "string",
+          "__required": true,
+          "__allowUpdate": true
+        },
+        "type": {
+          "__type": "string",
+          "__required": true,
+          "__enum": ["EVIL", "GOOD"],
+          "__allowUpdate": true
+        }
+      }
+    },
+    "images": {
+      "__type": "array",
+      "__required": true,
+      "__allowUpdate": true
+    }
+  }
+}
