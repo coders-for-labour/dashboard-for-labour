@@ -51,14 +51,13 @@ dom-module#d4l-dashboard
     )
 
     .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
-        //- d4l-dashboard-card.card.flex(background="twibbyn")
-        //-   .layout.horizontal.center
-        //-     iron-icon(icon="d4l-social-icons:social")
-        //-     h1 Twibbyns
-        //-   p Change your profile pictures to show your support.
-        //-   paper-button(on-tap="__viewTwibbyn") Get Started
+      .flex.self-strech.layout.horizontal.card-group(mobile$="[[isMobile]]")
+        .layout.horizontal.center
+          h1 List Out Hot Topics
+          div
+            paper-button(on-tap="__viewTopics") See All Topics
 
+      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:storm")
@@ -73,11 +72,14 @@ dom-module#d4l-dashboard
           p Gorgeous covers, posters and infographics to share
           paper-button(on-tap="__viewMemes") Get Started
 
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(background="members")
           .layout.horizontal.center
             iron-icon(icon="d4l-icons:member")
             h1 Members
           h2.members-stat [[__users.length]]
+
+        d4l-dashboard-constituency-card.card.flex(
+          auth="[[auth]]"
+        )
 
   script(src="d4l-dashboard.js")

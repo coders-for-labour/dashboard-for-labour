@@ -1,0 +1,66 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
+link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
+
+link(rel="import", href="/src/d4l-header/d4l-header.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+dom-module#d4l-topic
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+
+        padding: var(--default-page-padding);
+        padding-top: 95px;
+      }
+
+    d4l-header(
+      auth="[[auth]]",
+      db="{{db}}",
+      page="[[__pageTitle]]",
+      page-title="[[__pageTitle]]",
+      page-mode="[[__pageMode]]",
+      header="{{header}}",
+      allow-back,
+      on-back-button-clicked="__navBack"
+    )
+
+    iron-pages(
+      selected='[[__loadMode]]',
+      attr-for-selected='name',
+      role='loading'
+    )
+      div(name="loading", style="height: 90vh;").layout.horizontal.center.center-justified
+        h1 Loading
+        paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
+
+      div(name="loaded")
+        iron-pages(
+          selected='[[__pageMode]]',
+          attr-for-selected='name',
+          role='loaded'
+        )
+          div(name="list", mobile$="[[isMobile]]")
+            .layout.horizontal.wrap
+              .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+                h1 Sidebar
+
+              .page-content.flex-2(mobile$="[[isMobile]]")
+                h1 Content
+
+          div(name="detail", mobile$="[[isMobile]]")
+            h1 Detail
+
+  script(src="./d4l-topic.js")

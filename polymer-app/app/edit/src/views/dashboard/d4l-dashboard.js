@@ -49,6 +49,9 @@ Polymer({
   __viewThunderclap: function () {
     this.fire('view-entity', '/thunderclap');
   },
+  __viewTopics: function () {
+    this.fire('view-entity', '/topic');
+  },
   __viewMemes: function () {
     this.fire('view-entity', '/meme');
   }
