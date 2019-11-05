@@ -12,9 +12,6 @@ Polymer({
 
     auth: {
       type: Object,
-      value: {
-        user: null,
-      },
       notify: true
     },
     authStatus: {

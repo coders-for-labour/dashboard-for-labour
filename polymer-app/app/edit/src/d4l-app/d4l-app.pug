@@ -127,8 +127,7 @@ dom-module#d4l-app
     d4l-auth-service#authService(
       db="{{db}}",
       status="{{authStatus}}",
-      auth="{{auth}}",
-      login-details="[[loginDetails]]"
+      auth="{{auth}}"
     )
 
     buttress-db#bJSDB(
@@ -136,7 +135,7 @@ dom-module#d4l-app
       app-id="%{D4L_BUTTRESS_PUBLIC_ID}%",
       api-path="D4L",
       user-id="[[auth.user.id]]",
-      token="[[auth.user.tokens.0.value]]",
+      token="[[auth.token.value]]",
       loaded="{{dbLoaded}}",
       error="{{dbError}}",
       settings="{{dbSettings}}",
@@ -148,6 +147,7 @@ dom-module#d4l-app
       section(name="authenticating")
       section(name="authenticate")
         d4l-auth(auth="[[auth]]")
+
       section.fullbleed(name="application")
 
         iron-pages.fullbleed#app-pages(

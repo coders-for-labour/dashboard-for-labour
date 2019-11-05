@@ -22,12 +22,10 @@ Polymer({
       type: Object,
       value: {
         user: null,
-        metadata: null
+        token: null
       },
       notify: true
     }
-  },
-  attached: function() {
   },
 
   onAjaxResponse: function(ev, detail) {
@@ -38,10 +36,16 @@ Polymer({
     this.set('auth.user', detail.response.user);
     this.status = "done";
 
-    const userId = this.get('auth.user.id');
-    if (!userId) {
+    const user = this.get('auth.user');
+    if (!user || !user.id) {
       return;
     }
+
+    if (!user.tokens || user.tokens.length < 1) {
+      return;
+    }
+
+    this.set('auth.token', user.tokens[0]);
   },
 
   onAjaxError: function() {
