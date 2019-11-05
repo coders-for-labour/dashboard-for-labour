@@ -117,11 +117,13 @@ const __initWorker = () => {
  **********************************************************************************/
 const __initMaster = () => {
   const isPrimary = Config.cluster.app === 'primary';
-  Queue.Manager.init(isPrimary);
 
-  __spawnWorkers();
-
-  return Promise.resolve();
+  return Buttress.initSchema()
+    .then(Logging.logInfo(`Uploaded ${Schema.length} schema(s) & app role(s) to Buttress`))
+    .then(() => {
+      Queue.Manager.init(isPrimary);
+      __spawnWorkers();
+    });
 };
 
 /* ************************************************************
@@ -134,22 +136,20 @@ const _installApp = () => {
 
   Logging.logDebug(`Attempting to connect to Buttress using: ${Config.buttress.url}`);
 
-  Buttress.init({
-    buttressUrl: Config.buttress.url,
-    appToken: Config.buttress.token,
-    schema: Schema,
-    roles: AppRoles,
-    apiPath: Config.buttress.apiPath,
-    version: Config.buttress.apiVersion,
-  });
-
   if (cluster.isMaster) {
     processInit = () => __initMaster();
   } else {
     processInit = () => __initWorker();
   }
 
-  return Buttress.initSchema()
+  return Buttress.init({
+    buttressUrl: Config.buttress.url,
+    appToken: Config.buttress.token,
+    schema: Schema,
+    roles: AppRoles,
+    apiPath: Config.buttress.apiPath,
+    version: Config.buttress.apiVersion,
+  })
     .then(processInit)
     .then(() => cluster.isMaster)
     .catch(Logging.logError);
