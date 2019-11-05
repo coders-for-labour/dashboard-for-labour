@@ -49,7 +49,7 @@ const _subscribeThunderclap = (req, res) => {
   return Buttress.getCollection('thunderclap').get(id)
     .then((thunderclap) => {
       if (thunderclap.supporters.findIndex((id) => id == req.user.id) !== -1) {
-        // throw new Error('already_subscribed');
+        throw new Error('already_subscribed');
       }
 
       const time = Sugar.Date.create('now');
