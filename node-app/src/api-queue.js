@@ -81,6 +81,9 @@ const _appTasks = {
  *
  */
 class APIQueueManager {
+  /**
+   * 
+   */
   constructor() {
     this._rateLimiter = {};
     this._queueTimeout = null;
@@ -97,9 +100,10 @@ class APIQueueManager {
     }
   }
 
-  /* *
+  /**
    * @description Add to the queue, defer execution, honor rate limits
    * @param {object} qi - contains all parameters for api call
+   * @param {string} key
    * @return {Promise} - Resolves with result from redis
    */
   add(qi, key) {
@@ -115,7 +119,7 @@ class APIQueueManager {
     return this._addQueueItem(key, score, qi);
   }
 
-  /* *
+  /**
    * @description Immediately execute a queue Item, ignore rate limits
    * @param {object} qi - Queue Item
    * @return {Promise} - Resolves to the QI with .completed true and .results if successful
@@ -125,7 +129,7 @@ class APIQueueManager {
     return _appTasks[qi.app](qi);
   }
 
-  /* *
+  /**
    * @param {object} qi - Queue Item
    * @return {boolean} - true if rate limited
    * @private
@@ -151,8 +155,9 @@ class APIQueueManager {
     return false;
   }
 
-  /* *
-   * @description Fetch the length of the api-queue
+  /**
+   * @description Fetch the length of the api-queue `key`
+   * @param {string} key
    * @return {Promise} - Resolves with the length of the redis api-queue
    * @private
    */
@@ -170,9 +175,9 @@ class APIQueueManager {
     });
   }
 
-  /* *
-   * @description Push a queue item into the redis queue, returns a promise
-   * @param {object} item - contains all parameters for api call
+  /**
+   * @description Fetch a queue for `key`, returns a promise
+   * @param {object} key
    * @return {Promise} - Resolves with result from redis
    * @private
    */
@@ -192,8 +197,10 @@ class APIQueueManager {
     });
   }
 
-  /* *
+  /**
    * @description Push a queue item into the redis queue, returns a promise
+   * @param {string} key
+   * @param {nmber} score
    * @param {object} item - contains all parameters for api call
    * @return {Promise} - Resolves with result from redis
    * @private
@@ -229,6 +236,9 @@ class APIQueueManager {
     });
   }
 
+  /**
+   * 
+   */
   _recallQueueTimeout() {
     if (!this._queueTimeout) {
       this._queueTimeout = setTimeout(() => this._flush(), Constants.INTERVAL);
