@@ -14,7 +14,8 @@ const Config = require('node-env-obj')('../../');
 
 const EventEmitter = require('events');
 const rest = require('restler');
-const level = require('level');
+const redis = require('redis');
+const redisClient = redis.createClient(Config.redis);
 
 const Logging = require('./logging');
 const otp = require('./stotp');
@@ -69,8 +70,6 @@ class Cache extends EventEmitter {
   constructor(type) {
     super();
 
-    const db = level(`${Config.data.path}/cache`);
-
     if (!type || !_Constants.URLS[type]) {
       throw new Error(`Invalid or missing type ${type}`);
     }
@@ -88,14 +87,14 @@ class Cache extends EventEmitter {
       mode: otp.Constants.Mode.ALPHANUMERIC,
     });
 
-    db.get(type, (err, value) => {
+    redisClient.get(type, (err, reply) => {
+      this._data = _Constants.DEFAULTS[this._type];
       if (err) {
         Logging.logError(err);
-        this._data = _Constants.DEFAULTS[this._type];
       } else {
-        this._data = JSON.parse(value);
-        this.emit('cache-data', this._data);
+        this._data = JSON.parse(reply);
       }
+      this.emit('cache-data', this._data);
 
       this._callRefresh();
     });
@@ -154,11 +153,12 @@ class Cache extends EventEmitter {
 
           Logging.log(`Refreshed Cache ${this._type.toUpperCase()}`, Logging.Constants.LogLevel.INFO);
           if (data.res === undefined) {
+            Logging.log(data);
             reject(new Error('Invalid data'));
             return;
           }
 
-          db.put(this._type, JSON.stringify(data.res), (err) => {
+          redisClient.set(this._type, JSON.stringify(data.res), (err) => {
             if (err) {
               Logging.logError(err);
             }

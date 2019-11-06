@@ -13,7 +13,7 @@
 const Config = require('node-env-obj')('../../');
 const Buttress = require('buttress-js-api');
 
-const os = require('os');
+// const os = require('os');
 const cluster = require('cluster');
 const Helpers = require('./helpers');
 
@@ -21,12 +21,11 @@ const Schema = require('../schema');
 const AppRoles = require('../schema/appRoles.json');
 
 const Auth = require('./auth');
-const Cache = require('./cache');
-// const Twibbyn = require('./twibbyn');
 const Thunderclap = require('./thunderclap');
 const Queue = require('./api-queue');
+const Cache = require('./cache');
 // const Uploads = require('./uploads');
-const Constituency = require('./constituency');
+// const Constituency = require('./constituency');
 const Logging = require('./logging');
 
 const express = require('express');
@@ -97,7 +96,7 @@ const __initWorker = () => {
   // Twibbyn.init(app);
   Thunderclap.init(app);
   // Queue.Manager.init(app);
-  // Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
+  Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   // Constituency.init(app);
   // Uploads.init(app);
 
