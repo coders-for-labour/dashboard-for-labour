@@ -62,6 +62,10 @@ const Constants = {
  * @class
  */
 class Cache extends EventEmitter {
+/**
+ * Constructor
+ * @param {String} type
+ */
   constructor(type) {
     super();
 
@@ -97,10 +101,18 @@ class Cache extends EventEmitter {
     });
   }
 
+  /**
+   * getData
+   * @return {Promise}
+  */
   getData() {
     return Promise.resolve(this._data);
   }
 
+  /**
+   * _callRefresh
+   * @return {Promise}
+   */
   _callRefresh() {
     return this._refresh()
       .catch((err) => {
@@ -110,6 +122,10 @@ class Cache extends EventEmitter {
       });
   }
 
+  /**
+   * _refresh
+   * @return {Promise}
+   */
   _refresh() {
     return new Promise((resolve, reject) => {
       this._timeout = false;
@@ -173,6 +189,9 @@ class Cache extends EventEmitter {
     });
   }
 
+  /**
+   * @param {Number} timeout in milliseconds
+   */
   _setTimeout(timeout) {
     if (timeout === undefined) {
       timeout = _Constants.DEFAULT_CACHE_INTERVAL;
@@ -194,14 +213,30 @@ class Cache extends EventEmitter {
  *
  ******************************************************************/
 const _CACHES = {};
+/**
+ * @Class
+ */
 class CacheManager {
+  /**
+   * @param  {Enum} type
+   * @return {Object}
+   */
   static create(type) {
     _CACHES[type] = new Cache(type);
     return _CACHES[type];
   }
+  /**
+   * @param  {Enum} type
+   * @return {Object}
+   */
   static getCache(type) {
     return _CACHES[type];
   }
+
+  /**
+   * @param  {Enum} type
+   * @return {Promise}
+   */
   static getData(type) {
     return _CACHES[type].getData();
   }
