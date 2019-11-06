@@ -29,24 +29,49 @@ const AppRoles = require('../schema/appRoles');
  **************************************************************/
 const __authenticateUser = (appAuth, existingUser) => {
   const authentication = {
-    authLevel: 1,
-    domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
-    role: AppRoles.default,
-    permissions: [
-      {'route': 'campaign', 'permission': 'list'},
-      {'route': 'post', 'permission': 'list'},
-      {'route': 'post', 'permission': 'read'},
-      {'route': 'post', 'permission': 'add'},
-      {'route': 'post', 'permission': 'write'},
-      {'route': 'people', 'permission': 'list'},
-      {'route': 'app/schema', 'permission': 'read'},
-    ],
+    unauthorised: {
+      authLevel: 1,
+      domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
+      role: AppRoles.default,
+      permissions: [
+        {'route': 'campaign', 'permission': 'list'},
+        {'route': 'post', 'permission': 'list'},
+        {'route': 'post', 'permission': 'read'},
+        {'route': 'post', 'permission': 'add'},
+        {'route': 'post', 'permission': 'write'},
+        {'route': 'people', 'permission': 'list'},
+        {'route': 'app/schema', 'permission': 'read'},
+      ],
+    },
+    authorised: {
+      authLevel: 1,
+      domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
+      role: AppRoles.default,
+      permissions: [
+        {'route': 'campaign', 'permission': 'list'},
+        {'route': 'post', 'permission': 'list'},
+        {'route': 'post', 'permission': 'read'},
+        {'route': 'post', 'permission': 'add'},
+        {'route': 'post', 'permission': 'write'},
+        {'route': 'people', 'permission': 'list'},
+        {'route': 'app/schema', 'permission': 'read'},
+      ],
+    },
   };
+  let authorisation = 'unauthorised';
+  let user = null;
 
   Logging.logDebug(`AUTH: Pending ${appAuth.name} using ${appAuth.username}`);
 
-  let user = null;
-  return Buttress.Auth.findOrCreateUser(appAuth, authentication)
+  const cache = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
+  return cache.getData()
+    .then((users) => {
+      const authorised = users.find((u) => u.email === user.email);
+      if (authorised) {
+        authorisation = 'authorised';
+      }
+    })
+    .then(() => Buttress.Auth.findOrCreateUser(appAuth, authentication[authorisation]))
     .then((_user) => {
       if (!_user) {
         Logging.logError(`AUTH: User ${appAuth.name} profile doesn\'t exist using ${appAuth.username}`);
