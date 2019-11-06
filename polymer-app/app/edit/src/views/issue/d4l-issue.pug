@@ -21,10 +21,7 @@ link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 
-link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
-link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
-
-dom-module#d4l-topic
+dom-module#d4l-issue
   template
     style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
     style(include="d4l-theme")
@@ -48,9 +45,6 @@ dom-module#d4l-topic
       on-back-button-clicked="__navBack"
     )
 
-    buttress-db-query(db="[[db]]", doc="[[db.topic]]" query="[[__topicsQuery]]", find-all="{{__topics}}")
-    buttress-db-query(db="[[db]]", doc="[[db.issue]]" query="[[__issuesQuery]]", find-all="{{__issues}}")
-
     ltn-dialog#dialog
 
     iron-pages(
@@ -63,47 +57,31 @@ dom-module#d4l-topic
         paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
 
       div(name="loaded")
-        .layout.horizontal.wrap
-          .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
-            d4l-dashboard-card.card.flex(background="thunderclap")
-              div(hidden$="[[__hasSelectedItem]]")
-                .layout.horizontal.center
-                  h1 Topics
-                p Some message about topics
-              div(hidden$="[[!__hasSelectedItem]]")
+        div(hidden$="[[__hasSelectedItem]]")
+          h1 No issue selected
+          p Please find an issue by selecting a topic
+
+        div(hidden$="[[!__hasSelectedItem]]")
+          .layout.horizontal.wrap
+            .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+              d4l-dashboard-card.card.flex(background="thunderclap")
                 .layout.horizontal.center
                   h1 [[__selectedItem.name]]
                 p [[__selectedItem.description]]
 
-          .page-content.flex-2(mobile$="[[isMobile]]")
-            div(hidden$="[[__hasSelectedItem]]")
-              template(is="dom-repeat" items="[[__topics]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="__viewTopic") View
-            div(hidden$="[[!__hasSelectedItem]]")
-              h1 Topics
-              hr
-              template(is="dom-repeat" items="[[__topics]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="__viewTopic") View
+            .page-content.flex-2(mobile$="[[isMobile]]")
+              h1 Events
 
-              h1 Issues
-              hr
-              template(is="dom-repeat" items="[[__issues]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="__viewIssue") View
+              h1 Resource
 
-        ltn-fab-menu(
-          hidden$="[[!inAuthRole(auth.token, 'admin')]]"
-        )
-          .fab-item
-            .label Topic
-            paper-icon-button(icon="add" title="Topic", on-tap="__addTopic")
-          .fab-item(hidden$="[[!__hasSelectedItem]]")
-            .label Issue
-            paper-icon-button(icon="add" title="Issue", on-tap="__addIssue")
+          ltn-fab-menu(
+            hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+          )
+            .fab-item
+              .label Event
+              paper-icon-button(icon="add" title="Event", on-tap="__addEvent")
+            //- .fab-item(hidden$="[[!__hasSelectedItem]]")
+            //-   .label Resource
+            //-   paper-icon-button(icon="add" title="Issue", on-tap="__addIssue")
 
-  script(src="./d4l-topic.js")
+  script(src="./d4l-issue.js")

@@ -6,6 +6,8 @@ link(rel="import" href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import" href="/bower_components/paper-date-picker/paper-date-picker.html")
 link(rel="import" href="/bower_components/paper-listbox/paper-listbox.html")
 link(rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html")
+link(rel="import" href="/bower_components/paper-input/paper-input.html")
+link(rel="import" href="/bower_components/paper-input/paper-textarea.html")
 
 dom-module#ltn-dialog
   template
@@ -77,6 +79,10 @@ dom-module#ltn-dialog
                 //- TEXT
                 template(is="dom-if", if="[[__compareString(input.type, 'TEXT', input.value)]]")
                   paper-input(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", auto-validate)
+
+                //- TEXT
+                template(is="dom-if", if="[[__compareString(input.type, 'TEXTAREA', input.value)]]")
+                  paper-textarea(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", rows="3", auto-validate)
 
                 //- DATE
                 template(is="dom-if", if="[[__compareString(input.type, 'DATE', input.value)]]")
@@ -249,8 +255,6 @@ dom-module#ltn-dialog
       formBeginSubmit(ev) {
         const form = this.$.form || Polymer.dom(this.root).querySelector('#form');
         const submit = this.$.submit || Polymer.dom(this.root).querySelector('#submit');
-
-        console.log(form);
 
         if (form && !form.validate()) {
           return;

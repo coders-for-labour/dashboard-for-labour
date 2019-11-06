@@ -23,6 +23,9 @@ D4L.Helpers = {
         case 'TEXT':
           value = '';
           break;
+        case 'TEXTAREA':
+          value = '';
+          break;
         case 'NUMBER':
           value = 0;
           break;
@@ -30,6 +33,9 @@ D4L.Helpers = {
           value = null;
           break;
         case 'DATE':
+          value = Sugar.Date.create('now')
+          break;
+        case 'TIME':
           value = Sugar.Date.create('now')
           break;
       }
@@ -57,6 +63,10 @@ D4L.Helpers = {
     return {
       inputs: inputs
     };
+  },
+
+  computeIsSet(value) {
+    return (typeof value === 'undefined' || value === null) === false;
   },
 
   computeDateFormat(strDate, defaultValue = 'Not Set') {

@@ -175,7 +175,6 @@ Polymer({
   },
 
   __computeThunderclapQuery: function () {
-    console.log('__computeThunderclapQuery');
     return {
     }
   },

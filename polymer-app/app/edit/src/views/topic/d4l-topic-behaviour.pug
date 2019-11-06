@@ -1,0 +1,70 @@
+link(rel="import" href="/bower_components/polymer/polymer.html")
+
+script.
+  window.D4L = window.D4L || {};
+  window.D4L.Topic = window.D4L.Topic || {};
+
+  /**
+  * @polymerBehavior D4L.Topic.Helpers
+  */
+  D4L.Topic.Helpers = {
+    properties: {
+      
+    },
+
+    __viewTopic(ev) {
+      const item = ev.model.get('item');
+      
+      this.fire('view-entity', `/topic/${item.id}`);
+    },
+
+    __addTopic() {
+      const selectedItem = this.get('__selectedItem');
+      const dbFactory = this.get('db.Factory');
+      const dialog = this.$.dialog;
+
+      const topic = dbFactory.create('topic');
+
+      const dialogInputs = {
+        name: {
+          label: 'Title',
+          type: 'TEXT',
+          default: topic.name
+        },
+        description: {
+          label: 'Description',
+          type: 'TEXTAREA',
+          default: topic.description
+        },
+        banner: {
+          label: 'Banner Image',
+          type: 'TEXT',
+          default: topic.banner
+        }
+      };
+
+      dialog.setMetadata({
+        'title': 'Topic',
+        'description': 'Add a new topic to the system',
+        'action': 'Save',
+      });
+      
+      return dialog.openDialog(this.parseInputSchema(dialogInputs))
+        .then((result) => {
+          if (!result.values.name) {
+            throw new Error('Thunderclap requires a name');
+          }
+
+          topic.name = result.values.name;
+          topic.description = result.values.description;
+          topic.banner = result.values.banner;
+
+          if (selectedItem) {
+            topic.parentId = selectedItem.id;
+          }
+
+          this.push('db.topic.data', topic);
+        });
+    },
+
+  };

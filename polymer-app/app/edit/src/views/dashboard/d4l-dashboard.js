@@ -27,6 +27,12 @@ Polymer({
       computed: '__computeUserQuery(db.people.data.*)'
     },
 
+    __latestIssues: Array,
+    __latestIssuesQuery: {
+      type: Object,
+      computed: '__computeLatestIssuesQuery(db.issue.data.*)'
+    },
+
     __post: {
       type: Object,
       value: function () { return {}; }
@@ -41,6 +47,12 @@ Polymer({
     return {
       // Fetch all records
     }
+  },
+
+  __computeLatestIssuesQuery() {
+    return {
+      
+    };
   },
 
   __viewTwibbyn: function () {

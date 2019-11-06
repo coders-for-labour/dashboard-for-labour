@@ -120,11 +120,11 @@ dom-module#d4l-thunderclap
                       thunderclap="[[item]]",
                       on-subscribe="__subscribeThunderclap"
                     )
-                  paper-fab(
-                    icon="add"
-                    hidden$="[[!inAuthRole(auth.token, 'admin')]]"
-                    on-tap="__addThunderclap"
-                  )
+            paper-fab(
+              icon="add"
+              hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+              on-tap="__addThunderclap"
+            )
 
           div(name="detail", mobile$="[[isMobile]]")
             d4l-thunderclap-detail(

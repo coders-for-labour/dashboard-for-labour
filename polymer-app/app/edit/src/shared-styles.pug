@@ -22,10 +22,25 @@ dom-module(id="shared-styles")
         color: var(--text-light-primary-color);
       }
 
-      paper-fab {
+      paper-fab, ltn-fab-menu {
         position: fixed;
         right: 35px;
         bottom: 35px;
+      }
+      ltn-fab-menu paper-icon-button {
+        background: rgb(198, 40, 40, 0.7);
+        color: #FFF;
+        border-radius: 50%;
+      }
+
+      ltn-fab-menu .fab-item {
+        position: relative;
+      }
+      ltn-fab-menu .fab-item .label {
+        position: absolute;
+        right: 100%;
+        margin-right: 6px;
+        line-height: 40px;
       }
 
       .text-left {
