@@ -15,7 +15,7 @@ const Config = require('node-env-obj')('../../');
 const rest = require('restler');
 
 const Logging = require('./logging');
-// const Cache = require('./cache');
+const Cache = require('./cache');
 
 /**
  * Constituency class
