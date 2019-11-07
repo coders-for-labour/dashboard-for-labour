@@ -12,10 +12,12 @@ script.
       
     },
 
-    __viewTopic(ev) {
-      const topic = ev.model.get('topic');
-      
-      this.fire('view-entity', `/topic/${topic.id}`);
+    viewTopicItem(ev) {
+      this.viewTopic(ev.model.get('item.id'));
+    },
+
+    viewTopic(topicId) {
+      this.fire('view-entity', `/topic/${topicId}`);
     },
 
     __presentTopicDialog(topic, meta) {

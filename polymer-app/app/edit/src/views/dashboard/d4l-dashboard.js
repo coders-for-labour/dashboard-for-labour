@@ -2,6 +2,7 @@ Polymer({
   is: 'd4l-dashboard',
   behaviors: [
     D4L.Logging,
+    D4L.Issue.Helpers,
     Polymer.D4LViewList
   ],
   properties: {

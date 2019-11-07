@@ -20,6 +20,7 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="./d4l-dashboard-card.html")
+link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
 
 dom-module#d4l-dashboard
   template
@@ -56,13 +57,13 @@ dom-module#d4l-dashboard
         .layout.horizontal.center
           h1 Latest
         .flex.layout.horizontal.center
-          template(is="dom-repeat" items="[[__latestIssues]]" as="issue")
+          template(is="dom-repeat" items="[[__latestIssues]]")
             d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
               .layout.horizontal.center
                 iron-icon(icon="d4l-social-icons:storm")
-                h1 [[issue.name]]
-              p [[issue.description]]
-              paper-button(on-click="__viewLatestIssue") View
+                h1 [[item.name]]
+              p [[item.description]]
+              paper-button(on-click="viewIssueItem") View
         div
           paper-button(on-tap="__viewTopics") See All Topics
 

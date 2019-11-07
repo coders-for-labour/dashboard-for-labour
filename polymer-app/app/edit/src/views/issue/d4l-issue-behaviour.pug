@@ -12,10 +12,11 @@ script.
       
     },
 
-    __viewIssue(ev) {
-      const item = ev.model.get('item');
-      
-      this.fire('view-entity', `/issue/${item.id}`);
+    viewIssueItem(ev) {
+      this.viewIssue(ev.model.get('item.id'));
+    },
+    viewIssue(issueId) {
+      this.fire('view-entity', `/issue/${issueId}`);
     },
 
     __addIssue() {

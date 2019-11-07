@@ -4,6 +4,7 @@ Polymer({
   behaviors: [
     D4L.Logging,
     D4L.Helpers,
+    D4L.Topic.Helpers,
     Polymer.D4LViewList
   ],
   properties: {
@@ -21,5 +22,9 @@ Polymer({
       value: false,
       computed: 'computeIsSet(__selectedItem)'
     }
+  },
+
+  __viewTopic() {
+    this.viewTopic(this.get('__selectedItem.topicId'));
   }
 });

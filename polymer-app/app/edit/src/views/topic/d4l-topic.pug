@@ -77,10 +77,10 @@ dom-module#d4l-topic
 
           .page-content.flex-2(mobile$="[[isMobile]]")
             div(hidden$="[[__hasSelectedItem]]")
-              template(is="dom-repeat" items="[[__topics]]" as="topic")
-                h1 [[topic.name]]
-                p [[topic.description]]
-                paper-button(on-click="__viewTopic") View
+              template(is="dom-repeat" items="[[__topics]]")
+                h1 [[item.name]]
+                p [[item.description]]
+                paper-button(on-click="viewTopicItem") View
                 paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
             div(hidden$="[[!__hasSelectedItem]]")
               h1 Topics
@@ -88,7 +88,7 @@ dom-module#d4l-topic
               template(is="dom-repeat" items="[[__topics]]")
                 h1 [[item.name]]
                 p [[item.description]]
-                paper-button(on-click="__viewTopic") View
+                paper-button(on-click="viewTopicItem") View
 
               h1 Issues
               hr
