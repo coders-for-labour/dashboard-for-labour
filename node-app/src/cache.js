@@ -87,7 +87,8 @@ class Cache extends EventEmitter {
       mode: otp.Constants.Mode.ALPHANUMERIC,
     });
 
-    redisClient.get(type, (err, reply) => {
+    const key = `${Config.app.code}-${type}`;
+    redisClient.get(key, (err, reply) => {
       this._data = _Constants.DEFAULTS[this._type];
       if (err) {
         Logging.logError(err);
@@ -158,7 +159,8 @@ class Cache extends EventEmitter {
             return;
           }
 
-          redisClient.set(this._type, JSON.stringify(data.res), (err) => {
+          const key = `${Config.app.code}-${this._type}`;
+          redisClient.set(key, JSON.stringify(data.res), (err) => {
             if (err) {
               Logging.logError(err);
             }
