@@ -13,19 +13,15 @@ script.
     },
 
     __viewTopic(ev) {
-      const item = ev.model.get('item');
+      const topic = ev.model.get('topic');
       
-      this.fire('view-entity', `/topic/${item.id}`);
+      this.fire('view-entity', `/topic/${topic.id}`);
     },
 
-    __addTopic() {
-      const selectedItem = this.get('__selectedItem');
-      const dbFactory = this.get('db.Factory');
+    __presentTopicDialog(topic, meta) {
       const dialog = this.$.dialog;
 
-      const topic = dbFactory.create('topic');
-
-      const dialogInputs = {
+      const inputSchema = {
         name: {
           label: 'Title',
           type: 'TEXT',
@@ -43,16 +39,54 @@ script.
         }
       };
 
-      dialog.setMetadata({
+      dialog.setMetadata(meta);
+      return dialog.openDialog(this.parseInputSchema(inputSchema));
+    },
+
+    __updateTopic(ev) {
+      const selectedItem = this.get('__selectedItem');
+      const topic = ev.model.get('topic');
+      const dialogMeta = {
         'title': 'Topic',
-        'description': 'Add a new topic to the system',
-        'action': 'Save',
-      });
-      
-      return dialog.openDialog(this.parseInputSchema(dialogInputs))
+        'description': 'Update this topic',
+        'action': 'Update',
+      };
+
+      return this.__presentTopicDialog(topic, dialogMeta)
         .then((result) => {
           if (!result.values.name) {
-            throw new Error('Thunderclap requires a name');
+            throw new Error('Topic requires a name');
+          }
+
+          const topics = this.get('db.topic.data');
+          const topicIdx = topics.findIndex(t => t.id === topic.id);
+          if (topicIdx === -1) {
+            throw new Error('Invalid topic');
+          }
+
+          this.set(['db.topic.data', topicIdx, 'name'], result.values.name);
+          this.set(['db.topic.data', topicIdx, 'description'], result.values.description);
+          this.set(['db.topic.data', topicIdx, 'banner'], result.values.banner);
+          if (selectedItem) {
+            this.set(['db.topic.data', topicIdx, 'parentId'], selectedItem.id);
+          }
+        });
+    },
+
+    __addTopic() {
+      const selectedItem = this.get('__selectedItem');
+      const dbFactory = this.get('db.Factory');
+      const dialogMeta = {
+        'title': 'Topic',
+        'description': 'Add a new topic to the system',
+        'action': 'Add',
+      };
+
+      const topic = dbFactory.create('topic');
+      return this.__presentTopicDialog(topic, dialogMeta)
+        .then((result) => {
+          if (!result.values.name) {
+            throw new Error('Topic requires a name');
           }
 
           topic.name = result.values.name;
