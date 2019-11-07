@@ -55,6 +55,12 @@ Polymer({
     };
   },
 
+
+  __viewLatestIssue: function(ev) {
+    const issue = ev.model.get('issue');
+    this.fire('view-entity', `/issue/${issue.id}`);
+  },
+
   __viewTwibbyn: function () {
     this.fire('view-entity', '/twibbyn');
   },

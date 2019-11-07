@@ -56,13 +56,13 @@ dom-module#d4l-dashboard
         .layout.horizontal.center
           h1 Latest
         .flex.layout.horizontal.center
-          template(is="dom-repeat" items="[[__latestIssues]]")
+          template(is="dom-repeat" items="[[__latestIssues]]" as="issue")
             d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
               .layout.horizontal.center
                 iron-icon(icon="d4l-social-icons:storm")
-                h1 [[item.name]]
-              p [[item.description]]
-              paper-button View
+                h1 [[issue.name]]
+              p [[issue.description]]
+              paper-button(on-click="__viewLatestIssue") View
         div
           paper-button(on-tap="__viewTopics") See All Topics
 
