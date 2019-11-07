@@ -14,6 +14,7 @@ const Schema = [
   require('./thunderclap.json'),
   require('./topic.json'),
   require('./issue.json'),
+  require('./resource.json'),
 ];
 
 module.exports = Schema;
