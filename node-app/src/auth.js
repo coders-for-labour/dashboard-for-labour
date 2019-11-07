@@ -34,27 +34,17 @@ const __authenticateUser = (appAuth, existingUser) => {
       domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
       role: AppRoles.default,
       permissions: [
-        {'route': 'campaign', 'permission': 'list'},
-        {'route': 'post', 'permission': 'list'},
-        {'route': 'post', 'permission': 'read'},
-        {'route': 'post', 'permission': 'add'},
-        {'route': 'post', 'permission': 'write'},
-        {'route': 'people', 'permission': 'list'},
         {'route': 'app/schema', 'permission': 'read'},
+        // TODO: Fill in permissions for public users
       ],
     },
     authorised: {
       authLevel: 1,
       domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
-      role: AppRoles.default,
+      role: 'admin.editor',
       permissions: [
-        {'route': 'campaign', 'permission': 'list'},
-        {'route': 'post', 'permission': 'list'},
-        {'route': 'post', 'permission': 'read'},
-        {'route': 'post', 'permission': 'add'},
-        {'route': 'post', 'permission': 'write'},
-        {'route': 'people', 'permission': 'list'},
-        {'route': 'app/schema', 'permission': 'read'},
+        {'route': '*', 'permission': '*'},
+        // TODO: Fill in permissions for authed users
       ],
     },
   };
@@ -66,7 +56,7 @@ const __authenticateUser = (appAuth, existingUser) => {
   const cache = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
   return cache.getData()
     .then((users) => {
-      const authorised = users.find((u) => u.email === user.email);
+      const authorised = users.find((u) => u.twitter === appAuth.username);
       if (authorised) {
         authorisation = 'authorised';
       }
