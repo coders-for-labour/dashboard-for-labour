@@ -45,7 +45,7 @@
             "__allowUpdate": true
           }
         },
-        "responce": {
+        "response": {
           "description": {
             "__type": "string",
             "__required": true,
