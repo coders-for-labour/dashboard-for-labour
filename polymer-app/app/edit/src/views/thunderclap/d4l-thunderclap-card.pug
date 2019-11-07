@@ -4,6 +4,7 @@ link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-cla
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-card/d4l-card-behaviors.html")
 
 link(rel="import", href="/src/d4l-theme.html")
@@ -11,63 +12,63 @@ link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
 dom-module#d4l-thunderclap-card
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="d4l-theme")
-  style(include="shared-styles")
-  style(include="shared-card-styles").
-    :host {
-      display: block;
-      min-width: 350px;
-    }
-
-    .card {
-      position: relative;
-      -webkit-background-size: cover;
-      background-size: cover;
-      padding: 0px 0px 0px;
-      color: var(--text-light-primary-color);
-    }
-
-    .thunderclap-content{
-      background: var(--app-color-primary-red);
-      padding: 10px 20px;
-    }
-    .thunderclap-text {
-      word-break: break-all;
-    }
-
-    .thunderclap-footer {
-      padding: 10px 20px 10px;
-      color: var(--text-dark-secondary-color);
-    }
-    .thunderclap-footer iron-icon {
-      margin-right: 10px;
-    }
-
-    .footer.tray{
-      position: relative;
-      margin: -30px -20px -10px;
-    }
-    .footer.tray paper-icon-button {
-      color: var(--app-color-secondary-grey);
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-card-styles").
+      :host {
+        display: block;
+        min-width: 350px;
+      }
+
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 0px 0px 0px;
+        color: var(--text-light-primary-color);
+      }
+
+      .thunderclap-content{
+        background: var(--app-color-primary-red);
+        padding: 10px 20px;
+      }
+      .thunderclap-text {
+        word-break: break-all;
+      }
+
+      .thunderclap-footer {
+        padding: 10px 20px 10px;
+        color: var(--text-dark-secondary-color);
+      }
+      .thunderclap-footer iron-icon {
+        margin-right: 10px;
+      }
+
+      .footer.tray{
+        position: relative;
+        margin: -30px -20px -10px;
+      }
+      .footer.tray paper-icon-button {
+        color: var(--app-color-secondary-grey);
+      }
+
     .card
       .thunderclap-content
-        div.thunderclap-text "[[campaign.description]]"
-        div.text-right [[__thunderClapFormatted]]
+        div.thunderclap-text "[[thunderclap.description]]"
+        div.text-right [[computeDateFormat(thunderclap.scheduledExecution)]]
       .thunderclap-footer
         .layout.horizontal.center
           .flex-2.layout.horizontal.wrap
-            h1 [[campaign.name]]
+            h1 [[thunderclap.name]]
           .flex.layout.horizontal.wrap
             iron-icon(icon="d4l-icons:member")
             div [[__userCountLabel]]
 
           .flex.layout.horizontal.center
             iron-icon(icon="d4l-icons:time")
-            div [[__thunderClapDaysLeft]]
+            div [[computeDateFormatRelative(thunderclap.scheduledExecution)]]
 
         .footer.tray(hidden$="[[!__showButtons]]")
           .layout.horizontal.center

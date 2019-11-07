@@ -8,11 +8,10 @@ link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-
-link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-post/d4l-post-dialog.html")
@@ -25,27 +24,27 @@ link(rel="import", href="/src/views/meme/d4l-meme-campaign-card.html")
 link(rel="import", href="/src/views/meme/d4l-meme-detail.html")
 
 dom-module#d4l-meme
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="d4l-theme")
-  style(include="shared-styles")
-  style(include="shared-layout-styles").
-    :host {
-      display: block;
-
-      padding: var(--default-page-padding);
-      padding-top: 95px;
-    }
-
-    paper-fab {
-      position: fixed;
-      bottom: 60px;
-      right: 30px;
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+
+        padding: var(--default-page-padding);
+        padding-top: 95px;
+      }
+
+      paper-fab {
+        position: fixed;
+        bottom: 60px;
+        right: 30px;
+      }
+
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    d4l-app-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
+    buttress-db-query(db="[[db]]", doc="[[db.campaign]]", query="[[__campaignsQuery]]", find-all="{{campaigns}}")
 
     d4l-header(
       auth="[[auth]]",
@@ -54,8 +53,7 @@ dom-module#d4l-meme
       page-title="[[__pageTitle]]",
       page-mode="[[__pageMode]]",
       header="{{header}}",
-      allow-back,
-      on-back-button-clicked="__navBack"
+      allow-back
     )
 
     d4l-post-dialog(title="Add Images", open="{{__openPostDialog}}", on-save="__saveUserMeme")

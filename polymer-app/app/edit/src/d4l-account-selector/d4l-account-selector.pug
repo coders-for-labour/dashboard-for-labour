@@ -25,7 +25,7 @@ dom-module#d4l-account-selector
   script.
     Polymer({
       is: 'd4l-account-selector',
-      behaviors: [Polymer.D4LLogging],
+      behaviors: [D4L.Logging],
       properties: {
         auth: {
           type: Object
@@ -60,7 +60,7 @@ dom-module#d4l-account-selector
           return false;
         }
 
-        return user.profiles.findIndex(a => a.app === app) !== -1;
+        return user.auth.findIndex(a => a.app === app) !== -1;
       },
 
       __connectTwitter: function () {

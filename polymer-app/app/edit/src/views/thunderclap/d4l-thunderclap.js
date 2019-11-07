@@ -1,7 +1,8 @@
 Polymer({
   is: 'd4l-thunderclap',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
+    D4L.Helpers,
     Polymer.D4LViewList,
     Polymer.D4LFacebook,
     Polymer.D4LShare
@@ -48,7 +49,7 @@ Polymer({
     },
     __thunderclapTwitterUrl: {
       type: String,
-      value: '/thunderclap/twitter/subscribe'
+      value: '/api/v1/thunderclap/twitter/subscribe'
     },
 
     __thunderclapSubscribeUrl: {
@@ -60,21 +61,79 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Storm',
+      value: 'Thunderclap',
       computed: '__computePageTitle(__selectedItem)'
-    },
-
-    __campaignsQuery: {
-      type: Object,
-      computed: '__computeCampaignsQuery(db.campaign.data.*)'
     },
 
     __hasUserTwitter: {
       type: Boolean,
       notify: true,
       value: false,
-      computed: '__computeHasUserTwitter(auth.user, auth.user.profiles.*)'
+      computed: '__computeHasUserTwitter(auth.user, auth.user.auth.*)'
     }
+  },
+
+  __addThunderclap() {
+    const dbFactory = this.get('db.Factory');
+    const dialog = this.$.dialog;
+
+    const thunderclap = dbFactory.create('thunderclap');
+
+    const dialogInputs = {
+      name: {
+        label: 'Title',
+        type: 'TEXT',
+        default: thunderclap.name
+      },
+      description: {
+        label: 'Description',
+        type: 'TEXT',
+        default: thunderclap.description
+      },
+      date: {
+        label: 'Date',
+        type: 'DATE',
+        default: thunderclap.scheduledExecution
+      },
+      time: {
+        label: 'Time',
+        type: 'TIME',
+        default: thunderclap.scheduledExecution
+      },
+    };
+
+    dialog.setMetadata({
+      'title': 'Thunderclap',
+      'description': 'Add a new thunderclap to the system',
+      'action': 'Save',
+    });
+    
+    return dialog.openDialog(this.parseInputSchema(dialogInputs))
+      .then((result) => {
+        if (!result.values.name) {
+          throw new Error('Thunderclap requires a name');
+        }
+        if (!result.values.description) {
+          throw new Error('Thunderclap requires a description');
+        }
+        if (!result.values.date) {
+          throw new Error('Thunderclap requires a date');
+        }
+        if (!result.values.time) {
+          throw new Error('Thunderclap requires a time');
+        }
+
+        const date = Sugar.Date.create(`${result.values.date} ${result.values.time}`);
+        if (!Sugar.Date.isValid(date)) {
+          throw new Error('Invalid Date');
+        }
+
+        thunderclap.name = result.values.name;
+        thunderclap.description = result.values.description;
+        thunderclap.scheduledExecution = date;
+
+        this.push('db.thunderclap.data', thunderclap);
+      });
   },
 
   __subscribeThunderclap: function(ev) {
@@ -93,7 +152,7 @@ Polymer({
 
     this.set('__thunderclapSubscribeUrl', this.get('__thunderclapTwitterUrl'));
     this.set('__thunderclapSubscribeBody', {
-      campaignId: this.__campaignId,
+      id: this.__campaignId,
       message: ev.detail.text
     });
 
@@ -115,19 +174,13 @@ Polymer({
     this.set('__shareTwStatus', 'ready');
   },
 
-  __computeCampaignsQuery: function () {
+  __computeThunderclapQuery: function () {
     return {
-      type: {
-        $eq: 'thunderclap'
-      },
-      status: {
-        $eq: 'published'
-      }
     }
   },
 
   __computePageTitle: function (campaign) {
-    let title = 'Storm';
+    let title = 'Thunderclap';
 
     this.__debug(title);
 
@@ -138,8 +191,11 @@ Polymer({
     return title;
   },
 
-  __computeHasUserTwitter: function(authUser){
-    return authUser.profiles.reduce((outcome, profile) => {
+  __computeHasUserTwitter: function(){
+    const authUser = this.get('auth.user');
+    if (!authUser) return;
+
+    return authUser.auth.reduce((outcome, profile) => {
       if (profile.app === 'twitter') {
         return true;
       }

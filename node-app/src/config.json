@@ -1,0 +1,98 @@
+{
+  "environment": {
+    "NODE_ENV": "development",
+
+    "D4L_APP_PROTOCOL": "https",
+    "D4L_APP_HOST": "dashboard.forlabour.com",
+    "D4L_APP_PORT": 6020,
+    "D4L_APP_PATH": "",
+
+    "D4L_CDN_URL": "http://cdn.forlabour.com",
+
+    "D4L_TEAM_API_TOTP_KEY": "",
+    "D4L_TEAM_API_URL": "",
+
+    "D4L_BUTTRESS_PROTOCOL": "https",
+    "D4L_BUTTRESS_HOST": "",
+    "D4L_BUTTRESS_API_TOKEN": "",
+    "D4L_BUTTRESS_API_PATH": "D4L",
+    "D4L_BUTTRESS_API_VERSION": 1,
+
+    "D4L_FB_APP_ID": "",
+    "D4L_FB_APP_SECRET": "",
+
+    "D4L_TW_CONSUMER_KEY": "",
+    "D4L_TW_CONSUMER_SECRET": "",
+    "D4L_TW_ACCESS_TOKEN": "",
+    "D4L_TW_ACCESS_TOKEN_SECRET": "",
+
+    "D4L_SESSION_SECRET": "",
+    "D4L_TWFY_API_KEY": "",
+    "D4L_REDIS_HOST": "127.0.0.1",
+    "D4L_REDIS_PORT": "6379",
+    "D4L_CLUSTER_APP": "primary",
+    "D4L_APP_SUBDOMAIN": "dashboard",
+    "D4L_APP_DOMAIN": "forlabour.com"
+  },
+  "global": {
+    "env": "%NODE_ENV%",
+    "app": {
+      "title": "Dashboard For Labour",
+      "description": "Application server for Dashboard for Labour.",
+      "code": "d4l",
+      "version": "1.3.7",
+      "protocol": "%D4L_APP_PROTOCOL%",
+      "host": "%D4L_APP_HOST%",
+      "port": "%D4L_APP_PORT%"
+    },
+    "data": {
+      "path": "%D4L_APP_PATH%/node-app/app_data",
+      "cdn": "http://cdn-forlabour-com.wearelightenclients.co.uk"
+    },
+    "log": {
+      "path": "%D4L_APP_PATH%/node-app/logs"
+    },
+    "api": {
+      "key": "%D4L_TEAM_API_TOTP_KEY%",
+      "urls": {
+        "team": "%D4L_TEAM_API_URL%",
+        "constituency": "%D4L_TEAM_API_URL%"
+      }
+    },
+    "buttress": {
+      "url": "%D4L_BUTTRESS_PROTOCOL%://%D4L_BUTTRESS_HOST%",
+      "protocol": "%D4L_BUTTRESS_HOST%",
+      "host": "%D4L_BUTTRESS_HOST%",
+      "token": "%D4L_BUTTRESS_API_TOKEN%",
+      "apiPath": "%D4L_BUTTRESS_API_PATH%",
+      "apiVersion": "%D4L_BUTTRESS_API_VERSION%"
+    },
+    "auth": {
+      "sessionSecret": "%D4L_SESSION_SECRET%",
+      "facebook": {
+        "appId": "%D4L_FB_APP_ID%",
+        "appSecret": "%D4L_FB_APP_SECRET%"
+      },
+      "twitter": {
+        "accessToken": "%D4L_TW_ACCESS_TOKEN%",
+        "accessTokenSecret": "%D4L_TW_ACCESS_TOKEN_SECRET%",
+        "consumerKey": "%D4L_TW_CONSUMER_KEY%",
+        "consumerSecret": "%D4L_TW_CONSUMER_SECRET%"
+      },
+      "twfy": {
+        "apiUrl": "https://www.theyworkforyou.com/api",
+        "apiKey": "%D4L_TWFY_API_KEY%"
+      }
+    },
+    "cluster": {
+      "app": "%D4L_CLUSTER_APP%"
+    },
+    "redis": {
+      "host": "%D4L_REDIS_HOST%"
+    },
+    "cdn": {
+      "url": "D4L_CDN_URL",
+      "bucket": "D4L_CDN_BUCKET"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-meme-campaign-card',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
     Polymer.D4LCardBehavior
   ],
   properties: {

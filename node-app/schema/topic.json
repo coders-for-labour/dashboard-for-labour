@@ -1,0 +1,31 @@
+{
+  "name": "topic",
+  "type": "collection",
+  "collection": "topic",
+  "extends": [
+    "timestamps"
+  ],
+  "roles": [],
+  "properties": {
+    "name": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "description": {
+      "__type": "string",
+      "__required": false,
+      "__allowUpdate": true
+    },
+    "banner": {
+      "__type": "string",
+      "__required": false,
+      "__allowUpdate": true
+    },
+    "parentId": {
+      "__type": "id",
+      "__required": true,
+      "__allowUpdate": true
+    }
+  }
+}

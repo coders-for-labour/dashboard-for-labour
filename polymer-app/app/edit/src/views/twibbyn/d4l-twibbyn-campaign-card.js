@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-twibbyn-campaign-card',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
     Polymer.D4LCardBehavior
   ],
   properties: {
@@ -87,9 +87,9 @@ Polymer({
   },
 
   __computeSelectedProfileImg: function(user, platform) {
-    let profile = user.profiles.find(p => p.app === platform);
+    let profile = user.auth.find(p => p.app === platform);
     if (!profile) {
-      profile = user.profiles[0];
+      profile = user.auth[0];
     }
 
     if (profile.app === 'facebook') {

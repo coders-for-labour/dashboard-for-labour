@@ -13,7 +13,6 @@ link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-account-selector/d4l-account-selector.html")
 
@@ -24,47 +23,47 @@ link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
 
 dom-module#d4l-thunderclap-detail
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="d4l-theme")
-  style(include="shared-styles")
-  style(include="shared-layout-styles").
-    :host {
-      display: block;
-    }
-
-    h1, h2 {
-      text-align: center;
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    .card {
-      position: relative;
-      -webkit-background-size: cover;
-      background-size: cover;
-      padding: 10px 20px 10px;
-      background: var(--text-light-primary-color);
-    }
-    .card.iron-selected {
-      background: #e0e0e0;
-    }
-
-    paper-button {
-      @apply(--d4l-button-primary);
-    }
-
-    d4l-twibbyn-overlay {
-      width: 250px;
-    }
-
-    paper-textarea {
-      width: 100%;
-      margin-top: 10px;
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+      }
+
+      h1, h2 {
+        text-align: center;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 10px 20px 10px;
+        background: var(--text-light-primary-color);
+      }
+      .card.iron-selected {
+        background: #e0e0e0;
+      }
+
+      paper-button {
+        @apply(--d4l-button-primary);
+      }
+
+      d4l-twibbyn-overlay {
+        width: 250px;
+      }
+
+      paper-textarea {
+        width: 100%;
+        margin-top: 10px;
+      }
+
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     .flex.layout.vertical.center(mobile$="[[isMobile]]")

@@ -1,0 +1,109 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/paper-fab/paper-fab.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
+link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
+
+link(rel="import", href="/src/d4l-header/d4l-header.html")
+
+link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
+link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
+
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
+
+link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
+link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+
+dom-module#d4l-topic
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+
+        padding: var(--default-page-padding);
+        padding-top: 95px;
+      }
+
+    d4l-header(
+      auth="[[auth]]",
+      db="{{db}}",
+      page="[[__pageTitle]]",
+      page-title="[[__pageTitle]]",
+      page-mode="[[__pageMode]]",
+      header="{{header}}",
+      allow-back,
+      on-back-button-clicked="__navBack"
+    )
+
+    buttress-db-query(db="[[db]]", doc="[[db.topic]]" query="[[__topicsQuery]]", find-all="{{__topics}}")
+    buttress-db-query(db="[[db]]", doc="[[db.issue]]" query="[[__issuesQuery]]", find-all="{{__issues}}")
+
+    ltn-dialog#dialog
+
+    iron-pages(
+      selected='[[__loadMode]]',
+      attr-for-selected='name',
+      role='loading'
+    )
+      div(name="loading", style="height: 90vh;").layout.horizontal.center.center-justified
+        h1 Loading
+        paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
+
+      div(name="loaded")
+        .layout.horizontal.wrap
+          .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+            d4l-dashboard-card.card.flex(background="thunderclap")
+              div(hidden$="[[__hasSelectedItem]]")
+                .layout.horizontal.center
+                  h1 Topics
+                p Some message about topics
+              div(hidden$="[[!__hasSelectedItem]]")
+                .layout.horizontal.center
+                  h1 [[__selectedItem.name]]
+                p [[__selectedItem.description]]
+
+          .page-content.flex-2(mobile$="[[isMobile]]")
+            div(hidden$="[[__hasSelectedItem]]")
+              template(is="dom-repeat" items="[[__topics]]")
+                h1 [[item.name]]
+                p [[item.description]]
+                paper-button(on-click="__viewTopic") View
+            div(hidden$="[[!__hasSelectedItem]]")
+              h1 Topics
+              hr
+              template(is="dom-repeat" items="[[__topics]]")
+                h1 [[item.name]]
+                p [[item.description]]
+                paper-button(on-click="__viewTopic") View
+
+              h1 Issues
+              hr
+              template(is="dom-repeat" items="[[__issues]]")
+                h1 [[item.name]]
+                p [[item.description]]
+                paper-button(on-click="__viewIssue") View
+
+        ltn-fab-menu(
+          hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+        )
+          .fab-item
+            .label Topic
+            paper-icon-button(icon="add" title="Topic", on-tap="__addTopic")
+          .fab-item(hidden$="[[!__hasSelectedItem]]")
+            .label Issue
+            paper-icon-button(icon="add" title="Issue", on-tap="__addIssue")
+
+  script(src="./d4l-topic.js")

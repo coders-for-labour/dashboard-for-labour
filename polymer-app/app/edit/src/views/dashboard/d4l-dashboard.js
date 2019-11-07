@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-dashboard',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
     Polymer.D4LViewList
   ],
   properties: {
@@ -24,7 +24,13 @@ Polymer({
     },
     __userQuery: {
       type: String,
-      computed: '__computeUserQuery(db.user.data.*)'
+      computed: '__computeUserQuery(db.people.data.*)'
+    },
+
+    __latestIssues: Array,
+    __latestIssuesQuery: {
+      type: Object,
+      computed: '__computeLatestIssuesQuery(db.issue.data.*)'
     },
 
     __post: {
@@ -43,11 +49,20 @@ Polymer({
     }
   },
 
+  __computeLatestIssuesQuery() {
+    return {
+      
+    };
+  },
+
   __viewTwibbyn: function () {
     this.fire('view-entity', '/twibbyn');
   },
   __viewThunderclap: function () {
-    this.fire('view-entity', '/storm');
+    this.fire('view-entity', '/thunderclap');
+  },
+  __viewTopics: function () {
+    this.fire('view-entity', '/topic');
   },
   __viewMemes: function () {
     this.fire('view-entity', '/meme');

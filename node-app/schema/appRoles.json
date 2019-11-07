@@ -1,0 +1,19 @@
+{
+  "default": "public",
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": "allowAll",
+    "dataDisposition": "allowAll"
+  },{
+    "name": "admin",
+    "roles": [{
+      "name": "editor",
+      "endpointDisposition": "allowAll",
+      "dataDisposition": "allowAll"
+    },{
+      "name": "super",
+      "endpointDisposition": "allowAll",
+      "dataDisposition": "allowAll"
+    }]
+  }]
+}

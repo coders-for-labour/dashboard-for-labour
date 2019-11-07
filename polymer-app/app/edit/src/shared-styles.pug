@@ -22,6 +22,27 @@ dom-module(id="shared-styles")
         color: var(--text-light-primary-color);
       }
 
+      paper-fab, ltn-fab-menu {
+        position: fixed;
+        right: 35px;
+        bottom: 35px;
+      }
+      ltn-fab-menu paper-icon-button {
+        background: rgb(198, 40, 40, 0.7);
+        color: #FFF;
+        border-radius: 50%;
+      }
+
+      ltn-fab-menu .fab-item {
+        position: relative;
+      }
+      ltn-fab-menu .fab-item .label {
+        position: absolute;
+        right: 100%;
+        margin-right: 6px;
+        line-height: 40px;
+      }
+
       .text-left {
         text-align: left;
       }
@@ -56,12 +77,16 @@ dom-module(id="shared-card-styles")
         color: var(--text-dark-primary-color);
         /*margin-bottom:10px;*/
       }
-      p, .third-line ::content span {
+      p,
+      .third-line ::slotted(span) {
         @apply(--d4l-font-common-base);
         @apply(--d4l-font-small-card-primary-text);
         color: var(--text-dark-primary-color);
       }
-      p.secondary, p[secondary], .third-line ::content span.secondary, .third-line ::content span[secondary] {
+      p.secondary,
+      p[secondary],
+      .third-line ::slotted(span.secondary),
+      .third-line ::slotted(span[secondary]) {
         @apply(--d4l-font-common-base);
         @apply(--d4l-font-small-card-secondary-text);
         color: var(--text-dark-secondary-color);

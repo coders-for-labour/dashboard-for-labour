@@ -9,11 +9,10 @@ link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-
-link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
 
 link(rel="import", href="/src/d4l-header/d4l-header.html")
 
@@ -23,24 +22,25 @@ link(rel="import", href="/src/shared-styles.html")
 link(rel="import", href="./d4l-dashboard-card.html")
 
 dom-module#d4l-dashboard
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="shared-styles")
-  style(include="shared-layout-styles").
-    :host {
-      display: block;
-
-      padding: var(--default-page-padding);
-      padding-top: 95px;
-    }
-
-    .members-stat {
-      font-size: 50px;
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+
+        padding: var(--default-page-padding);
+        padding-top: 95px;
+      }
+
+      .members-stat {
+        font-size: 50px;
+      }
+
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    d4l-app-db-query(db="[[db]]", doc="[[db.user]]", query="[[__userQuery]]", find-all="{{__users}}")
+    buttress-db-query(db="[[db]]", doc="[[db.people]]", query="[[__userQuery]]", find-all="{{__users}}")
+    buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
 
     d4l-header(
       auth="[[auth]]",
@@ -52,33 +52,43 @@ dom-module#d4l-dashboard
     )
 
     .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
-        d4l-dashboard-card.card.flex(background="twibbyn")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-social-icons:social")
-            h1 Twibbyns
-          p Change your profile pictures to show your support.
-          paper-button(on-tap="__viewTwibbyn") Get Started
+      .flex.self-strech.layout.vertical.card-group(mobile$="[[isMobile]]")
+        .layout.horizontal.center
+          h1 Latest
+        .flex.layout.horizontal.center
+          template(is="dom-repeat" items="[[__latestIssues]]")
+            d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
+              .layout.horizontal.center
+                iron-icon(icon="d4l-social-icons:storm")
+                h1 [[item.name]]
+              p [[item.description]]
+              paper-button View
+        div
+          paper-button(on-tap="__viewTopics") See All Topics
 
+      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:storm")
-            h1 Storm
+            h1 Thunderclap
           p Sign up to tweet our important messages.
           paper-button(on-tap="__viewThunderclap") Get Started
 
-        //-d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme", disabled)
+        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme", disabled)
           .layout.horizontal.center
             iron-icon(icon="d4l-icons:picture")
             h1 Images
           p Gorgeous covers, posters and infographics to share
           paper-button(on-tap="__viewMemes") Get Started
 
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
         d4l-dashboard-card.card.flex(background="members")
           .layout.horizontal.center
             iron-icon(icon="d4l-icons:member")
             h1 Members
           h2.members-stat [[__users.length]]
+
+        d4l-dashboard-constituency-card.card.flex(
+          auth="[[auth]]"
+        )
 
   script(src="d4l-dashboard.js")

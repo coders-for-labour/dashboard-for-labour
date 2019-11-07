@@ -21,7 +21,6 @@ link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout.htm
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 link(rel="import", href="/bower_components/iron-image/iron-image.html")
-//-link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-icons/social-icons.html")
 link(rel="import", href="/bower_components/iron-icons/communication-icons.html")
 link(rel="import", href="/bower_components/paper-input/paper-input.html")
@@ -29,17 +28,19 @@ link(rel="import", href="/bower_components/paper-item/paper-icon-item.html")
 link(rel="import", href="/bower_components/paper-icon-button/paper-icon-button.html")
 link(rel="import", href="/bower_components/paper-toast/paper-toast.html")
 link(rel="import", href="/bower_components/paper-styles/typography.html")
+link(rel="import" href="/bower_components/buttress-js-db/buttress-db.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 
 link(rel="import", href="/src/d4l-auth/d4l-auth.html")
-link(rel="import", href="/src/d4l-app-db/d4l-app-db.html")
-link(rel="import", href="/src/d4l-app-db/d4l-realtime-db-behaviors.html")
-link(rel="import", href="/src/d4l-socket-io/d4l-socket-io.html")
+//- link(rel="import", href="/src/d4l-app-db/d4l-app-db.html")
+//- link(rel="import", href="/src/d4l-app-db/d4l-realtime-db-behaviors.html")
+//- link(rel="import", href="/src/d4l-socket-io/d4l-socket-io.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 
+script(src="/src/d4l-helpers/d4l-helpers-behaviour.js")
 script(src="/src/polyfill/object-assign.js")
 
 dom-module#d4l-app
@@ -90,114 +91,110 @@ dom-module#d4l-app
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    app-location(route="{{route}}")
-    app-route(
-      route="{{route}}",
-      pattern="/:page",
-      data="{{routeData}}",
-      tail="{{subroute}}"
+    app-location(
+      route="{{__routesData.route.route}}"
+      url-space-regex="^[[rootPath]]",
+      query-params="{{__routesData.route.queryParams}}"
     )
     app-route(
-      route="{{subroute}}",
-      pattern="/:id",
-      data="{{subrouteData}}"
-      tail="{{subrouteAction}}"
+      route="{{__routesData.route.route}}"
+      pattern="[[rootPath]]:data"
+      data="{{__routesData.route.parts}}",
+      active="{{__routesData.route.active}}"
+      tail="{{__routesData.subroute.route}}"
     )
     app-route(
-      route="{{subrouteAction}}",
-      pattern="/:action",
-      data="{{subrouteActionData}}",
-      tail="{{subrouteActionId}}"
+      route="{{__routesData.subroute.route}}",
+      pattern="/:data",
+      data="{{__routesData.subroute.parts}}",
+      active="{{__routesData.subroute.active}}",
+      tail="{{__routesData.action.route}}"
     )
     app-route(
-      route="{{subrouteActionId}}",
-      pattern="/:id",
-      data="{{subrouteActionIdData}}"
+      route="{{__routesData.action.route}}",
+      pattern="/:data",
+      data="{{__routesData.action.parts}}",
+      active="{{__routesData.action.active}}",
+      tail="{{__routesData.id.route}}"
     )
-    d4l-socket-io#db(
-      auth="[[auth]]",
-      endpoint="{{iodb.endpoint}}",
-      connected="{{iodb.connected}}",
-      rx-events="{{iodb.rxEvents}}",
-      rx="{{iodb.rx}}",
-      on-rx-event="__dbRxEvent"
+    app-route(
+      route="{{__routesData.id.route}}",
+      pattern="/:data",
+      data="{{__routesData.id.parts}}",
+      active="{{__routesData.id.active}}"
     )
+
     d4l-auth-service#authService(
       db="{{db}}",
-      status="{{authStatus}}",
-      auth="{{auth}}",
-      login-details="[[loginDetails]]"
+      auth="{{auth}}"
     )
-    d4l-app-db#db(
-      status="{{dbStatus}}",
-      auth="[[auth]]",
+
+    buttress-db#bJSDB(
+      endpoint="%{D4L_BUTTRESS_URL}%",
+      app-id="%{D4L_BUTTRESS_PUBLIC_ID}%",
+      api-path="D4L",
+      user-id="[[auth.user.id]]",
+      token="[[auth.token.value]]",
+      loaded="{{dbLoaded}}",
+      error="{{dbError}}",
+      settings="{{dbSettings}}",
       db="{{db}}",
-      on-error="__dataServiceError"
+      core-collections="[[dbCoreCollections]]"
     )
 
-    iron-pages.fullbleed(attr-for-selected="name", selected="{{mode}}")
-      section(name="authenticating")
-      section(name="authenticate")
-        d4l-auth(auth="[[auth]]")
-      section.fullbleed(name="application")
+    iron-pages.fullbleed#app-pages(
+      selected="[[__appRoute]]",
+      attr-for-selected="name",
+      fallback-selection="view404",
+      role="main"
+      mobile$="[[isMobile]]"
+      on-toggle-nav-drawer="__toggleNavDrawer",
+      on-toggle-chat-drawer="__toggleChatDrawer"
+    )
+      d4l-dashboard.fullbleed.layout.vertical(
+        name="dashboard",
+        auth="{{auth}}",
+        db="{{db}}",
+        mobile="[[isMobile]]"
+      )
+      d4l-meme.fullbleed.layout.vertical(
+        name="meme",
+        db="{{db}}",
+        doc="{{db.campaign}}",
+        auth="{{auth}}",
+        routes="[[routes]]",
+        mobile="[[isMobile]]"
+      )
+      d4l-thunderclap.fullbleed.layout.vertical(
+        name="thunderclap",
+        db="{{db}}",
+        doc="[[db.thunderclap]]",
+        auth="[[auth]]",
+        routes="[[routes]]",
+        mobile="[[isMobile]]"
+      )
+      d4l-topic.fullbleed.layout.vertical(
+        name="topic",
+        db="{{db}}",
+        doc="[[db.topic]]",
+        auth="[[auth]]",
+        routes="[[routes]]",
+        mobile="[[isMobile]]"
+      )
+      d4l-issue.fullbleed.layout.vertical(
+        name="issue",
+        db="{{db}}",
+        doc="[[db.issue]]",
+        auth="[[auth]]",
+        routes="[[routes]]",
+        mobile="[[isMobile]]"
+      )
+      d4l-view404(
+        name="view404"
+      )
 
-        iron-pages.fullbleed#app-pages(
-          selected="[[page]]",
-          attr-for-selected="name",
-          fallback-selection="view404",
-          role="main"
-          mobile$="[[isMobile]]"
-          on-toggle-nav-drawer="__toggleNavDrawer",
-          on-toggle-chat-drawer="__toggleChatDrawer"
-        )
-          d4l-dashboard.fullbleed.layout.vertical(
-            name="dashboard",
-            title="Amplify",
-            auth="{{auth}}",
-            db="{{db}}",
-            mobile="[[isMobile]]"
-          )
-          d4l-twibbyn.fullbleed.layout.vertical(
-            name="twibbyn",
-            title="Twibbyn",
-            db="{{db}}",
-            doc="{{db.campaign}}",
-            auth="[[auth]]",
-            route="[[route]]",
-            route-data="[[routeData]]",
-            subroute="[[subroute]]",
-            subroute-data="[[subrouteData]]",
-            mobile="[[isMobile]]"
-          )
-          //-d4l-meme.fullbleed.layout.vertical(
-            name="meme",
-            title="Images",
-            db="{{db}}",
-            doc="{{db.campaign}}",
-            auth="{{auth}}",
-            route="[[route]]",
-            route-data="[[routeData]]",
-            subroute="[[subroute]]",
-            subroute-data="[[subrouteData]]",
-            mobile="[[isMobile]]")
-          d4l-thunderclap.fullbleed.layout.vertical(
-            name="storm",
-            title="Storm",
-            db="{{db}}",
-            doc="{{db.campaign}}",
-            auth="{{auth}}",
-            route="[[route]]",
-            route-data="[[routeData]]",
-            subroute="[[subroute]]",
-            subroute-data="[[subrouteData]]",
-            mobile="[[isMobile]]"
-          )
-          d4l-view404(
-            name="view404"
-          )
-
-        d4l-footer(
-          footer-logo="red"
-        )
+    d4l-footer(
+      footer-logo="red"
+    )
 
   script(src="d4l-app.js")

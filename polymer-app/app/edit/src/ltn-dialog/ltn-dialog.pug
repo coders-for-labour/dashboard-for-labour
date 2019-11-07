@@ -1,0 +1,413 @@
+link(rel="import" href="/bower_components/polymer/polymer.html")
+link(rel="import" href="/bower_components/iron-form/iron-form.html")
+link(rel="import" href="/bower_components/paper-dialog/paper-dialog.html")
+link(rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html")
+link(rel="import" href="/bower_components/paper-spinner/paper-spinner.html")
+link(rel="import" href="/bower_components/paper-date-picker/paper-date-picker.html")
+link(rel="import" href="/bower_components/paper-listbox/paper-listbox.html")
+link(rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html")
+link(rel="import" href="/bower_components/paper-input/paper-input.html")
+link(rel="import" href="/bower_components/paper-input/paper-textarea.html")
+
+dom-module#ltn-dialog
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment").
+      :host{
+        display: block;
+      }
+
+      #dialog {
+        border-radius: 0.3rem;
+      }
+
+      .dialog-header, #form, .dialog-footer {
+        margin: 0;
+        padding: 0;
+      }
+      .dialog-header {
+        padding: 1.2rem 1.2rem 0;
+      }
+      .dialog-header .title {
+        font-size: 1.3rem;
+        margin: 0 0 0.5rem;
+        line-height: 2rem;
+        color: rgba(0,0,0,0.8);
+      }
+      .dialog-header p {
+        margin: 0;
+        color: rgba(0,0,0,.6);
+      }
+      .dialog-body {
+        padding: 0.5rem 1.2rem;
+      }
+      .dialog-footer .buttons {
+        padding: 0 0.3rem 0.4rem;
+      }
+      .dialog-footer .buttons paper-button {
+        color: var(--app-primary-color);
+        padding: 0.5rem;
+        margin: 0px 0.2rem;
+      }
+
+    paper-dialog#dialog(
+      on-iron-overlay-opened="__patchOverlay",
+      on-iron-overlay-closed="__dialogClosed")
+      .dialog-header
+        .layout.horizontal.center
+          h2.title [[titleLabel]]
+          .flex
+          //- paper-icon-button#close(icon="icons:close", on-click="__closeDialog")
+        .layout-horizontal.center
+          p.desc [[description]]
+
+      template(is="dom-if" if="[[loading]]")
+        .dialog-loading.layout.vertical.center
+          .flex.layout.horizontal.center
+            .layout.vertical.center
+              h1.title [[loadingStageLabel]]
+              paper-spinner(active)
+              h1.subtitle [[loadingLabel]]
+
+      template(is="dom-if" if="[[!loading]]")
+        iron-form#form(
+          on-change="__formChanged",
+          on-iron-form-presubmit="__formPresubmit",
+        )
+          form(method="")
+            .dialog-body
+              template(is="dom-repeat", items="{{item.inputs}}", as="input")
+                //- TEXT
+                template(is="dom-if", if="[[__compareString(input.type, 'TEXT', input.value)]]")
+                  paper-input(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", auto-validate)
+
+                //- TEXT
+                template(is="dom-if", if="[[__compareString(input.type, 'TEXTAREA', input.value)]]")
+                  paper-textarea(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", rows="3", auto-validate)
+
+                //- DATE
+                template(is="dom-if", if="[[__compareString(input.type, 'DATE', input.value)]]")
+                  paper-input(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", auto-validate)
+
+                //- TIME
+                template(is="dom-if", if="[[__compareString(input.type, 'TIME', input.value)]]")
+                  paper-input(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", auto-validate)
+                
+                //- NUMBER
+                template(is="dom-if", if="[[__compareString(input.type, 'NUMBER', input.value)]]")
+                  paper-input(
+                    class$="[[input.class]]",
+                    name="[[input.name]]",
+                    type="number",
+                    min="[[input.min]]",
+                    max="[[input.max]]",
+                    step="[[input.step]]",
+                    label="[[input.label]]",
+                    value="{{input.value}}",
+                    auto-validate
+                  )
+                    div(slot="prefix") [[input.prefix]]
+                    div(slot="suffix") [[input.suffix]]
+
+                //- SELECT
+                template(is="dom-if", if="[[__compareString(input.type, 'SELECT', input.value)]]")
+                  paper-dropdown-menu(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", vertical-align="top")
+                    paper-listbox(slot="dropdown-content", attr-for-selected="value-id", selected="{{input.value}}")
+                      template(is="dom-repeat", items="[[input.options]]")
+                        paper-item(label="[[item.value]]", value-id="[[item.key]]") [[item.value]]
+
+        .dialog-footer
+          .buttons
+            .layout.horizontal.center
+              .flex
+              paper-button#submit(autofocus, on-click="__validate") [[actionLabel]]
+
+  script.
+    /**
+     * @LTNDialog
+     * @polymer
+     */
+    class LTNDialog extends Polymer.Element {
+      static get is() { return 'ltn-dialog'; }
+      static get properties() {
+        return {
+          name: {
+            type: String,
+            value: ""
+          },
+          open: {
+            type: Boolean,
+            notify: true,
+            observer: '__openChanged'
+          },
+          item: {
+            type: Object
+          },
+          mode: {
+            type: String,
+            value: 'add'
+          },
+
+          titleLabel: {
+            type: String,
+            value: 'Dialog'
+          },
+          description: {
+            type: String,
+            value: ''
+          },
+          actionLabel: {
+            type: String,
+            value: 'Save'
+          },
+
+          loadingStageLabel: {
+            type: String,
+            value: ''
+          },
+          loadingLabel: {
+            type: String,
+            value: 'Loading..'
+          },
+
+          dialogTitle: {
+            type: String
+          },
+          action: {
+            type: String
+          },
+
+          loading: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+
+          _reposition: Boolean,
+
+          item: {
+            type: Object,
+            notify: true
+          }
+        };
+      }
+      static get observers() {
+        return [
+          '_itemChanged(item, item.*)'
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.__promiseResolve = null;
+        this.__promiseReject = null;
+      }
+
+      setItem(item) {
+        this.set('item', item);
+      }
+
+      __compareString(str, str2) {
+        return str === str2;
+      }
+
+      _itemChanged() {
+        const item = this.get('item');
+        
+        if (!this.get('_reposition')) {
+          this.set('_reposition', true);
+          setTimeout(() => {
+            this.$.dialog.refit();
+            this.set('_reposition', false);
+          }, 100);
+        }
+      }
+
+      __openChanged() {
+        const submit = this.$.submit || Polymer.dom(this.root).querySelector('#submit');
+        const open = this.get('open');
+
+        if (!submit) {
+          throw new Error('Dialog doesn\'t have a submit button');
+        }
+
+        if (open === true) {
+          submit.disabled = false;
+          this.$.dialog.open();
+        } else {
+          this.$.dialog.close();
+        }
+      }
+
+      __formChanged() {
+        const form = this.$.form || Polymer.dom(this.root).querySelector('#form');
+        const submit = this.$.submit || Polymer.dom(this.root).querySelector('#submit');
+
+        if (!form) {
+          throw new Error('Dialog doesn\'t have a form');
+        }
+        if (!submit) {
+          throw new Error('Dialog doesn\'t have a submit button');
+        }
+
+        submit.disabled = !form.validate();
+      }
+
+      formBeginSubmit(ev) {
+        const form = this.$.form || Polymer.dom(this.root).querySelector('#form');
+        const submit = this.$.submit || Polymer.dom(this.root).querySelector('#submit');
+
+        if (form && !form.validate()) {
+          return;
+        }
+
+        // Disable Button to prevent duplicate submissions
+        if (submit) {
+          submit.disabled = true;
+        }
+        form.submit();
+      }
+
+      __formPresubmit(ev) {
+        const item = this.get('item');
+        const form = this.$.form || Polymer.dom(this.root).querySelector('#form');
+
+        ev.preventDefault();
+        if (this.__promiseResolve) {
+          this.__promiseResolve(item);
+        } else if (this.mode === 'add') {
+          this.dispatchEvent(new CustomEvent('add', {
+            detail: item,
+            bubbles: true
+          }));
+        } else {
+          this.dispatchEvent(new CustomEvent('update', {
+            detail: Object.assign({}, item),
+            bubbles: true
+          }));
+        }
+
+        form.reset();
+        this.__closeDialog();
+      }
+
+      repositionDialog() {
+        this.$.dialog.center();
+      }
+
+      /**
+      * @summary opens the dialog with data provided.
+      * @param {object} metadata - Contains form metadata to be set
+      * @return {void}
+      */
+      setMetadata(metadata) {
+        if (metadata.title) {
+          this.set('titleLabel', metadata.title);
+        }
+        if (metadata.description) {
+          this.set('description', metadata.description);
+        }
+        if (metadata.action) {
+          this.set('actionLabel', metadata.action);
+        }
+      }
+
+      /**
+      * @summary opens the dialog with data provided.
+      * @param {object} item - Data to be used for the form
+      * @return {promise} - resolves with dialog result data
+      */
+      openDialog(item) {
+        this.setItem(item);
+        this.__openDialog();
+        // this.__hideLoading();
+
+        this.set('canClose', true);
+
+        return new Promise((resolve, reject) => {
+          this.__promiseResolve = resolve;
+          this.__promiseReject = reject;
+        });
+      }
+      hideDialog() {
+        this.__closeDialog();
+      }
+
+      __openDialog() {
+        const open = this.get('open');
+        if (open) return;
+        this.set('open', true);
+      }
+      __closeDialog(ev) {
+        const open = this.get('open');
+        if (!open) return;
+
+        this.set('open', false);
+        this.set('canClose', true);
+
+        if (this.__promiseReject) {
+          this.__promiseReject({
+            err: false,
+            msg: 'Dialog Closed'
+          });
+        }
+
+        this.__promiseResolve = null;
+        this.__promiseReject = null;
+      }
+
+      __dialogClosed(ev) {
+        const open = this.get('open');
+        if (!open) return;
+
+        if (ev.target === this.$.dialog) {
+          this.set('open', false);
+        }
+      }
+
+      // https://github.com/PolymerElements/paper-dialog/issues/7
+      __patchOverlay(e) {
+        if (e.target.withBackdrop) {
+          e.target.parentNode.insertBefore(e.target._backdrop, e.target);
+        }
+      }
+
+      __validate(){
+        const item = this.get('item');
+        item.values = {};
+
+        item.values = item.inputs.reduce((_values, input) => {
+          _values[input.name] = input.value;
+          return _values;
+        }, item.values);
+
+        this.formBeginSubmit();
+      }
+
+      __openDateDialog(ev) {
+        const dialog = this.$.datePicker;
+        const inputs = this.get('item.inputs');
+
+        const input = ev.model.get('input');
+        const inputIdx = inputs.findIndex(i => i === input);
+
+        let date = Sugar.Date.create();
+        if (input.value) {
+          date = Sugar.Date.create(input.value);
+        }
+
+        return dialog.openDialog({
+          date: date,
+          minDate: Sugar.Date.create('50 years ago'),
+          maxDate: Sugar.Date.create('in 50 years')
+        })
+        .then(res => {
+          const resDate = Sugar.Date.create(res.date);
+          if (!Sugar.Date.isValid(resDate)) {
+            throw new Error('Date isn\'t is valid');
+          }
+
+          this.set(['item.inputs', inputIdx, 'value'], this.computeDateFormatDate(resDate));
+        });
+      }
+    }
+    window.customElements.define(LTNDialog.is, LTNDialog);

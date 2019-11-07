@@ -1,0 +1,13 @@
+{
+  "name": "people",
+  "type": "collection",
+  "collection": "people",
+  "extends": [
+    "person",
+    "timestamps"
+  ],
+  "roles": [],
+  "properties": {
+
+  }
+}

@@ -1,7 +1,7 @@
 Polymer({
   is: 'd4l-header',
   behaviors: [
-    Polymer.D4LLogging
+    D4L.Logging
   ],
   properties: {
     logLevel: {
@@ -46,7 +46,7 @@ Polymer({
     },
     __userImage: {
       type: String,
-      computed: '__computeUserImage(auth.user.profiles.0.images.profile)'
+      computed: '__computeUserImage(auth.user.person.avatar)'
     }
   },
 
