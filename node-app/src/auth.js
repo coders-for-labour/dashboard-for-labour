@@ -18,6 +18,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const Buttress = require('buttress-js-api');
 const Humanname = require('humanname');
 
+const Cache = require('./cache');
 const Logging = require('./logging');
 
 const AppRoles = require('../schema/appRoles');
