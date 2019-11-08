@@ -81,7 +81,7 @@ dom-module#d4l-topic
                 h1 [[item.name]]
                 p [[item.description]]
                 paper-button(on-click="viewTopicItem") View
-                paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
+                paper-button(on-click="updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
             div(hidden$="[[!__hasSelectedItem]]")
               h1 Topics
@@ -96,16 +96,16 @@ dom-module#d4l-topic
               template(is="dom-repeat" items="[[__issues]]")
                 h1 [[item.name]]
                 p [[item.description]]
-                paper-button(on-click="__viewIssue") View
+                paper-button(on-click="viewIssueItem") View
 
         ltn-fab-menu(
           hidden$="[[!inAuthRole(auth.token, 'admin')]]"
         )
-          .fab-item
-            .label Topic
-            paper-icon-button(icon="add" title="Topic", on-tap="__addTopic")
           .fab-item(hidden$="[[!__hasSelectedItem]]")
             .label Issue
-            paper-icon-button(icon="add" title="Issue", on-tap="__addIssue")
+            paper-icon-button(icon="add" title="Issue", on-tap="addIssue")
+          .fab-item
+            .label Topic
+            paper-icon-button(icon="add" title="Topic", on-tap="addTopic")
 
   script(src="./d4l-topic.js")

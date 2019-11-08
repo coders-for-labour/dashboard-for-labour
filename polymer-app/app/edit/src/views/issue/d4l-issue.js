@@ -5,6 +5,7 @@ Polymer({
     D4L.Logging,
     D4L.Helpers,
     D4L.Topic.Helpers,
+    D4L.Issue.Helpers,
     Polymer.D4LViewList
   ],
   properties: {

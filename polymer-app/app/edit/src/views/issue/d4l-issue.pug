@@ -21,6 +21,7 @@ link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
+link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
 
 dom-module#d4l-issue
   template
@@ -73,6 +74,18 @@ dom-module#d4l-issue
 
             .page-content.flex-2(mobile$="[[isMobile]]")
               h1 Events
+              template(is="dom-repeat", items="[[__selectedItem.events]]")
+                div Source [[item.source.description]]
+                ul
+                  template(is="dom-repeat", items="[[item.source.links]]")
+                    li
+                      a(href="[[item]]" target="_BLANK") [[item]]
+
+                div Response: [[item.response.description]]
+                ul
+                  template(is="dom-repeat", items="[[item.response.links]]")
+                    li
+                      a(href="[[item]]" target="_BLANK") [[item]]
 
               h1 Resource
 
@@ -81,7 +94,7 @@ dom-module#d4l-issue
           )
             .fab-item
               .label Event
-              paper-icon-button(icon="add" title="Event", on-click="__addEvent")
+              paper-icon-button(icon="add" title="Event", on-click="addIssueEvent")
             .fab-item
               .label Resource
               paper-icon-button(icon="add" title="Resource", on-click="__addResource")

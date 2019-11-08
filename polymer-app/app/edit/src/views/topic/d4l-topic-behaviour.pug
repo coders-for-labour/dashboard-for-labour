@@ -45,7 +45,7 @@ script.
       return dialog.openDialog(this.parseInputSchema(inputSchema));
     },
 
-    __updateTopic(ev) {
+    updateTopic(ev) {
       const selectedItem = this.get('__selectedItem');
       const topic = ev.model.get('item');
       const dialogMeta = {
@@ -69,13 +69,14 @@ script.
           this.set(['db.topic.data', topicIdx, 'name'], result.values.name);
           this.set(['db.topic.data', topicIdx, 'description'], result.values.description);
           this.set(['db.topic.data', topicIdx, 'banner'], result.values.banner);
+
           if (selectedItem) {
             this.set(['db.topic.data', topicIdx, 'parentId'], selectedItem.id);
           }
         });
     },
 
-    __addTopic() {
+    addTopic() {
       const selectedItem = this.get('__selectedItem');
       const dbFactory = this.get('db.Factory');
       const dialogMeta = {
