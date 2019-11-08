@@ -1,4 +1,4 @@
-link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/polymer/polymer-element.html")
 link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
@@ -48,8 +48,8 @@ dom-module#d4l-topic
       on-back-button-clicked="__navBack"
     )
 
-    buttress-db-query(db="[[db]]", doc="[[db.topic]]" query="[[__topicsQuery]]", find-all="{{__topics}}")
-    buttress-db-query(db="[[db]]", doc="[[db.issue]]" query="[[__issuesQuery]]", find-all="{{__issues}}")
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}")
+    buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
 
     ltn-dialog#dialog
 
@@ -82,6 +82,7 @@ dom-module#d4l-topic
                 p [[item.description]]
                 paper-button(on-click="viewTopicItem") View
                 paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
+
             div(hidden$="[[!__hasSelectedItem]]")
               h1 Topics
               hr

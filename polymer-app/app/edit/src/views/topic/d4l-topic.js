@@ -1,4 +1,3 @@
-
 Polymer({
   is: 'd4l-topic',
   behaviors: [
@@ -86,7 +85,7 @@ Polymer({
     this.fire('view-entity', `/issue/${item.id}`);
   },
 
-  __computeTopicsQuery() {
+  __computeTopicsQuery(cr) {
     const selectedItem = this.get('__selectedItem');
 
     let parentId = null;
@@ -95,6 +94,7 @@ Polymer({
     }
 
     return {
+      __crPath: cr.path,
       parentId: {
         $eq: parentId
       }
