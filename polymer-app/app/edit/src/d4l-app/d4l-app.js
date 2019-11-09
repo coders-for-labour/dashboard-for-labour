@@ -10,6 +10,15 @@ Polymer({
       value: 3
     },
 
+    app: {
+      type: Object,
+      value: function() {
+        return {
+          title: '%{D4L_APP_TITLE}%'
+        };
+      }
+    },
+
     auth: {
       type: Object,
       notify: true
@@ -73,13 +82,6 @@ Polymer({
     pageFirstLoad: {
       type: Boolean,
       value: true
-    },
-    subPageTitle: {
-      type: String
-    },
-    mainTitle: {
-      type: String,
-      computed: '__computeMainTitle(page)'
     },
 
     __hideMenuButton: {
@@ -206,18 +208,6 @@ Polymer({
     this.__viewEntity('/');
   },
 
-  __computeMainTitle: function(page) {
-    if (this.subPageTitle) {
-      return this.subPageTitle;
-    }
-    let titles = {
-      'dashboard': 'Amplify'
-    };
-    if (!page || !titles[page]) {
-      return 'Admin';
-    }
-    return titles[page];
-  },
   __computeHideMenuButton: function() {
     return this.subroute.path ? true : false
   },

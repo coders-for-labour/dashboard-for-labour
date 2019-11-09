@@ -7,8 +7,8 @@ Polymer.D4LShare = {
       type: Object,
       value: function() {
         return {
-          fb: 'I\'ve just Amplified Labour! https://amplify.labour.org.uk #votelabour',
-          tw: 'I\'ve just Amplified Labour! https://amplify.labour.org.uk #votelabour'
+          fb: 'I\'ve just Amplified Labour! %{D4L_BUTTRESS_URL}% #votelabour',
+          tw: 'I\'ve just Amplified Labour! %{D4L_BUTTRESS_URL}% #votelabour'
         };
       }
     },
@@ -56,7 +56,7 @@ Polymer.D4LShare = {
     }
 
     let postText = this.get('__shareText.fb');
-    const url = 'https://amplify.labour.org.uk';
+    const url = '%{D4L_BUTTRESS_URL}%';
     this.set('__shareTwStatus', 'sharing');
 
     let authFb = user.auth.find(p => p.app === 'facebook') !== -1;
@@ -104,7 +104,7 @@ Polymer.D4LShare = {
 
   __shareAmplifyFb: function(){
     let postText = this.get('__shareText.fb');
-    const url = 'https://amplify.labour.org.uk';
+    const url = '%{D4L_BUTTRESS_URL}%';
     this.set('__shareFbStatus', 'sharing');
 
     this.__shareUrl(postText, url, (err, postResponse) => {

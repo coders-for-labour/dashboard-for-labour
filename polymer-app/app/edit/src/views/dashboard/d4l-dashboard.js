@@ -17,7 +17,7 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Amplify'
+      value: '%{D4L_APP_TITLE}%'
     },
 
     __users: {

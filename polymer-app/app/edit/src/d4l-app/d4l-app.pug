@@ -125,6 +125,7 @@ dom-module#d4l-app
     )
 
     d4l-auth-service#authService(
+      app="[[app]]",
       db="{{db}}",
       auth="{{auth}}"
     )
@@ -153,12 +154,14 @@ dom-module#d4l-app
     )
       d4l-dashboard.fullbleed.layout.vertical(
         name="dashboard",
-        auth="{{auth}}",
+        app="[[app]]",
         db="{{db}}",
+        auth="{{auth}}",
         mobile="[[isMobile]]"
       )
       d4l-meme.fullbleed.layout.vertical(
         name="meme",
+        app="[[app]]",
         db="{{db}}",
         doc="{{db.campaign}}",
         auth="{{auth}}",
@@ -167,6 +170,7 @@ dom-module#d4l-app
       )
       d4l-thunderclap.fullbleed.layout.vertical(
         name="thunderclap",
+        app="[[app]]",
         db="{{db}}",
         doc="[[db.thunderclap]]",
         auth="[[auth]]",
@@ -175,6 +179,7 @@ dom-module#d4l-app
       )
       d4l-topic.fullbleed.layout.vertical(
         name="topic",
+        app="[[app]]",
         db="{{db}}",
         doc="[[db.topic]]",
         auth="[[auth]]",
@@ -183,6 +188,7 @@ dom-module#d4l-app
       )
       d4l-issue.fullbleed.layout.vertical(
         name="issue",
+        app="[[app]]",
         db="{{db}}",
         doc="[[db.issue]]",
         auth="[[auth]]",
