@@ -32,7 +32,7 @@ const __authenticateUser = (appAuth, existingUser) => {
   const authentication = {
     unauthorised: {
       authLevel: 1,
-      domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
+      domains: [`${Config.app.protocol}://${Config.app.host}`],
       role: AppRoles.default,
       permissions: [
         {'route': 'app/schema', 'permission': 'read'},
@@ -41,7 +41,7 @@ const __authenticateUser = (appAuth, existingUser) => {
     },
     authorised: {
       authLevel: 1,
-      domains: [`${Config.app.protocol}://${Config.app.subdomain}.${Config.app.domain}`],
+      domains: [`${Config.app.protocol}://${Config.app.host}`],
       role: 'admin.editor',
       permissions: [
         {'route': '*', 'permission': '*'},
