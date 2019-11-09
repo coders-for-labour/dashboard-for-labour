@@ -28,7 +28,7 @@ const otp = require('./stotp');
 const _Constants = {
   DEFAULT_CACHE_INTERVAL: 5 * 60 * 1000,
   ERROR_CACHE_INTERVAL: 5 * 1000,
-  REQUEST_TIMEOUT: 30 * 1000,
+  REQUEST_TIMEOUT: 90 * 1000,
   DEFAULTS: {
     team: [],
   },
