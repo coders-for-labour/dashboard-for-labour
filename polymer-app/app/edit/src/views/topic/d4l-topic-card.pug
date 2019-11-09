@@ -1,0 +1,72 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
+link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
+
+
+dom-module#d4l-topic-card
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-card-styles").
+      :host {
+        display: block;
+        min-width: 350px;
+      }
+
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 0px 0px 0px;
+        color: var(--text-light-primary-color);
+      }
+
+      .topic-content{
+        background: var(--app-color-primary-red);
+        padding: 10px 20px;
+      }
+      .topic-text {
+        word-break: break-all;
+      }
+
+      .topic-footer {
+        padding: 10px 20px 10px;
+        color: var(--text-dark-secondary-color);
+      }
+      .topic-footer iron-icon {
+        margin-right: 10px;
+      }
+
+      .footer.tray{
+        //- position: relative;
+        //- margin: -30px -20px -10px;
+      }
+      .footer.tray paper-icon-button {
+        color: var(--app-color-secondary-grey);
+      }
+
+    ltn-dialog#dialog
+    .card
+      .topic-content
+        div.topic-text [[topic.name]]
+      .topic-footer
+        .layout.horizontal.center
+          .flex-2.layout.vertical.wrap
+            h1 [[__topicSummary]]
+
+      .footer.tray(hidden$="[[!__showButtons]]")
+        .layout.horizontal
+          paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTopic")
+          paper-icon-button(hidden$="[[!inAuthRole(auth.token, 'admin')]]", icon="create", on-tap="__updateTopic")
+          .flex.flex-end [[__viewCount]] Views
+
+  script(src="./d4l-topic-card.js")

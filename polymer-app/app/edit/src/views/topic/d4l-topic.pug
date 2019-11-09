@@ -23,6 +23,7 @@ link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/views/topic/d4l-topic-card.html")
 
 dom-module#d4l-topic
   template
@@ -64,39 +65,38 @@ dom-module#d4l-topic
 
       div(name="loaded")
         .layout.horizontal.wrap
-          .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
+          .page-content.flex.layout.vertical.card-group(mobile$="[[isMobile]]")
             d4l-dashboard-card.card.flex(background="thunderclap")
               div(hidden$="[[__hasSelectedItem]]")
-                .layout.horizontal.center
-                  h1 Topics
-                p Some message about topics
+                .layout.vertical
+                  h1 All Topics
+                  p Primum Theophrasti, Strato, physicum se voluit; Obsecro, inquit, Torquate, haec dicit Epicurus?
               div(hidden$="[[!__hasSelectedItem]]")
-                .layout.horizontal.center
+                .layout.vertical
                   h1 [[__selectedItem.name]]
-                p [[__selectedItem.description]]
+                  p [[__selectedItem.description]]
+                  .layout.horizontal
+                    paper-button(on-click="viewTopicItem") View
+                    paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
-          .page-content.flex-2(mobile$="[[isMobile]]")
-            div(hidden$="[[__hasSelectedItem]]")
-              template(is="dom-repeat" items="[[__topics]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="viewTopicItem") View
-                paper-button(on-click="updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
+            .flex-2(mobile$="[[isMobile]]")
+              div(hidden$="[[__hasSelectedItem]]")
+                .flex.wrap.layout.horizontal
+                  template(is="dom-repeat" items="[[__topics]]")
+                    d4l-topic-card(topic="[[item]]")
 
-            div(hidden$="[[!__hasSelectedItem]]")
-              h1 Topics
-              hr
-              template(is="dom-repeat" items="[[__topics]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="viewTopicItem") View
+              div(hidden$="[[!__hasSelectedItem]]")
+                h1 Topics
+                .flex.wrap.layout.horizontal
+                  template(is="dom-repeat" items="[[__topics]]")
+                    d4l-topic-card.flex-2(topic="[[item]]")
 
-              h1 Issues
-              hr
-              template(is="dom-repeat" items="[[__issues]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="viewIssueItem") View
+                h1 Issues
+                hr
+                template(is="dom-repeat" items="[[__issues]]")
+                  h1 [[item.name]]
+                  p [[item.description]]
+                  paper-button(on-click="viewIssueItem") View
 
         ltn-fab-menu(
           hidden$="[[!inAuthRole(auth.token, 'admin')]]"

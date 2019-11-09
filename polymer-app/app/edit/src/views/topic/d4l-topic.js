@@ -52,17 +52,24 @@ Polymer({
     };
   },
 
-  __computeIssuesQuery() {
+  __computeIssuesQuery(cr) {
     const selectedItem = this.get('__selectedItem');
 
     if (!selectedItem) {
-      return;
+      return {
+        __crPath: cr.path,
+      };
     }
 
     return {
+      __crPath: cr.path,
       topicId: {
         $eq: selectedItem.id
       }
     };
+  },
+
+  __updateTopic() {
+    this.updateTopic(this.get('__selectedItem'));
   }
 });

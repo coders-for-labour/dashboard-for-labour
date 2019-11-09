@@ -39,6 +39,12 @@
       "__required": true,
       "__default": [],
       "__allowUpdate": true
+    },
+    "viewCount": {
+      "__type": "number",
+      "__required": false,
+      "__default": 0,
+      "__allowUpdate": true      
     }
   }
 }
