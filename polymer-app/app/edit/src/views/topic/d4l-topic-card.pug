@@ -20,6 +20,8 @@ dom-module#d4l-topic-card
       :host {
         display: block;
         min-width: 350px;
+        max-width: 400px;
+        margin: 10px 20px;
       }
 
       .card {
@@ -67,6 +69,6 @@ dom-module#d4l-topic-card
         .layout.horizontal
           paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTopic")
           paper-icon-button(hidden$="[[!inAuthRole(auth.token, 'admin')]]", icon="create", on-tap="__updateTopic")
-          .flex.flex-end [[__viewCount]] Views
+          div [[__viewCount]] Views
 
   script(src="./d4l-topic-card.js")

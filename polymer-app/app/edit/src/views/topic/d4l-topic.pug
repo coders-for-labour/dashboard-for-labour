@@ -79,7 +79,7 @@ dom-module#d4l-topic
                     paper-button(on-click="viewTopicItem") View
                     paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
-            .flex-2(mobile$="[[isMobile]]")
+            div(mobile$="[[isMobile]]")
               div(hidden$="[[__hasSelectedItem]]")
                 .flex.wrap.layout.horizontal
                   template(is="dom-repeat" items="[[__topics]]")
@@ -89,7 +89,8 @@ dom-module#d4l-topic
                 h1 Topics
                 .flex.wrap.layout.horizontal
                   template(is="dom-repeat" items="[[__topics]]")
-                    d4l-topic-card.flex-2(topic="[[item]]")
+                    d4l-topic-card(topic="[[item]]")
+                      
 
                 h1 Issues
                 hr
