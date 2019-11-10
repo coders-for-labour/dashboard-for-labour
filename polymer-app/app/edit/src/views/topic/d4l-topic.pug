@@ -40,6 +40,10 @@ dom-module#d4l-topic
         padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
       }
 
+      paper-button {
+        @apply(--d4l-button-primary);
+      }
+
 
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}")
     buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
@@ -68,7 +72,7 @@ dom-module#d4l-topic
                   h1 [[__selectedItem.name]]
                   p [[__selectedItem.description]]
                   .layout.horizontal
-                    paper-button(on-click="viewTopicItem") View
+                    paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
                     paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
             .content(mobile$="[[isMobile]]")
