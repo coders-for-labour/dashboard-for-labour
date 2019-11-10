@@ -8,7 +8,7 @@ Polymer({
   properties: {
     logLevel: {
       type: Number,
-      value: 2
+      value: 3
     },
     topic: {
       type: Object
@@ -39,7 +39,7 @@ Polymer({
   },
 
   __computeViewCount: function(){
-    this.__info(this.get('topic'));
+    this.__silly(this.get('topic'));
 
     const count = this.get('topic.viewCount');
     if (!count) return 0;
