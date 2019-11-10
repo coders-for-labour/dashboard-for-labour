@@ -51,7 +51,10 @@ dom-module(id="d4l-theme")
         };
 
         --default-page-padding: 0;
+        --default-page-gutter: 10px;        
         --default-header-offset: 64px;
+        --default-hero-padding: 10px var(--default-page-gutter) 40px var(--default-page-gutter);
+
 
         --d4l-font-common-base: {
           font-family: 'Raleway', 'Lato', sans-serif;
@@ -210,4 +213,11 @@ dom-module(id="d4l-theme")
         --notifications-dropdown-width: 500px;
         --notifications-dropdown-height: 600px;
       }
+
+      @media (min-width: 1024px) {
+        :host {
+          --default-page-gutter: 100px;
+        }
+      }
+
 
