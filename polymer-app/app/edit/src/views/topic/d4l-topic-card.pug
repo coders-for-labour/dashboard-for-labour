@@ -19,9 +19,9 @@ dom-module#d4l-topic-card
     style(include="shared-card-styles").
       :host {
         display: block;
-        min-width: 350px;
+        min-width: 300px;
         max-width: 400px;
-        margin: 10px 20px;
+        margin: 10px 10px 10px 0px;
       }
 
       .card {
@@ -59,16 +59,16 @@ dom-module#d4l-topic-card
     ltn-dialog#dialog
     .card
       .topic-content
-        div.topic-text [[topic.name]]
+        .topic-text [[topic.name]]
       .topic-footer
         .layout.horizontal.center
-          .flex-2.layout.vertical.wrap
+          .layout.vertical.wrap
             h1 [[__topicSummary]]
 
       .footer.tray(hidden$="[[!__showButtons]]")
-        .layout.horizontal
+        .flex.layout.horizontal(style="justify-content: flex-start;")
           paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTopic")
           paper-icon-button(hidden$="[[!inAuthRole(auth.token, 'admin')]]", icon="create", on-tap="__updateTopic")
-          div [[__viewCount]] Views
+          div(style="align-self:center") [[__viewCount]] Views
 
   script(src="./d4l-topic-card.js")
