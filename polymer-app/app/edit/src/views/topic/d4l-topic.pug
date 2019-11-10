@@ -36,6 +36,11 @@ dom-module#d4l-topic
         padding-top: var(--default-header-offset);
       }
 
+      .content {
+        padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
+      }
+
+
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}")
     buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
 
@@ -53,7 +58,7 @@ dom-module#d4l-topic
       div(name="loaded")
         .layout.horizontal.wrap
           .page-content.flex.layout.vertical.card-group(mobile$="[[isMobile]]")
-            d4l-dashboard-card.card.flex(background="thunderclap")
+            d4l-dashboard-card.card.flex(background="thunderclap", hero)
               div(hidden$="[[__hasSelectedItem]]")
                 .layout.vertical
                   h1 All Topics
@@ -66,18 +71,17 @@ dom-module#d4l-topic
                     paper-button(on-click="viewTopicItem") View
                     paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
-            div(mobile$="[[isMobile]]")
+            .content(mobile$="[[isMobile]]")
               div(hidden$="[[__hasSelectedItem]]")
-                .flex.wrap.layout.horizontal
+                .flex.wrap.layout.horizontal(style="")
                   template(is="dom-repeat" items="[[__topics]]")
                     d4l-topic-card(topic="[[item]]")
 
               div(hidden$="[[!__hasSelectedItem]]")
                 h1 Topics
-                .flex.wrap.layout.horizontal
+                .flex.wrap.layout.horizontal(style="justify-content:flex-start;")
                   template(is="dom-repeat" items="[[__topics]]")
                     d4l-topic-card(topic="[[item]]")
-                      
 
                 h1 Issues
                 hr

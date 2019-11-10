@@ -36,6 +36,25 @@ Polymer({
     }
   },
 
+  observers: [
+    '__observeSelectedItem(db.topic.data, __selectedItem)'
+  ],
+    
+  __observeSelectedItem() {
+    const db = this.get('db.topic.data');
+    if (!db) return;
+    const selectedItem = this.get('__selectedItem');
+    if (!selectedItem) return;
+    const dbIdx = db.findIndex(t => t.id === selectedItem.id);
+    if (dbIdx === -1) return;
+
+    this.__info('__observeSelectedItem', selectedItem);
+
+    let views = selectedItem.viewCount;
+    if (!views && views !== 0) views = 0;
+    this.set(['db.topic.data',dbIdx,'viewCount'], ++views);
+  },
+
   __computeTopicsQuery(cr) {
     const selectedItem = this.get('__selectedItem');
 
