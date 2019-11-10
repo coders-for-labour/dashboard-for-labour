@@ -18,11 +18,12 @@ dom-module#d4l-footer
       }
 
       .footer-group {
-        position: fixed;
         bottom: 0px;
-        width: 100vw;
         padding: 5px 0px;
         z-index: 500;
+
+        font-size: 12px;
+        color: #FFF;
 
         @apply --footer-background;
       }
@@ -40,11 +41,14 @@ dom-module#d4l-footer
         text-decoration: none;
         margin-right: 10px;
       }
+      .footer-group a iron-image {
+        vertical-align: middle;
+      }
 
       .footer-group .labour-icon {
         margin-right: 10px;
-        width: 145px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
         @apply(--footer-icon);
       }
 
@@ -52,8 +56,10 @@ dom-module#d4l-footer
       .flex.text-left.info
         .layout.horizontal.center
           a(href="http://www.labour.org.uk/" target="_BLANK")
-            iron-image.labour-icon(src="/images/labour-logo-[[footerLogo]].svg", sizing="contain", position="left")
+            iron-image.labour-icon(src="/images/c4l-logo-white.svg", sizing="contain", position="left")
+
       .flex.text-right
-        a(href="http://www.labour.org.uk/pages/privacy" target="_BLANK") Privacy Policy
+        div Built with ❤️ by volunteers at 
+          a(href="https://www.codersforlabour.com" target="_blank") Coders For Labour
 
   script(src="d4l-footer.js")

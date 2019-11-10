@@ -15,7 +15,6 @@ link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-social/d4l-social.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
-link(rel="import", href="/src/d4l-header/d4l-header.html")
 link(rel="import", href="/src/d4l-account-selector/d4l-account-selector.html")
 
 link(rel="import", href="/src/d4l-theme.html")
@@ -36,7 +35,7 @@ dom-module#d4l-twibbyn
         display: block;
 
         padding: var(--default-page-padding);
-        padding-top: 95px;
+        padding-top: var(--default-header-offset);
       }
 
     iron-media-query(query="(max-width: 800px)", query-matches="{{isMobile}}")
@@ -51,17 +50,6 @@ dom-module#d4l-twibbyn
       body="[[__tweetBody]]",
       on-response="__sharedTw",
       on-error="__sharedTwErr")
-
-    d4l-header(
-      auth="[[auth]]",
-      db="{{db}}",
-      page="Twibbyn",
-      page-title="[[__pageTitle]]",
-      page-mode="[[__pageMode]]",
-      header="{{header}}",
-      allow-back,
-      on-back-button-clicked="__navBack"
-    )
 
     iron-pages(
       selected='[[__loadMode]]',

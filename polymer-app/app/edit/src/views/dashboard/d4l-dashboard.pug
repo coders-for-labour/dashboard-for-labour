@@ -14,8 +14,6 @@ link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
-link(rel="import", href="/src/d4l-header/d4l-header.html")
-
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
@@ -32,7 +30,7 @@ dom-module#d4l-dashboard
         display: block;
 
         padding: var(--default-page-padding);
-        padding-top: 95px;
+        padding-top: var(--default-header-offset);
       }
 
       .members-stat {
@@ -44,31 +42,21 @@ dom-module#d4l-dashboard
     buttress-db-query(db="[[db]]", doc="[[db.people]]", query="[[__userQuery]]", find-all="{{__users}}")
     buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
 
-    d4l-header(
-      auth="[[auth]]",
-      db="{{db}}",
-      page="Dashboard",
-      page-title="[[__pageTitle]]",
-      page-mode="[[__pageMode]]",
-      header="{{header}}",
-    )
-
-    .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
-      .flex.self-strech.layout.vertical.card-group(mobile$="[[isMobile]]")
-        .layout.horizontal.center
-          h1 Latest
-        .flex.layout.horizontal.center
-          template(is="dom-repeat" items="[[__latestIssues]]")
-            d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
-              .layout.horizontal.center
-                iron-icon(icon="d4l-social-icons:storm")
-                h1 [[item.name]]
-              p [[item.description]]
-              paper-button(on-click="viewIssueItem") View
-        div
-          paper-button(on-tap="__viewTopics") See All Topics
-
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
+    .view-container.layout.vertical
+      .layout.horizontal
+        h1 Latest
+      .layout.horizontal
+        template(is="dom-repeat" items="[[__latestIssues]]")
+          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-social-icons:storm")
+              h1 [[item.name]]
+            p [[item.description]]
+            paper-button(on-click="viewIssueItem") View
+      div
+        paper-button(on-tap="__viewTopics") See All Topics
+      
+      .layout.horizontal
         d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:storm")

@@ -11,8 +11,6 @@ link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
-link(rel="import", href="/src/d4l-header/d4l-header.html")
-
 link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
 
@@ -33,19 +31,8 @@ dom-module#d4l-issue
         display: block;
 
         padding: var(--default-page-padding);
-        padding-top: 95px;
+        padding-top: var(--default-header-offset);
       }
-
-    d4l-header(
-      auth="[[auth]]",
-      db="{{db}}",
-      page="[[__pageTitle]]",
-      page-title="[[__pageTitle]]",
-      page-mode="[[__pageMode]]",
-      header="{{header}}",
-      allow-back,
-      on-back-button-clicked="__navBack"
-    )
 
     ltn-dialog#dialog
 
