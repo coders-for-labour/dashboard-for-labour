@@ -34,6 +34,12 @@ Polymer({
       computed: '__computeLatestIssuesQuery(db.issue.data.*)'
     },
 
+    __latestTopics: Array,
+    __latestTopicsQuery: {
+      type: Object,
+      computed: '__computeLatestTopicsQuery(db.topic.data.*)'
+    },
+
     __post: {
       type: Object,
       value: function () { return {}; }
@@ -53,6 +59,15 @@ Polymer({
   __computeLatestIssuesQuery() {
     return {
       
+    };
+  },
+
+  __computeLatestTopicsQuery(cr) {
+    return {
+      __crPath: cr.path,
+      parentId: {
+        $eq: null
+      }
     };
   },
 

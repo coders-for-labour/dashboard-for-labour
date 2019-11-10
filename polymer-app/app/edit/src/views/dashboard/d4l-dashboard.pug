@@ -20,6 +20,7 @@ link(rel="import", href="/src/shared-styles.html")
 link(rel="import", href="./d4l-dashboard-card.html")
 link(rel="import", href="./d4l-dashboard-constituency-card.html")
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/views/topic/d4l-topic-card.html")
 
 dom-module#d4l-dashboard
   template
@@ -33,30 +34,33 @@ dom-module#d4l-dashboard
         padding-top: var(--default-header-offset);
       }
 
+      paper-button {
+        @apply(--d4l-button-primary);
+      }
+
       .members-stat {
         font-size: 50px;
+      }
+
+      .view-container {
+        margin-left: var(--default-page-gutter);
+        margin-right: var(--default-page-gutter);
       }
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     buttress-db-query(db="[[db]]", doc="[[db.people]]", query="[[__userQuery]]", find-all="{{__users}}")
     buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4", logging)
 
     .view-container.layout.vertical
-      .layout.horizontal
-        h1 Latest
-      .layout.horizontal
-        template(is="dom-repeat" items="[[__latestIssues]]")
-          d4l-dashboard-card.card.flex(mobile$="[[isMobile]]")
-            .layout.horizontal.center
-              iron-icon(icon="d4l-social-icons:storm")
-              h1 [[item.name]]
-            p [[item.description]]
-            paper-button(on-click="viewIssueItem") View
-      div
-        paper-button(on-tap="__viewTopics") See All Topics
+      h1 Latest
+      .flex.wrap.layout.horizontal(style="justify-content:space-between;")
+        template(is="dom-repeat" items="[[__latestTopics]]")
+          d4l-topic-card(topic="[[item]]")
+      paper-button(on-tap="__viewTopics") See All Topics
       
-      .layout.horizontal
+      .layout.horizontal(style="margin-top: 50px;")
         d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:storm")
@@ -71,15 +75,15 @@ dom-module#d4l-dashboard
           p Gorgeous covers, posters and infographics to share
           paper-button(on-tap="__viewMemes") Get Started
 
-        d4l-dashboard-card.card.flex(background="members")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-icons:member")
-            h1 Members
-          h2.members-stat [[__users.length]]
-
         d4l-dashboard-constituency-card.card.flex(
           auth="[[auth]]",
           db="{{db}}"
         )
+
+        d4l-dashboard-card.card.flex(background="members")
+          .layout.horizontal.center
+            iron-icon(icon="d4l-icons:member")
+            h1 Topics
+          h2.members-stat [[db.topic.data.length]]
 
   script(src="d4l-dashboard.js")
