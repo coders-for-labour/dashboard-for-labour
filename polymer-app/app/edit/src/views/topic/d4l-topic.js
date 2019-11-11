@@ -17,6 +17,11 @@ Polymer({
       value: 'Topics'
     },
 
+    __isTopicEditor: {
+      type: Boolean,
+      computed: '__computeIsTopicEditor(__selectedItem, auth.token)'
+    },
+
     __topics: Array,
     __topicsQuery: {
       type: Object,

@@ -9,7 +9,6 @@ script.
   */
   D4L.Topic.Helpers = {
     properties: {
-      
     },
 
     viewTopicItem(ev) {
@@ -104,4 +103,19 @@ script.
         });
     },
 
+    __computeIsTopicEditor(topic) {
+      if (!topic) return false;
+
+      const auth = this.get('auth');
+      const isAdmin = this.inAuthRole(auth.token, 'admin.super');
+      const isEditor = this.inAuthRole(auth.token, 'admin.editor');
+
+      this.__silly(`__computeIsTopicEditor`, `isAdmin: ${isAdmin}`, `isEditor: ${isEditor}`, auth, topic);
+
+      if (isAdmin === true) return true;
+      if (isEditor === false) return false;
+
+      const editorIds = topic.editorIds || [];
+      return editorIds.indexOf(auth.user.id) !== -1;
+    }
   };
