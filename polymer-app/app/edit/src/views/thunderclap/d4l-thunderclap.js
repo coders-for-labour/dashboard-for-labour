@@ -59,6 +59,12 @@ Polymer({
       type: Object
     },
 
+    __thunderclap: Array,
+    __thunderclapQuery: {
+      type: Object,
+      computed: '__computeThunderclapQuery(db.thunderclap.data.*, __selectedItem)'
+    },
+
     __pageTitle: {
       type: String,
       value: 'Thunderclap',
@@ -89,6 +95,11 @@ Polymer({
         label: 'Description',
         type: 'TEXT',
         default: thunderclap.description
+      },
+      topicId: {
+        label: 'Topic ID',
+        type: 'TEXT',
+        default: thunderclap.topicId
       },
       date: {
         label: 'Date',
@@ -130,6 +141,7 @@ Polymer({
 
         thunderclap.name = result.values.name;
         thunderclap.description = result.values.description;
+        thunderclap.topicId = result.values.topicId;
         thunderclap.scheduledExecution = date;
 
         this.push('db.thunderclap.data', thunderclap);
@@ -176,6 +188,9 @@ Polymer({
 
   __computeThunderclapQuery: function () {
     return {
+      scheduledExecution: {
+        $gtDate: Sugar.Date.create('now')
+      }
     }
   },
 

@@ -29,6 +29,12 @@ Polymer({
       computed: '__computeIssuesQuery(db.issue.data.*, __selectedItem)'
     },
 
+    __thunderclap: Array,
+    __thunderclapQuery: {
+      type: Object,
+      computed: '__computeThunderclapQuery(db.thunderclap.data.*, __selectedItem)'
+    },
+
     __hasSelectedItem: {
       type: Boolean,
       value: false,
@@ -62,6 +68,20 @@ Polymer({
       }
     })
     .catch(err => this.__err(err));
+  },
+
+  __computeThunderclapQuery: function () {
+    const topic = this.get('__selectedItem');
+    if (!topic) return;
+
+    return {
+      topicId: {
+        $eq: topic.id
+      },
+      scheduledExecution: {
+        $gtDate: Sugar.Date.create('now')
+      }
+    }
   },
 
   __computeTopicsQuery(cr) {

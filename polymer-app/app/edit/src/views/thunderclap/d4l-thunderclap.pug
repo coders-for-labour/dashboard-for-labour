@@ -41,7 +41,11 @@ dom-module#d4l-thunderclap
         padding-top: var(--default-header-offset);
       }
 
-    iron-media-query(query="(max-width: 800px)", query-matches="{{isMobile}}")
+      .content {
+        padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
+      }
+
+    buttress-db-query(doc="[[db.thunderclap]]", data-path="db.thunderclap.data", query="[[__thunderclapQuery]]", find-all="{{__thunderclap}}", sort-path="scheduledExecution", sort-type="date", sort-order="ASC")
 
     iron-ajax#ajaxSubscribeThunderclap(
       handleAs="json",
@@ -55,7 +59,7 @@ dom-module#d4l-thunderclap
     iron-ajax#ajaxTweet(
       handleAs="json",
       content-type="application/json",
-      url="/twitter",
+      url="/api/v1/twitter",
       method="POST",
       body="[[__tweetBody]]",
       on-response="__sharedTw",
@@ -87,27 +91,26 @@ dom-module#d4l-thunderclap
           role='loaded'
         )
           div(name="list", mobile$="[[isMobile]]")
-            .layout.horizontal.wrap
-              .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
-                d4l-dashboard-card.card.flex(background="thunderclap")
-                  .layout.horizontal.center
-                    iron-icon(icon="d4l-social-icons:storm")
-                    h1 Thunderclap
-                  p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
-                  p Think your friends want to Amplify Labour’s message?
-                  .share-buttons
-                    paper-button(disabled$="[[__disableShareFb]]", on-tap="__shareAmplifyFb") [[__shareFbButton]]
-                    paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplifyTw") [[__shareTwButton]]
+            .page-content
+              d4l-dashboard-card.card(background="thunderclap", hero)
+                .layout.horizontal.center
+                  iron-icon(icon="d4l-social-icons:storm")
+                  h1 Thunderclap
+                p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
+                p Think your friends want to Amplify Labour’s message?
+                .share-buttons
+                  paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareTwitter") [[__shareTwButton]]
 
-              .page-content.flex-2(mobile$="[[isMobile]]")
-                .layout.horizontal.wrap.card-group.group-2
-                  template(is="dom-repeat" items="[[db.thunderclap.data]]")
-                    d4l-thunderclap-card.card(
+              .content
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__thunderclap]]")
+                    d4l-thunderclap-card.item(
                       db="{{db}}",
                       auth="[[auth]]",
                       thunderclap="[[item]]",
                       on-subscribe="__subscribeThunderclap"
                     )
+
             paper-fab(
               icon="add"
               hidden$="[[!inAuthRole(auth.token, 'admin')]]"

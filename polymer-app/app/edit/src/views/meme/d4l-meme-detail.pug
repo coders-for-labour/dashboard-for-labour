@@ -68,7 +68,7 @@ dom-module#d4l-meme-detail
     iron-ajax#ajaxTweet(
       handleAs="json",
       content-type="application/json",
-      url="/twitter",
+      url="/api/v1/twitter",
       method="POST",
       body="[[__tweetBody]]"
       on-response="__saveTwResponse",
