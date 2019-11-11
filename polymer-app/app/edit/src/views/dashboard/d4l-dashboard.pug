@@ -62,7 +62,7 @@ dom-module#d4l-dashboard
           )
       paper-button(on-tap="__viewTopics") See All Topics
       
-      .layout.horizontal.row-4.wrap
+      .layout.horizontal.row-3.wrap
         d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="thunderclap")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:storm")
@@ -70,12 +70,12 @@ dom-module#d4l-dashboard
           p Sign up to tweet our important messages.
           paper-button(on-tap="__viewThunderclap") Get Started
 
-        d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="meme", disabled)
-          .layout.horizontal.center
-            iron-icon(icon="d4l-icons:picture")
-            h1 Images
-          p Gorgeous covers, posters and infographics to share
-          paper-button(on-tap="__viewMemes") Get Started
+        //- d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="meme", disabled)
+        //-   .layout.horizontal.center
+        //-     iron-icon(icon="d4l-icons:picture")
+        //-     h1 Images
+        //-   p Gorgeous covers, posters and infographics to share
+        //-   paper-button(on-tap="__viewMemes") Get Started
 
         d4l-dashboard-constituency-card.item.flex(
           auth="[[auth]]",
