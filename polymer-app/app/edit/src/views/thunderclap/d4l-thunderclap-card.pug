@@ -27,53 +27,62 @@ dom-module#d4l-thunderclap-card
         -webkit-background-size: cover;
         background-size: cover;
         padding: 0px 0px 0px;
-        color: var(--text-light-primary-color);
+        overflow: hidden;
+        cursor: pointer;
+      } 
+
+      .card-media {
+        width: 100%;
+        height: 200px;
+        background: #d4d4d4;
       }
 
-      .thunderclap-content{
-        background: var(--app-color-primary-red);
-        padding: 10px 20px;
+      .card-header {
+        padding: 16px 16px 0;
       }
-      .thunderclap-text {
-        word-break: break-all;
+      .card-header .title {
+        font-size: 1.25rem;
+        line-height: 2rem;
+        font-weight: 500;
+        letter-spacing: .0125em;
       }
 
-      .thunderclap-footer {
+      .card-content {
+        padding: 0 16px;
+      }
+      .card-content p {
+        font-size: .875rem;
+        line-height: 1.25rem;
+        font-weight: 400;
+        letter-spacing: .0178571429em;
+        text-decoration: inherit;
+        text-transform: inherit;
+        color: rgba(0, 0, 0, 0.6);
+      }
+      .card-footer {
         padding: 10px 20px 10px;
         color: var(--text-dark-secondary-color);
+        padding: 0 16px 16px;
       }
-      .thunderclap-footer iron-icon {
+      .card-footer iron-icon {
         margin-right: 10px;
       }
 
-      .footer.tray{
-        position: relative;
-        margin: -30px -20px -10px;
-      }
-      .footer.tray paper-icon-button {
-        color: var(--app-color-secondary-grey);
-      }
-
     .card
-      .thunderclap-content
-        div.thunderclap-text "[[thunderclap.description]]"
-        div.text-right [[computeDateFormat(thunderclap.scheduledExecution)]]
-      .thunderclap-footer
+      .card-header
         .layout.horizontal.center
-          .flex-2.layout.horizontal.wrap
-            h1 [[thunderclap.name]]
-          .flex.layout.horizontal.wrap
-            iron-icon(icon="d4l-icons:member")
-            div [[__userCountLabel]]
+          .title.flex [[thunderclap.name]]
+          div [[computeDateFormatRelative(thunderclap.scheduledExecution)]]
 
-          .flex.layout.horizontal.center
-            iron-icon(icon="d4l-icons:time")
-            div [[computeDateFormatRelative(thunderclap.scheduledExecution)]]
+      .card-content
+        p "[[thunderclap.description]]"
 
-        .footer.tray(hidden$="[[!__showButtons]]")
-          .layout.horizontal.center
+      .card-footer
+        .layout.horizontal.center
+          iron-icon(icon="d4l-icons:member")
+          div [[__userCountLabel]]
+          .flex
+          .buttons
             paper-icon-button(icon="d4l-icons:view-circle", on-tap="__subscribeThunderclap")
-            div Subscribe
-
 
   script(src="./d4l-thunderclap-card.js")

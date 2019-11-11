@@ -117,7 +117,7 @@ Polymer.D4LShare = {
     });
   },
 
-  __shareAmplifyTw: function(){
+  __shareTwitter: function(){
     let postText = this.get('__shareText.fb');
     this.set('__shareTwStatus', 'sharing');
 

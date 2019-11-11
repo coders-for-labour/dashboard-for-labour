@@ -87,7 +87,7 @@ dom-module#d4l-twibbyn-detail
     iron-ajax#ajaxTweet(
       handleAs="json",
       content-type="application/json",
-      url="/twitter",
+      url="/api/v1/twitter",
       method="POST",
       body="[[__tweetBody]]",
       on-response="__sharedTw",
@@ -156,7 +156,7 @@ dom-module#d4l-twibbyn-detail
 
             .layout.horizontal
               paper-button(on-tap="__finishedUpload") Finished
-              paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareAmplifyTw") [[__shareTwButton]]
+              paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareTwitter") [[__shareTwButton]]
 
     .page-content.flex-2(hidden$="[[isMobile]]", mobile$="[[isMobile]]")
       iron-selector(attr-for-selected="name", selected="{{__selectedTwibbyn}}")
