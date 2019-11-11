@@ -15,14 +15,14 @@ link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 link(rel="import", href="/src/ltn-ajax/ltn-ajax.html")
 link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
 
-
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
-link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
-
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-behaviour.html")
+
+link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/topic/d4l-topic-card.html")
 link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-card.html")
 
@@ -115,14 +115,17 @@ dom-module#d4l-topic
                     p [[item.description]]
                     paper-button(on-click="viewIssueItem") View
 
-      ltn-fab-menu(
-        hidden$="[[!inAuthRole(auth.token, 'admin')]]"
-      )
-        .fab-item(hidden$="[[!__hasSelectedItem]]")
-          .label Issue
-          paper-icon-button(icon="add" title="Issue", on-tap="addIssue")
-        .fab-item
-          .label Topic
-          paper-icon-button(icon="add" title="Topic", on-tap="addTopic")
+    ltn-fab-menu(
+      hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+    )
+      .fab-item
+        .label Thunderclap
+        paper-icon-button(icon="add" title="Thunderclap", on-tap="__addTopicThunderclap")
+      .fab-item(hidden$="[[!__hasSelectedItem]]")
+        .label Issue
+        paper-icon-button(icon="add" title="Issue", on-tap="addIssue")
+      .fab-item
+        .label Topic
+        paper-icon-button(icon="add" title="Topic", on-tap="addTopic")
 
   script(src="./d4l-topic.js")

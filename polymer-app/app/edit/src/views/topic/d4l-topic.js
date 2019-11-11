@@ -5,6 +5,7 @@ Polymer({
     D4L.Helpers,
     D4L.Topic.Helpers,
     D4L.Issue.Helpers,
+    D4L.Thunderclap.Helpers,
     Polymer.D4LViewList
   ],
   properties: {
@@ -68,6 +69,17 @@ Polymer({
       }
     })
     .catch(err => this.__err(err));
+  },
+
+  __addTopicThunderclap() {
+    const selectedItem = this.get('__selectedItem');
+    const thunderclap = this.get('db.Factory').create('thunderclap');
+
+    if (selectedItem) {
+      thunderclap.topicId = selectedItem.id;
+    }
+
+    return this.addThunderclap(thunderclap);
   },
 
   __computeThunderclapQuery: function () {

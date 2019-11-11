@@ -1,0 +1,92 @@
+link(rel="import" href="/bower_components/polymer/polymer.html")
+
+script.
+  window.D4L = window.D4L || {};
+  window.D4L.Thunderclap = window.D4L.Thunderclap || {};
+
+  /**
+  * @polymerBehavior D4L.Thunderclap.Helpers
+  */
+  D4L.Thunderclap.Helpers = {
+    properties: {
+      
+    },
+
+    __presentIssueDialog(thunderclap, meta) {
+      const dialog = this.$.dialog;
+
+      const inputSchema = {
+        name: {
+          label: 'Title',
+          type: 'TEXT',
+          default: thunderclap.name
+        },
+        description: {
+          label: 'Description',
+          type: 'TEXT',
+          default: thunderclap.description
+        },
+        topicId: {
+          label: 'Topic ID',
+          type: 'TEXT',
+          default: thunderclap.topicId
+        },
+        date: {
+          label: 'Date',
+          type: 'DATE',
+          default: thunderclap.scheduledExecution
+        },
+        time: {
+          label: 'Time',
+          type: 'TIME',
+          default: thunderclap.scheduledExecution
+        },
+      };
+
+      dialog.setMetadata(meta);
+      return dialog.openDialog(this.parseInputSchema(inputSchema));
+    },
+
+    addThunderclap(thunderclap) {
+      const selectedItem = this.get('__selectedItem');
+      if (!thunderclap) {
+        thunderclap = this.get('db.Factory').create('thunderclap');
+      }
+      const dialog = this.$.dialog;
+
+      const dialogMeta = {
+        'title': 'Issue',
+        'description': 'Add a new issue to the system',
+        'action': 'Save',
+      }
+      
+      return this.__presentIssueDialog(thunderclap, dialogMeta)
+        .then((result) => {
+          if (!result.values.name) {
+            throw new Error('Thunderclap requires a name');
+          }
+          if (!result.values.description) {
+            throw new Error('Thunderclap requires a description');
+          }
+          if (!result.values.date) {
+            throw new Error('Thunderclap requires a date');
+          }
+          if (!result.values.time) {
+            throw new Error('Thunderclap requires a time');
+          }
+
+          const date = Sugar.Date.create(`${result.values.date} ${result.values.time}`);
+          if (!Sugar.Date.isValid(date)) {
+            throw new Error('Invalid Date');
+          }
+
+          thunderclap.name = result.values.name;
+          thunderclap.description = result.values.description;
+          thunderclap.topicId = result.values.topicId;
+          thunderclap.scheduledExecution = date;
+
+          this.push('db.thunderclap.data', thunderclap);
+        });
+    },
+
+  };

@@ -25,6 +25,7 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-behaviour.html")
 link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-card.html")
 link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-detail.html")
 
@@ -114,7 +115,7 @@ dom-module#d4l-thunderclap
             paper-fab(
               icon="add"
               hidden$="[[!inAuthRole(auth.token, 'admin')]]"
-              on-tap="__addThunderclap"
+              on-tap="addThunderclap"
             )
 
           div(name="detail", mobile$="[[isMobile]]")
