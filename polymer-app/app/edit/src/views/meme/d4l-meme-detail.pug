@@ -13,7 +13,6 @@ link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-link(rel="import", href="/src/d4l-account-selector/d4l-account-selector.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
@@ -75,9 +74,6 @@ dom-module#d4l-meme-detail
       on-error="__ajaxError")
 
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
-      h1 Platform
-      d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
-
       h1 Images
       .layout.horizontal.center-center
         .flex.text-right

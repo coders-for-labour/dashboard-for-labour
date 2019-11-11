@@ -13,7 +13,6 @@ link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-link(rel="import", href="/src/d4l-account-selector/d4l-account-selector.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
@@ -66,7 +65,7 @@ dom-module#d4l-thunderclap-detail
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     .flex.layout.vertical.center(mobile$="[[isMobile]]")
-      h1 Platform
-      d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
+      h1 TODO: Thunderclap share page
+
 
   script(src="d4l-thunderclap-detail.js")
