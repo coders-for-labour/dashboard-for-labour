@@ -37,6 +37,8 @@ link(rel="import", href="/src/d4l-auth/d4l-auth.html")
 //- link(rel="import", href="/src/d4l-app-db/d4l-realtime-db-behaviors.html")
 //- link(rel="import", href="/src/d4l-socket-io/d4l-socket-io.html")
 
+link(rel="import", href="/src/d4l-header/d4l-header.html")
+
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
 
@@ -49,40 +51,21 @@ dom-module#d4l-app
     style(is="custom-style", include="d4l-theme")
     style(include="shared-styles").
       :host {
-        --app-primary-color: var(--default-primary-color);
+        --app-primary-color: #d30437;
         --app-secondary-color: black;
 
         position: relative;
         display: block;
         background-color: var(--default-background-color);
+      }
 
+      .app-container {
         min-height: 100vh;
-      }
-
-      .footer-group {
-        background-color: var(--default-background-color);
-        position: fixed;
-        bottom: 0px;
-        font-size: 14px;
-        width: 100%;
-        padding: 5px 0px;
-      }
-      .footer-group[mobile] {
-        flex-direction: column;
-      }
-      .footer-group > div {
-        padding: 0px 20px;
-      }
-      .footer-group > .info a {
-        color: inherit;
-        font-size: 14px;
-        text-decoration: none;
-        margin-right: 10px;
       }
 
       d4l-footer{
         --footer-background: {
-          background: var(--default-background-color);
+          background: var(--app-primary-color);
         };
         --footer-icon: {
           color: var(--app-color-primary-red);
@@ -125,6 +108,7 @@ dom-module#d4l-app
     )
 
     d4l-auth-service#authService(
+      app="[[app]]",
       db="{{db}}",
       auth="{{auth}}"
     )
@@ -142,59 +126,71 @@ dom-module#d4l-app
       core-collections="[[dbCoreCollections]]"
     )
 
-    iron-pages.fullbleed#app-pages(
-      selected="[[__appRoute]]",
-      attr-for-selected="name",
-      fallback-selection="view404",
-      role="main"
-      mobile$="[[isMobile]]"
-      on-toggle-nav-drawer="__toggleNavDrawer",
-      on-toggle-chat-drawer="__toggleChatDrawer"
-    )
-      d4l-dashboard.fullbleed.layout.vertical(
-        name="dashboard",
-        auth="{{auth}}",
+    .app-container.layout.vertical
+      d4l-header(
+        app="[[app]]",
         db="{{db}}",
-        mobile="[[isMobile]]"
-      )
-      d4l-meme.fullbleed.layout.vertical(
-        name="meme",
-        db="{{db}}",
-        doc="{{db.campaign}}",
-        auth="{{auth}}",
-        routes="[[routes]]",
-        mobile="[[isMobile]]"
-      )
-      d4l-thunderclap.fullbleed.layout.vertical(
-        name="thunderclap",
-        db="{{db}}",
-        doc="[[db.thunderclap]]",
-        auth="[[auth]]",
-        routes="[[routes]]",
-        mobile="[[isMobile]]"
-      )
-      d4l-topic.fullbleed.layout.vertical(
-        name="topic",
-        db="{{db}}",
-        doc="[[db.topic]]",
-        auth="[[auth]]",
-        routes="[[routes]]",
-        mobile="[[isMobile]]"
-      )
-      d4l-issue.fullbleed.layout.vertical(
-        name="issue",
-        db="{{db}}",
-        doc="[[db.issue]]",
-        auth="[[auth]]",
-        routes="[[routes]]",
-        mobile="[[isMobile]]"
-      )
-      d4l-view404(
-        name="view404"
+        auth="[[auth]]"
       )
 
-    d4l-footer(
-      footer-logo="red"
-    )
+      iron-pages.flex(
+        selected="[[__appRoute]]",
+        attr-for-selected="name",
+        fallback-selection="view404",
+        role="main"
+        mobile$="[[isMobile]]"
+        on-toggle-nav-drawer="__toggleNavDrawer",
+        on-toggle-chat-drawer="__toggleChatDrawer"
+      )
+        d4l-dashboard(
+          name="dashboard",
+          app="[[app]]",
+          db="{{db}}",
+          auth="{{auth}}",
+          mobile="[[isMobile]]"
+        )
+        d4l-meme(
+          name="meme",
+          app="[[app]]",
+          db="{{db}}",
+          doc="{{db.campaign}}",
+          auth="{{auth}}",
+          routes="[[routes]]",
+          mobile="[[isMobile]]"
+        )
+        d4l-thunderclap(
+          name="thunderclap",
+          app="[[app]]",
+          db="{{db}}",
+          doc="[[db.thunderclap]]",
+          auth="[[auth]]",
+          routes="[[routes]]",
+          mobile="[[isMobile]]"
+        )
+        d4l-topic(
+          name="topic",
+          app="[[app]]",
+          db="{{db}}",
+          doc="[[db.topic]]",
+          auth="[[auth]]",
+          routes="[[routes]]",
+          mobile="[[isMobile]]"
+        )
+        d4l-issue(
+          name="issue",
+          app="[[app]]",
+          db="{{db}}",
+          doc="[[db.issue]]",
+          auth="[[auth]]",
+          routes="[[routes]]",
+          mobile="[[isMobile]]"
+        )
+        d4l-view404(
+          name="view404"
+        )
+
+      d4l-footer(
+        footer-logo="red"
+      )
 
   script(src="d4l-app.js")

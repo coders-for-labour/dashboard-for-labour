@@ -13,7 +13,7 @@ html(lang="en")
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no")
 
-    title Amplify
+    title %{D4L_APP_TITLE}%
     meta(name="description", content="Social media tools for activists for #ge17")
 
     link(rel="shortcut icon", type="image/x-icon", href="/images/favicon.ico")
@@ -27,28 +27,28 @@ html(lang="en")
     //- Twitter card
     meta(name="twitter:card", value="summary_large_image")
     meta(name="twitter:site", content="@UKLabour")
-    meta(name="twitter:title", content="Amplify – Labour’s tool for supporters")
+    meta(name="twitter:title", content="%{D4L_APP_TITLE}% – Labour’s tool for supporters")
     meta(name="twitter:description", content="Change your profile pictures and get tweeting for Labour now.")
     meta(name="twitter:creator", content="@UkLabour")
     //-Twitter summary card with large image must be at least 280x150px -->
-    meta(name="twitter:image:src", content="https://amplify.labour.org.uk/images/amplify-promo.png")
+    meta(name="twitter:image:src", content="%{D4L_BUTTRESS_URL}%/images/amplify-promo.png")
 
     <!-- Open Graph data -->
     meta(property="fb:app_id", content="%{D4L_FACEBOOK_APP_ID}%")
-    meta(property="og:title", content="Amplify – Labour’s tool for supporters")
+    meta(property="og:title", content="%{D4L_APP_TITLE}% – Labour’s tool for supporters")
     meta(property="og:type", content="article")
-    meta(property="og:url", content="https://amplify.labour.org.uk/")
-    meta(property="og:image", content="https://amplify.labour.org.uk/images/amplify-promo.png")
+    meta(property="og:url", content="%{D4L_BUTTRESS_URL}%")
+    meta(property="og:image", content="%{D4L_BUTTRESS_URL}%/images/amplify-promo.png")
     meta(property="og:description", content="Change your profile pictures and get tweeting for Labour now.")
 
     //- Add to homescreen for Chrome on Android. Fallback for manifest.json
     meta(name="mobile-web-app-capable", content="yes")
-    meta(name="application-name", content="Amplify")
+    meta(name="application-name", content="%{D4L_APP_TITLE}%")
 
     //- Add to homescreen for Safari on iOS -->
     meta(name="apple-mobile-web-app-capable", content="yes")
     meta(name="apple-mobile-web-app-status-bar-style", content="black-translucent")
-    meta(name="apple-mobile-web-app-title", content="Amplify")
+    meta(name="apple-mobile-web-app-title", content="%{D4L_APP_TITLE}%")
 
     //- Homescreen icons -->
     link(rel="apple-touch-icon", href="/images/manifest/icon-48x48.png")

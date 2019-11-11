@@ -17,7 +17,8 @@ Polymer({
       value: {
         status: 'idle',
         user: null,
-        token: null
+        token: null,
+        signedIn: false
       },
       notify: true
     }
@@ -38,6 +39,7 @@ Polymer({
       });
     } else {
       this.set('auth.user', detail.response.user);
+      this.set('auth.signedIn', true);
     }
 
     const user = this.get('auth.user');

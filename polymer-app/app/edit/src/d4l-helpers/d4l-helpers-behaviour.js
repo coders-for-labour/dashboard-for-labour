@@ -8,6 +8,10 @@ D4L.Helpers = {
     
   },
 
+  authTwitter() {
+    window.location = '/auth/twitter';
+  },
+
   inAuthRole(token, match) {
     if (!token || !token.role) return false;
     return token.role.indexOf(match) === 0;

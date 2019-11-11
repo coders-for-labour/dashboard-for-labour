@@ -1,0 +1,94 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/iron-image/iron-image.html")
+
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
+link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
+
+
+dom-module#d4l-topic-card
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-card-styles").
+      :host {
+        display: block;
+      }
+
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 0px 0px 0px;
+        overflow: hidden;
+      } 
+
+      .topic-media {
+        width: 100%;
+        height: 200px;
+        background: #d4d4d4;
+      }
+
+
+      .topic-header {
+        
+      }
+      .topic-header .title {
+        font-size: 1.25rem;
+        line-height: 2rem;
+        font-weight: 500;
+        letter-spacing: .0125em;
+        padding: 16px 16px 0;
+      }
+
+      .topic-content p {
+        font-size: .875rem;
+        line-height: 1.25rem;
+        font-weight: 400;
+        letter-spacing: .0178571429em;
+        text-decoration: inherit;
+        text-transform: inherit;
+        color: rgba(0, 0, 0, 0.6);
+        padding: 0 16px;
+      }
+      .topic-footer {
+        padding: 10px 20px 10px;
+        color: var(--text-dark-secondary-color);
+        padding: 0 16px 16px;
+      }
+      .topic-footer iron-icon {
+        margin-right: 10px;
+      }
+
+      .footer.tray{
+        //- position: relative;
+        //- margin: -30px -20px -10px;
+      }
+      .footer.tray paper-icon-button {
+        color: var(--app-color-secondary-grey);
+      }
+
+    ltn-dialog#dialog
+    .card
+      iron-image.topic-media(src="[[topic.banner]]" sizing="spread")
+      .topic-header
+        .title [[topic.name]]
+      .topic-content
+        p [[__topicSummary]]
+
+      .topic-footer(hidden$="[[!__showButtons]]")
+        .flex.layout.horizontal(style="justify-content: flex-start;")
+          div(style="align-self:center") [[__viewCount]] Views
+          .flex
+          .buttons
+            paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTopic")
+            paper-icon-button(hidden$="[[!inAuthRole(auth.token, 'admin')]]", icon="create", on-tap="__updateTopic")
+
+  script(src="./d4l-topic-card.js")

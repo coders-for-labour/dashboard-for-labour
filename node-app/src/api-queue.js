@@ -82,7 +82,7 @@ const _appTasks = {
  */
 class APIQueueManager {
   /**
-   * 
+   *
    */
   constructor() {
     this._rateLimiter = {};
@@ -237,7 +237,7 @@ class APIQueueManager {
   }
 
   /**
-   * 
+   *
    */
   _recallQueueTimeout() {
     if (!this._queueTimeout) {

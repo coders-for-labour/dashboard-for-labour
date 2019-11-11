@@ -1,4 +1,4 @@
-link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/polymer/polymer-element.html")
 link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
@@ -11,8 +11,6 @@ link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
-link(rel="import", href="/src/d4l-header/d4l-header.html")
-
 link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
 
@@ -23,6 +21,7 @@ link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/views/topic/d4l-topic-card.html")
 
 dom-module#d4l-topic
   template
@@ -34,22 +33,20 @@ dom-module#d4l-topic
         display: block;
 
         padding: var(--default-page-padding);
-        padding-top: 95px;
+        padding-top: var(--default-header-offset);
       }
 
-    d4l-header(
-      auth="[[auth]]",
-      db="{{db}}",
-      page="[[__pageTitle]]",
-      page-title="[[__pageTitle]]",
-      page-mode="[[__pageMode]]",
-      header="{{header}}",
-      allow-back,
-      on-back-button-clicked="__navBack"
-    )
+      .content {
+        padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
+      }
 
-    buttress-db-query(db="[[db]]", doc="[[db.topic]]" query="[[__topicsQuery]]", find-all="{{__topics}}")
-    buttress-db-query(db="[[db]]", doc="[[db.issue]]" query="[[__issuesQuery]]", find-all="{{__issues}}")
+      paper-button {
+        @apply(--d4l-button-primary);
+      }
+
+
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}")
+    buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
 
     ltn-dialog#dialog
 
@@ -64,47 +61,51 @@ dom-module#d4l-topic
 
       div(name="loaded")
         .layout.horizontal.wrap
-          .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
-            d4l-dashboard-card.card.flex(background="thunderclap")
+          .page-content.flex.layout.vertical.card-group(mobile$="[[isMobile]]")
+            d4l-dashboard-card.card.flex(background="thunderclap", hero)
               div(hidden$="[[__hasSelectedItem]]")
-                .layout.horizontal.center
-                  h1 Topics
-                p Some message about topics
+                .layout.vertical
+                  h1 All Topics
+                  p Primum Theophrasti, Strato, physicum se voluit; Obsecro, inquit, Torquate, haec dicit Epicurus?
               div(hidden$="[[!__hasSelectedItem]]")
-                .layout.horizontal.center
+                .layout.vertical
                   h1 [[__selectedItem.name]]
-                p [[__selectedItem.description]]
+                  p [[__selectedItem.description]]
+                  .layout.horizontal
+                    paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
+                    paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
-          .page-content.flex-2(mobile$="[[isMobile]]")
-            div(hidden$="[[__hasSelectedItem]]")
-              template(is="dom-repeat" items="[[__topics]]" as="topic")
-                h1 [[topic.name]]
-                p [[topic.description]]
-                paper-button(on-click="__viewTopic") View
-                paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
-            div(hidden$="[[!__hasSelectedItem]]")
-              h1 Topics
-              hr
-              template(is="dom-repeat" items="[[__topics]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="__viewTopic") View
+            .content(mobile$="[[isMobile]]")
+              div(hidden$="[[__hasSelectedItem]]")
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__topics]]")
+                    d4l-topic-card.item(topic="[[item]]")
+                    d4l-topic-card.item(topic="[[item]]")
+                    d4l-topic-card.item(topic="[[item]]")
 
-              h1 Issues
-              hr
-              template(is="dom-repeat" items="[[__issues]]")
-                h1 [[item.name]]
-                p [[item.description]]
-                paper-button(on-click="__viewIssue") View
+              div(hidden$="[[!__hasSelectedItem]]")
+                h1 Topics
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__topics]]")
+                    d4l-topic-card.item(topic="[[item]]")
+
+                h1 Issues
+                hr
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__issues]]")
+                    .item
+                      h1 [[item.name]]
+                      p [[item.description]]
+                      paper-button(on-click="viewIssueItem") View
 
         ltn-fab-menu(
           hidden$="[[!inAuthRole(auth.token, 'admin')]]"
         )
-          .fab-item
-            .label Topic
-            paper-icon-button(icon="add" title="Topic", on-tap="__addTopic")
           .fab-item(hidden$="[[!__hasSelectedItem]]")
             .label Issue
-            paper-icon-button(icon="add" title="Issue", on-tap="__addIssue")
+            paper-icon-button(icon="add" title="Issue", on-tap="addIssue")
+          .fab-item
+            .label Topic
+            paper-icon-button(icon="add" title="Topic", on-tap="addTopic")
 
   script(src="./d4l-topic.js")

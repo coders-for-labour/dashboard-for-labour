@@ -8,6 +8,10 @@
   ],
   "roles": [],
   "properties": {
-
+    "constituencyPano": {
+      "__type": "string",
+      "__required": false,
+      "__allowUpdate": true
+    }
   }
 }

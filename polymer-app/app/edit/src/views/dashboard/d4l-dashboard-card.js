@@ -8,6 +8,10 @@ Polymer({
       type: Number,
       value: 3
     },
+    hero: {
+      type: Boolean,
+      default: false
+    },
     background: {
       type: String,
       notify: true

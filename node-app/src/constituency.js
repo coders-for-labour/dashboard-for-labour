@@ -45,8 +45,10 @@ class Constituency {
             res.send({
               name: req.query.name,
               id: constituency.id,
+              pano: constituency.pano,
               results: {
                 2015: constituency['2015'],
+                2017: constituency['2017'],
               },
             });
           });
@@ -65,8 +67,10 @@ class Constituency {
               res.send({
                 name: data.name,
                 id: constituency.id,
+                pano: constituency.pano,
                 results: {
                   2015: constituency['2015'],
+                  2017: constituency['2017'],
                 },
               });
             });

@@ -26,6 +26,25 @@
       "__type": "id",
       "__required": true,
       "__allowUpdate": true
+    },
+    "constituencyPano": {
+      "__type": "string",
+      "__required": false,
+      "__default": null,
+      "__allowUpdate": true
+    },
+    "editorIds": {
+      "__type": "array",
+      "__itemtype": "id",
+      "__required": true,
+      "__default": [],
+      "__allowUpdate": true
+    },
+    "viewCount": {
+      "__type": "number",
+      "__required": false,
+      "__default": 0,
+      "__allowUpdate": true      
     }
   }
 }

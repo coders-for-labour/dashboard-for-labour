@@ -12,14 +12,17 @@ script.
       
     },
 
-    __viewTopic(ev) {
-      const topic = ev.model.get('topic');
-      
-      this.fire('view-entity', `/topic/${topic.id}`);
+    viewTopicItem(ev) {
+      this.viewTopic(ev.model.get('item.id'));
+    },
+
+    viewTopic(topicId) {
+      this.fire('view-entity', `/topic/${topicId}`);
     },
 
     __presentTopicDialog(topic, meta) {
       const dialog = this.$.dialog;
+      if (!this.$.dialog) throw new Error("Need a dialog with id: 'dialog'");
 
       const inputSchema = {
         name: {
@@ -43,9 +46,8 @@ script.
       return dialog.openDialog(this.parseInputSchema(inputSchema));
     },
 
-    __updateTopic(ev) {
+    updateTopic(topic) {
       const selectedItem = this.get('__selectedItem');
-      const topic = ev.model.get('topic');
       const dialogMeta = {
         'title': 'Topic',
         'description': 'Update this topic',
@@ -67,13 +69,14 @@ script.
           this.set(['db.topic.data', topicIdx, 'name'], result.values.name);
           this.set(['db.topic.data', topicIdx, 'description'], result.values.description);
           this.set(['db.topic.data', topicIdx, 'banner'], result.values.banner);
-          if (selectedItem) {
+
+          if (selectedItem && selectedItem.id != topic.id) {
             this.set(['db.topic.data', topicIdx, 'parentId'], selectedItem.id);
           }
         });
     },
 
-    __addTopic() {
+    addTopic() {
       const selectedItem = this.get('__selectedItem');
       const dbFactory = this.get('db.Factory');
       const dialogMeta = {

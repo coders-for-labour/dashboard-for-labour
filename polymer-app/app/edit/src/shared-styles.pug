@@ -70,6 +70,9 @@ dom-module(id="shared-card-styles")
         background-color: #fff;
         margin: 0px;
       }
+      .card[hero] {
+        padding: var(--default-hero-padding);
+      }
 
       h1 {
         @apply(--d4l-font-common-base);
@@ -108,8 +111,8 @@ dom-module(id="shared-layout-styles")
       }
 
       .page-content:not([mobile]) {
-        width: 70%;
-        margin-left: 30%;
+        width: 100%;
+        margin-left: 00%;
       }
       .page-sidebar:not([mobile]) {
         position: fixed;
@@ -117,34 +120,35 @@ dom-module(id="shared-layout-styles")
         height: 88%;
       }
 
-      .card {
-        margin-bottom: 30px;
+      .row-4, .row-3 {
+        margin: 10px -10px;
       }
-      .card.flex {
-        flex: none;
-        width: 100%;
+      .row-4 > .item, 
+      .row-3 > .item {
+        padding: 10px;
+        box-sizing: border-box;
       }
-      .card.flex:not([mobile]) {
-        flex: 1;
+
+      .row-3 > .item {
+        flex: 0 1 33.333333%;
       }
-      .card-group[mobile] {
-        display: block;
-        flex: none;
-        width: 100%;
+      .row-4 > .item {
+        flex: 0 1 25%;
       }
-      .card-group:not([mobile]) > .card {
-        margin-right: 30px;
+
+      @media (max-width: 768px) {
+        .row-4 > .item,
+        .row-3 > .item {
+          flex-basis: 50%;
+        }
       }
-      .card-group > .card:last-child {
-        margin-right: 0px;
+      @media (max-width: 576px) {
+        .row-4 > .item,
+        .row-3 > .item {
+          flex-basis: 100%;
+        }
       }
-      .card-group.group-2 > .card {
-        width: 49%;
-        margin-right: 2%;
-      }
-      .card-group.group-2 > .card:nth-child(2n) {
-        margin-right: 0px;
-      }
+
 
 dom-module#d4l-dialog-styles
   template

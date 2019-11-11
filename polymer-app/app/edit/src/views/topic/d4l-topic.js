@@ -1,4 +1,3 @@
-
 Polymer({
   is: 'd4l-topic',
   behaviors: [
@@ -37,56 +36,26 @@ Polymer({
     }
   },
 
-  __addIssue() {
+  observers: [
+    '__observeSelectedItem(db.topic.data, __selectedItem)'
+  ],
+    
+  __observeSelectedItem() {
+    const db = this.get('db.topic.data');
+    if (!db) return;
     const selectedItem = this.get('__selectedItem');
-    const dbFactory = this.get('db.Factory');
-    const dialog = this.$.dialog;
+    if (!selectedItem) return;
+    const dbIdx = db.findIndex(t => t.id === selectedItem.id);
+    if (dbIdx === -1) return;
 
-    const issue = dbFactory.create('issue');
+    this.__info('__observeSelectedItem', selectedItem);
 
-    const dialogInputs = {
-      name: {
-        label: 'Title',
-        type: 'TEXT',
-        default: issue.name
-      },
-      description: {
-        label: 'Description',
-        type: 'TEXTAREA',
-        default: issue.description
-      }
-    };
-
-    dialog.setMetadata({
-      'title': 'Issue',
-      'description': 'Add a new issue to the system',
-      'action': 'Save',
-    });
-    
-    return dialog.openDialog(this.parseInputSchema(dialogInputs))
-      .then((result) => {
-        if (!result.values.name) {
-          throw new Error('Thunderclap requires a name');
-        }
-
-        issue.name = result.values.name;
-        issue.description = result.values.description;
-
-        if (selectedItem) {
-          issue.topicId = selectedItem.id;
-        }
-
-        this.push('db.issue.data', issue);
-      });
+    let views = selectedItem.viewCount;
+    if (!views && views !== 0) views = 0;
+    this.set(['db.topic.data',dbIdx,'viewCount'], ++views);
   },
 
-  __viewIssue(ev) {
-    const item = ev.model.get('item');
-    
-    this.fire('view-entity', `/issue/${item.id}`);
-  },
-
-  __computeTopicsQuery() {
+  __computeTopicsQuery(cr) {
     const selectedItem = this.get('__selectedItem');
 
     let parentId = null;
@@ -95,23 +64,31 @@ Polymer({
     }
 
     return {
+      __crPath: cr.path,
       parentId: {
         $eq: parentId
       }
     };
   },
 
-  __computeIssuesQuery() {
+  __computeIssuesQuery(cr) {
     const selectedItem = this.get('__selectedItem');
 
     if (!selectedItem) {
-      return;
+      return {
+        __crPath: cr.path,
+      };
     }
 
     return {
+      __crPath: cr.path,
       topicId: {
         $eq: selectedItem.id
       }
     };
+  },
+
+  __updateTopic() {
+    this.updateTopic(this.get('__selectedItem'));
   }
 });
