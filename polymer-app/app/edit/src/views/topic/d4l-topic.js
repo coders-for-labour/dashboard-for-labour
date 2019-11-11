@@ -48,7 +48,7 @@ Polymer({
     const dbIdx = db.findIndex(t => t.id === selectedItem.id);
     if (dbIdx === -1) return;
 
-    this.__info('__observeSelectedItem', selectedItem);
+    this.__silly('__observeSelectedItem', selectedItem);
 
     let views = selectedItem.viewCount;
     if (!views && views !== 0) views = 0;
