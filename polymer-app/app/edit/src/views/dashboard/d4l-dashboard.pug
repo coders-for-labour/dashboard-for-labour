@@ -35,7 +35,7 @@ dom-module#d4l-dashboard
       }
 
       paper-button {
-        @apply(--d4l-button-primary);
+        @apply --d4l-button-primary;
       }
 
       .members-stat {
@@ -49,7 +49,6 @@ dom-module#d4l-dashboard
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    buttress-db-query(db="[[db]]", doc="[[db.people]]", query="[[__userQuery]]", find-all="{{__users}}")
     buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
 
@@ -63,7 +62,7 @@ dom-module#d4l-dashboard
           )
       paper-button(on-tap="__viewTopics") See All Topics
       
-      .layout.horizontal.row-4.wrap
+      .layout.horizontal.row-3.wrap
         d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="thunderclap")
           .layout.horizontal.center
             iron-icon(icon="d4l-social-icons:storm")
@@ -71,12 +70,12 @@ dom-module#d4l-dashboard
           p Sign up to tweet our important messages.
           paper-button(on-tap="__viewThunderclap") Get Started
 
-        d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="meme", disabled)
-          .layout.horizontal.center
-            iron-icon(icon="d4l-icons:picture")
-            h1 Images
-          p Gorgeous covers, posters and infographics to share
-          paper-button(on-tap="__viewMemes") Get Started
+        //- d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="meme", disabled)
+        //-   .layout.horizontal.center
+        //-     iron-icon(icon="d4l-icons:picture")
+        //-     h1 Images
+        //-   p Gorgeous covers, posters and infographics to share
+        //-   paper-button(on-tap="__viewMemes") Get Started
 
         d4l-dashboard-constituency-card.item.flex(
           auth="[[auth]]",

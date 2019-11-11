@@ -15,15 +15,16 @@ link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 link(rel="import", href="/src/ltn-ajax/ltn-ajax.html")
 link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
 
-
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
-link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
-
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-behaviour.html")
+
+link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/topic/d4l-topic-card.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-card.html")
 
 dom-module#d4l-topic
   template
@@ -42,13 +43,27 @@ dom-module#d4l-topic
         padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
       }
 
-      paper-button {
-        @apply(--d4l-button-primary);
+      .thunderclap {
+        margin-left: 30px;
+        color: #444;
       }
 
+      paper-button {
+        @apply --d4l-button-primary;
+      }
 
-    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}")
+      @media (max-width: 768px) {
+        .page-header.layout.horizontal {
+          flex-direction: column;
+        }
+        .page-header .thunderclap{
+          margin: 0;
+        }
+      }
+
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
     buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
+    buttress-db-query(doc="[[db.thunderclap]]", data-path="db.thunderclap.data", query="[[__thunderclapQuery]]", find-one="{{__thunderclap}}")
 
     ltn-ajax#ajax
     ltn-dialog#dialog
@@ -63,50 +78,61 @@ dom-module#d4l-topic
         paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
 
       div(name="loaded")
-        .layout.horizontal.wrap
-          .page-content.flex.layout.vertical.card-group(mobile$="[[isMobile]]")
-            d4l-dashboard-card.card.flex(background="thunderclap", hero)
-              div(hidden$="[[__hasSelectedItem]]")
-                .layout.vertical
-                  h1 All Topics
-                  p Primum Theophrasti, Strato, physicum se voluit; Obsecro, inquit, Torquate, haec dicit Epicurus?
-              div(hidden$="[[!__hasSelectedItem]]")
-                .layout.vertical
-                  h1 [[__selectedItem.name]]
-                  p [[__selectedItem.description]]
-                  .layout.horizontal
-                    paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
-                    paper-button(on-click="__updateTopic", hidden$="[[!__isTopicEditor]]") Edit
+        .page-content.flex.layout
+          d4l-dashboard-card.card.flex(hero, style="background-image: url('[[__topicBanner]]')")
+            .page-header.layout.vertical(hidden$="[[__hasSelectedItem]]")
+              h1 All Topics
+              p Primum Theophrasti, Strato, physicum se voluit; Obsecro, inquit, Torquate, haec dicit Epicurus?
 
-            .content(mobile$="[[isMobile]]")
-              div(hidden$="[[__hasSelectedItem]]")
-                .layout.horizontal.row-3.wrap
-                  template(is="dom-repeat" items="[[__topics]]")
-                    d4l-topic-card.item(topic="[[item]]")
+            .page-header.layout.horizontal.center(hidden$="[[!__hasSelectedItem]]")
+              .flex.layout.vertical
+                h1 [[__selectedItem.name]]
+                p [[__selectedItem.description]]
+                .layout.horizontal
+                  paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
+                  paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
-              div(hidden$="[[!__hasSelectedItem]]")
-                h1 Topics
-                .layout.horizontal.row-3.wrap
-                  template(is="dom-repeat" items="[[__topics]]")
-                    d4l-topic-card.item(topic="[[item]]")
+              .thunderclap(hidden$="[[!computeIsSet(__thunderclap)]]")
+                h1 Next Thunderclap
+                d4l-thunderclap-card(
+                  db="{{db}}",
+                  auth="[[auth]]",
+                  thunderclap="[[__thunderclap]]",
+                  on-subscribe="subscribeThunderclap"
+                )
 
-                h1 Issues
-                hr
-                .layout.horizontal.row-3.wrap
-                  template(is="dom-repeat" items="[[__issues]]")
-                    .item
-                      h1 [[item.name]]
-                      p [[item.description]]
-                      paper-button(on-click="viewIssueItem") View
+          .content
+            div(hidden$="[[__hasSelectedItem]]")
+              .layout.horizontal.row-3.wrap
+                template(is="dom-repeat" items="[[__topics]]")
+                  d4l-topic-card.item(topic="[[item]]")
 
-        ltn-fab-menu(
-          hidden$="[[!__isTopicEditor]]"
-        )
-          .fab-item(hidden$="[[!__hasSelectedItem]]")
-            .label Issue
-            paper-icon-button(icon="add" title="Issue", on-tap="addIssue")
-          .fab-item
-            .label Topic
-            paper-icon-button(icon="add" title="Topic", on-tap="addTopic")
+            div(hidden$="[[!__hasSelectedItem]]")
+              h1 Topics
+              .layout.horizontal.row-3.wrap
+                template(is="dom-repeat" items="[[__topics]]")
+                  d4l-topic-card.item(topic="[[item]]")
+
+              h1 Issues
+              hr
+              .layout.horizontal.row-3.wrap
+                template(is="dom-repeat" items="[[__issues]]")
+                  .item
+                    h1 [[item.name]]
+                    p [[item.description]]
+                    paper-button(on-click="viewIssueItem") View
+
+    ltn-fab-menu(
+      hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+    )
+      .fab-item(hidden$="[[!__hasSelectedItem]]")
+        .label Thunderclap
+        paper-icon-button(icon="add" title="Thunderclap", on-tap="__addTopicThunderclap")
+      .fab-item(hidden$="[[!__hasSelectedItem]]")
+        .label Issue
+        paper-icon-button(icon="add" title="Issue", on-tap="__addTopicIssue")
+      .fab-item
+        .label Topic
+        paper-icon-button(icon="add" title="Topic", on-tap="addTopic")
 
   script(src="./d4l-topic.js")

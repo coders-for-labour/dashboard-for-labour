@@ -13,13 +13,11 @@ link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-link(rel="import", href="/src/d4l-account-selector/d4l-account-selector.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
-link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
 
 dom-module#d4l-meme-detail
   template
@@ -51,7 +49,7 @@ dom-module#d4l-meme-detail
       }
 
       paper-button {
-        @apply(--d4l-button-primary);
+        @apply --d4l-button-primary;
       }
 
       d4l-twibbyn-overlay {
@@ -68,16 +66,13 @@ dom-module#d4l-meme-detail
     iron-ajax#ajaxTweet(
       handleAs="json",
       content-type="application/json",
-      url="/twitter",
+      url="/api/v1/twitter",
       method="POST",
       body="[[__tweetBody]]"
       on-response="__saveTwResponse",
       on-error="__ajaxError")
 
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
-      h1 Platform
-      d4l-account-selector(auth="[[auth]]", selected="{{__selectedPlatform}}")
-
       h1 Images
       .layout.horizontal.center-center
         .flex.text-right

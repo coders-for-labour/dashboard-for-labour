@@ -1,12 +1,12 @@
 {
-  "root": "app/serve",
   "entrypoint": "index.html",
   "shell": "src/d4l-app/d4l-app.html",
   "fragments": [
     "src/views/dashboard/d4l-dashboard.html",
-    "src/views/thunderclap/d4l-thunderclap.html",
-    "src/views/twibbyn/d4l-twibbyn.html",
+    "src/views/issue/d4l-issue.html",
     "src/views/meme/d4l-meme.html",
+    "src/views/thunderclap/d4l-thunderclap.html",
+    "src/views/topic/d4l-topic.html",
     "src/views/view404/d4l-view404.html"
   ],
   "sources": [
@@ -16,15 +16,19 @@
    "bower.json"
   ],
   "extraDependencies": [
+    "bower_components/webcomponentsjs/*.js",
+    "!bower_components/webcomponentsjs/gulpfile.js",
     "manifest.json",
-    "bower_components/webcomponentsjs/webcomponents-lite.min.js",
     "bower_components/sugar/dist/sugar.min.js"
   ],
-  "builds": [{
-    "name": "bundled",
-    "bundle": true,
-    "js": {"minify": true},
-    "css": {"minify": true},
-    "html": {"minify": true}
-  }]
+  "lint": {
+    "rules": ["polymer-2"]
+  },
+  "builds": [
+    {
+      "name": "es6",
+      "preset": "es6-bundled",
+      "addServiceWorker": true
+    }
+  ]
 }

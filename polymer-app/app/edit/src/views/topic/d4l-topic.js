@@ -5,6 +5,7 @@ Polymer({
     D4L.Helpers,
     D4L.Topic.Helpers,
     D4L.Issue.Helpers,
+    D4L.Thunderclap.Helpers,
     Polymer.D4LViewList
   ],
   properties: {
@@ -34,6 +35,18 @@ Polymer({
       computed: '__computeIssuesQuery(db.issue.data.*, __selectedItem)'
     },
 
+    __thunderclap: Array,
+    __thunderclapQuery: {
+      type: Object,
+      computed: '__computeThunderclapQuery(db.thunderclap.data.*, __selectedItem)'
+    },
+
+    __topicBanner: {
+      type: String,
+      value: '',
+      computed: '__computeTopicBanner(__selectedItem.banner)'
+    },
+
     __hasSelectedItem: {
       type: Boolean,
       value: false,
@@ -44,7 +57,7 @@ Polymer({
   observers: [
     '__observeSelectedItem(__selectedItem)'
   ],
-    
+
   __observeSelectedItem() {
     const ajax = this.$.ajax;
 
@@ -67,6 +80,51 @@ Polymer({
       }
     })
     .catch(err => this.__err(err));
+  },
+
+  __addTopicThunderclap() {
+    const selectedItem = this.get('__selectedItem');
+    const thunderclap = this.get('db.Factory').create('thunderclap');
+
+    if (selectedItem) {
+      thunderclap.topicId = selectedItem.id;
+    }
+
+    return this.addThunderclap(thunderclap);
+  },
+
+  __addTopicIssue() {
+    const selectedItem = this.get('__selectedItem');
+    const issue = this.get('db.Factory').create('issue');
+
+    if (selectedItem) {
+      issue.topicId = selectedItem.id;
+    }
+
+    return this.addIssue(issue);
+  },
+
+  __computeTopicBanner() {
+    const selectedItem = this.get('__selectedItem');
+    if (selectedItem && selectedItem.banner) {
+      return selectedItem.banner;
+    }
+
+    return '/images/homepage/homepage-01.jpg';
+  },
+
+  __computeThunderclapQuery: function () {
+    const topic = this.get('__selectedItem');
+    if (!topic) return;
+
+    return {
+      topicId: {
+        $eq: topic.id
+      },
+      scheduledExecution: {
+        $gtDate: Sugar.Date.create('now')
+      }
+    }
   },
 
   __computeTopicsQuery(cr) {

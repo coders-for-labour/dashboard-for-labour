@@ -2,6 +2,7 @@ Polymer({
   is: 'd4l-dashboard-constituency-card',
   behaviors: [
     D4L.Logging,
+    D4L.Helpers,
     D4L.Topic.Helpers
   ],
   properties: {
@@ -26,33 +27,18 @@ Polymer({
       type: Object,
       notify: true,
     },
-    __rqParams: {
-      type: Object,
-      value: function() {
-        return {
-          postcode: ''
-        };
-      }
+    __formError: {
+      type: String,
+      value: null
     },
-    __rqResponse: {
-      type: Object,
-      observer: '__onRqResponse'
+    __postcode: {
+      type: String,
+      value: ''
     },
     __hasConstituency: {
       type: Boolean,
       computed: '__computeHasConstituency(constituency)'
     }
-  },
-  observers: [
-    '__onUserMetadataChanged(auth.user.metadata.*)'
-  ],
-
-  __onUserMetadataChanged: function() {
-    // if (this.get('constituency') || !this.get('auth.metadata.constituencyName')) {
-    //   return;
-    // }
-    // this.set('__rqParams.name', this.get('auth.metadata.constituencyName'));
-    // this.$.findConstituency.generateRequest();
   },
 
   viewTopicConstituency: function() {
@@ -100,33 +86,44 @@ Polymer({
   __resetConstituency: function() {
     // this.set('auth.metadata.constituencyName', '');
     this.set('constituency', null);
-    this.set('__rqParams.name', '');
-    this.set('__rqParams.postcode', '');
+    this.set('__postcode', '');
   },
 
   __findConstituency: function() {
-    if (!this.get('__rqParams.postcode')) {
+    const ajax = this.$.ajax;
+    const postcode = this.get('__postcode');
+    if (!postcode) {
       return;
     }
 
-    // this.set('auth.metadata.postCode', this.get('__rqParams.postcode'));
-    this.$.findConstituency.generateRequest();
-  },
+    this.set('__formError', null);
 
-  __onRqResponse: function(response) {
-    this.__silly(this.get('auth.user'));
-    this.__debug(response);
-    if (!response) {
-      return;
-    }
+    return ajax.send({
+      url: '/api/v1/constituency',
+      method: 'GET',
+      contentType: 'application/json',
+      params: {
+        postcode: postcode
+      }
+    })
+    .then(res => {
+      if (!res.response) {
+        this.__resetConstituency();
+        this.set('__formError', 'Invalid Postcode');
+        return;
+      }
+      this.set('constituency', res.response);
+    })
+    .catch(err => {
+      this.__resetConstituency();
 
-    this.set('constituency', response);
-    // this.linkPaths('mp', 'constituency.results.2015.results.0');
-    // this.set('mp', this.get('constituency.results.2015.results.0'));
-    // if (this.get('auth.metadata.constituencyName')) {
-    //   return;
-    // }
-    // this.set('auth.metadata.constituencyName', response.name);
+      if (err.response) {
+        this.set('__formError', err.response.message);
+        return;
+      }
+
+      this.__err(err);
+    });
   },
 
   __computeHasConstituency: function() {

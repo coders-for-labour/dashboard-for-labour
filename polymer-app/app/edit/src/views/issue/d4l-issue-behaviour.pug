@@ -69,10 +69,11 @@ script.
       return dialog.openDialog(this.parseInputSchema(inputSchema));
     },
 
-    addIssue() {
+    addIssue(issue) {
       const selectedItem = this.get('__selectedItem');
-      const dbFactory = this.get('db.Factory');
-      const issue = dbFactory.create('issue');
+      if (!issue) {
+        issue = this.get('db.Factory').create('issue');
+      }
       const dialogMeta = {
         'title': 'Issue',
         'description': 'Add a new issue to the system',

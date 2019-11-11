@@ -46,11 +46,6 @@
     "google-apis": "^1.1.7"
   },
   "overrides": {
-    "bwt-uploader": {
-      "main": [
-        "*.html"
-      ]
-    },
     "pdfjs-dist": {
       "main": [
         "./build/*.js"
