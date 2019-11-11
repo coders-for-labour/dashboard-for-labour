@@ -29,6 +29,12 @@ Polymer({
       computed: '__computeTopicsQuery(db.topic.data.*, __selectedItem)'
     },
 
+    parent: Object,
+    __parentQuery: {
+      type: Object,
+      computed: '__computeParentQuery(__selectedItem, db.issue.data.*)'
+    },
+
     __issues: Array,
     __issuesQuery: {
       type: Object,

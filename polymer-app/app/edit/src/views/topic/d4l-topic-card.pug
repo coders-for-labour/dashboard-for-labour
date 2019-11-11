@@ -68,6 +68,8 @@ dom-module#d4l-topic-card
       }
 
     ltn-dialog#dialog
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__parentQuery]]", find-one="{{parent}}")
+
     .card
       iron-image.topic-media(src="[[topic.banner]]" sizing="spread")
       .topic-header
@@ -81,6 +83,6 @@ dom-module#d4l-topic-card
           .flex
           .buttons
             paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTopic")
-            paper-icon-button(hidden$="[[!inAuthRole(auth.token, 'admin')]]", icon="create", on-tap="__updateTopic")
+            paper-icon-button(hidden$="[[!__isTopicEditor]]", icon="create", on-tap="__updateTopic")
 
   script(src="./d4l-topic-card.js")

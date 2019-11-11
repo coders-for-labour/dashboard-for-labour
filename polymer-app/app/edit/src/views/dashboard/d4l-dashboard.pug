@@ -57,6 +57,7 @@ dom-module#d4l-dashboard
       .layout.horizontal.row-3.wrap
         template(is="dom-repeat" items="[[__latestTopics]]")
           d4l-topic-card.item(
+            auth="[[auth]]"
             db="{{db}}",
             topic="[[item]]"
           )

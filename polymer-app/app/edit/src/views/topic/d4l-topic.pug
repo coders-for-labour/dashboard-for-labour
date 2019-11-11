@@ -62,6 +62,7 @@ dom-module#d4l-topic
       }
 
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__parentQuery]]", find-one="{{parent}}")
     buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
     buttress-db-query(doc="[[db.thunderclap]]", data-path="db.thunderclap.data", query="[[__thunderclapQuery]]", find-one="{{__thunderclap}}")
 
@@ -90,7 +91,7 @@ dom-module#d4l-topic
                 p [[__selectedItem.description]]
                 .layout.horizontal
                   paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
-                  paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
+                  paper-button(on-click="__updateTopic", hidden$="[[!__isTopicEditor]]") Edit
 
               .thunderclap(hidden$="[[!computeIsSet(__thunderclap)]]")
                 h1 Next Thunderclap
@@ -105,13 +106,21 @@ dom-module#d4l-topic
             div(hidden$="[[__hasSelectedItem]]")
               .layout.horizontal.row-3.wrap
                 template(is="dom-repeat" items="[[__topics]]")
-                  d4l-topic-card.item(topic="[[item]]")
+                  d4l-topic-card.item(
+                    auth="[[auth]]", 
+                    db="{{db}}"
+                    topic="[[item]]"
+                  )
 
             div(hidden$="[[!__hasSelectedItem]]")
               h1 Topics
               .layout.horizontal.row-3.wrap
                 template(is="dom-repeat" items="[[__topics]]")
-                  d4l-topic-card.item(topic="[[item]]")
+                  d4l-topic-card.item(
+                    auth="[[auth]]", 
+                    db="{{db}}"
+                    topic="[[item]]"
+                  )
 
               h1 Issues
               hr
@@ -123,7 +132,7 @@ dom-module#d4l-topic
                     paper-button(on-click="viewIssueItem") View
 
     ltn-fab-menu(
-      hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+      hidden$="[[!__isTopicEditor]]"
     )
       .fab-item(hidden$="[[!__hasSelectedItem]]")
         .label Thunderclap

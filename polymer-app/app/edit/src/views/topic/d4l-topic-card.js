@@ -13,6 +13,15 @@ Polymer({
     topic: {
       type: Object
     },
+    parent: Object,
+    __parentQuery: {
+      type: Object,
+      computed: '__computeParentQuery(topic, db.topic.data.*)'
+    },
+    __isTopicEditor: {
+      type: Boolean,
+      computed: '__computeIsTopicEditor(topic, parent, auth.token)'
+    },
     __topicSummary: {
       type: String,
       value: '',
