@@ -77,13 +77,15 @@ dom-module#d4l-topic
 
             .content(mobile$="[[isMobile]]")
               div(hidden$="[[__hasSelectedItem]]")
-                .flex.wrap.layout.horizontal(style="")
+                .layout.horizontal.row-3.wrap
                   template(is="dom-repeat" items="[[__topics]]")
-                    d4l-topic-card(topic="[[item]]")
+                    d4l-topic-card.item(topic="[[item]]")
+                    d4l-topic-card.item(topic="[[item]]")
+                    d4l-topic-card.item(topic="[[item]]")
 
               div(hidden$="[[!__hasSelectedItem]]")
                 h1 Topics
-                .flex.wrap.layout.horizontal(style="justify-content:flex-start;")
+                .layout.horizontal.row-3.wrap
                   template(is="dom-repeat" items="[[__topics]]")
                     d4l-topic-card(topic="[[item]]")
 
