@@ -87,14 +87,16 @@ dom-module#d4l-topic
                 h1 Topics
                 .layout.horizontal.row-3.wrap
                   template(is="dom-repeat" items="[[__topics]]")
-                    d4l-topic-card(topic="[[item]]")
+                    d4l-topic-card.item(topic="[[item]]")
 
                 h1 Issues
                 hr
-                template(is="dom-repeat" items="[[__issues]]")
-                  h1 [[item.name]]
-                  p [[item.description]]
-                  paper-button(on-click="viewIssueItem") View
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__issues]]")
+                    .item
+                      h1 [[item.name]]
+                      p [[item.description]]
+                      paper-button(on-click="viewIssueItem") View
 
         ltn-fab-menu(
           hidden$="[[!inAuthRole(auth.token, 'admin')]]"
