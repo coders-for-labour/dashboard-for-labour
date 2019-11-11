@@ -52,6 +52,15 @@ dom-module#d4l-topic
         @apply(--d4l-button-primary);
       }
 
+      @media (max-width: 768px) {
+        .page-header.layout.horizontal {
+          flex-direction: column;
+        }
+        .page-header .thunderclap{
+          margin: 0;
+        }
+      }
+
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
     buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
     buttress-db-query(doc="[[db.thunderclap]]", data-path="db.thunderclap.data", query="[[__thunderclapQuery]]", find-one="{{__thunderclap}}")
@@ -71,28 +80,26 @@ dom-module#d4l-topic
       div(name="loaded")
         .page-content.flex.layout
           d4l-dashboard-card.card.flex(hero, style="background-image: url('[[__topicBanner]]')")
-            div(hidden$="[[__hasSelectedItem]]")
-              .layout.vertical
-                h1 All Topics
-                p Primum Theophrasti, Strato, physicum se voluit; Obsecro, inquit, Torquate, haec dicit Epicurus?
+            .page-header.layout.vertical(hidden$="[[__hasSelectedItem]]")
+              h1 All Topics
+              p Primum Theophrasti, Strato, physicum se voluit; Obsecro, inquit, Torquate, haec dicit Epicurus?
 
-            div(hidden$="[[!__hasSelectedItem]]")
-              .layout.horizontal.center
-                .flex.layout.vertical
-                  h1 [[__selectedItem.name]]
-                  p [[__selectedItem.description]]
-                  .layout.horizontal
-                    paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
-                    paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
+            .page-header.layout.horizontal.center(hidden$="[[!__hasSelectedItem]]")
+              .flex.layout.vertical
+                h1 [[__selectedItem.name]]
+                p [[__selectedItem.description]]
+                .layout.horizontal
+                  paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
+                  paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
 
-                .thunderclap(hidden$="[[!computeIsSet(__thunderclap)]]")
-                  h1 Next Thunderclap
-                  d4l-thunderclap-card(
-                    db="{{db}}",
-                    auth="[[auth]]",
-                    thunderclap="[[__thunderclap]]",
-                    on-subscribe="subscribeThunderclap"
-                  )
+              .thunderclap(hidden$="[[!computeIsSet(__thunderclap)]]")
+                h1 Next Thunderclap
+                d4l-thunderclap-card(
+                  db="{{db}}",
+                  auth="[[auth]]",
+                  thunderclap="[[__thunderclap]]",
+                  on-subscribe="subscribeThunderclap"
+                )
 
           .content
             div(hidden$="[[__hasSelectedItem]]")
