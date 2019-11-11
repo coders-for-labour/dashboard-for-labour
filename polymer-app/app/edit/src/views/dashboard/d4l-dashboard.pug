@@ -49,7 +49,6 @@ dom-module#d4l-dashboard
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    buttress-db-query(db="[[db]]", doc="[[db.people]]", query="[[__userQuery]]", find-all="{{__users}}")
     buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
 
