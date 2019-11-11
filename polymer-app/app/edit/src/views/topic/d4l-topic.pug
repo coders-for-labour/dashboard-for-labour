@@ -76,7 +76,7 @@ dom-module#d4l-topic
                   p [[__selectedItem.description]]
                   .layout.horizontal
                     paper-button(on-click="viewTopicItem", hidden$="[[__hasSelectedItem]]") View
-                    paper-button(on-click="__updateTopic", hidden$="[[!inAuthRole(auth.token, 'admin')]]") Edit
+                    paper-button(on-click="__updateTopic", hidden$="[[!__isTopicEditor]]") Edit
 
             .content(mobile$="[[isMobile]]")
               div(hidden$="[[__hasSelectedItem]]")
@@ -100,7 +100,7 @@ dom-module#d4l-topic
                       paper-button(on-click="viewIssueItem") View
 
         ltn-fab-menu(
-          hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+          hidden$="[[!__isTopicEditor]]"
         )
           .fab-item(hidden$="[[!__hasSelectedItem]]")
             .label Issue

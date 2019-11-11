@@ -36,6 +36,10 @@ const __authenticateUser = (appAuth, existingUser) => {
       role: AppRoles.default,
       permissions: [
         {'route': 'app/schema', 'permission': 'read'},
+        {'route': 'topic', 'permission': 'read'},
+        {'route': 'issue', 'permission': 'read'},
+        {'route': 'thunderclap', 'permission': 'read'},
+        {'route': 'resource', 'permission': 'read'},
         // TODO: Fill in permissions for public users
       ],
     },
@@ -49,19 +53,85 @@ const __authenticateUser = (appAuth, existingUser) => {
       ],
     },
   };
+  let constituencies = null;
+  let constituency = null;
   let authorisation = 'unauthorised';
   let user = null;
+  let topic = null;
 
   Logging.logDebug(`AUTH: Pending ${appAuth.name} using ${appAuth.username}`);
 
-  const cache = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
-  return cache.getData()
-    .then((users) => {
-      const authorised = users.find((u) => u.twitter === appAuth.username);
-      if (authorised) {
-        authorisation = 'authorised';
+  const tCache = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
+  const cCache = Cache.Manager.getCache(Cache.Constants.Type.CONSTITUENCY);
+  return cCache.getData()
+    .then((data) => {
+      constituencies = [];
+      for (const name in data) {
+        if (data.hasOwnProperty(name) === false) continue;
+        const c = data[name];
+        c.name = name;
+        constituencies.push(c);
       }
     })
+    .then(() => tCache.getData())
+    .then((users) => {
+      const authorised = users.find((u) => appAuth.app === 'twitter' && u.twitter === appAuth.username);
+      if (!authorised) {
+        return null;
+      }
+
+      authorisation = 'authorised';
+      return authorised;
+    })
+    .then((authorised) => {
+      if (!authorised) {
+        return;
+      }
+      constituency = constituencies.find((c) => c.pano == authorised.teamName);
+      if (!constituency) {
+        return;
+      }
+      return Buttress.getCollection('topic').getAll();
+    })
+    .then((topics) => {
+      return topics.find((t) => t.constituencyPano == constituency.pano);
+    })
+    .then((_topic) => {
+      if (_topic) return _topic;
+
+      const r17 = constituency.results['2017'].results;
+      const mp = r17[0];
+      const labourIdx = r17.findIndex((mp) => mp.party === 'Labour');
+      const labour = r17[labourIdx];
+      const labourBehind = r17.reduce((behind, mp, idx) => {
+        if (idx >= labourIdx) return behind;
+        behind += mp.ahead;
+        return behind;
+      }, 0);
+
+      let description = '';
+      if (labour !== mp) {
+        description = `
+          This seat is currently held by ${mp.party} with a majority of ${mp.ahead}. The MP is ${mp.name}. 
+          The Labour MP in the 2017 election was ${labour.name}. We need ${labourBehind} votes to win this seat.
+        `;
+      } else {
+        description = `
+          This seat is currently held by Labour with a majority of ${mp.ahead}. Your MP is ${mp.name}.
+        `;
+      }
+
+      return Buttress.getCollection('topic').save({
+        name: constituency.name,
+        description: description,
+        constituencyPano: constituency.pano,
+        banner: '',
+        parentId: null,
+        editorIds: [],
+        viewCount: 0,
+      });
+    })
+    .then((_topic) => topic = _topic)
     .then(() => Buttress.Auth.findOrCreateUser(appAuth, authentication[authorisation]))
     .then((_user) => {
       if (!_user) {
@@ -80,6 +150,21 @@ const __authenticateUser = (appAuth, existingUser) => {
             return user;
           });
       }
+    })
+    .then(() => {
+      if (!user || authorisation === 'unauthorised' || !topic) {
+        return;
+      }
+
+      const editorIdx = topic.editorIds.indexOf(user.id);
+      if (editorIdx != -1) {
+        return;
+      }
+
+      return Buttress.getCollection('topic').update(topic.id, {
+        path: 'editorIds',
+        value: user.id,
+      });
     })
     .then(() => Buttress.getCollection('people').getAll())
     .then((people) => {
