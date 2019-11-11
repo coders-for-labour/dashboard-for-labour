@@ -5,7 +5,15 @@
   "extends": [
     "timestamps"
   ],
-  "roles": [],
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": {
+      "GET": "allow"
+    },
+    "dataDisposition": {
+      "READ": "allow"
+    }
+  }],
   "properties": {
     "name": {
       "__type": "string",

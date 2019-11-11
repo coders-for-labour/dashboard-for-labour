@@ -5,7 +5,15 @@
   "extends": [
     "timestamps"
   ],
-  "roles": [],
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": {
+      "GET": "allow"
+    },
+    "dataDisposition": {
+      "READ": "allow"
+    }
+  }],
   "properties": {
     "name": {
       "__type": "string",
@@ -31,20 +39,28 @@
       "__type": "string",
       "__required": false,
       "__default": null,
-      "__allowUpdate": true
+      "__allowUpdate": true,
+      "__permissions": [{
+        "role": "public",
+        "READ": "deny"
+      }]
     },
     "editorIds": {
       "__type": "array",
       "__itemtype": "id",
       "__required": true,
       "__default": [],
-      "__allowUpdate": true
+      "__allowUpdate": true,
+      "__permissions": [{
+        "role": "public",
+        "READ": "deny"
+      }]
     },
     "viewCount": {
       "__type": "number",
       "__required": false,
       "__default": 0,
-      "__allowUpdate": true      
+      "__allowUpdate": true    
     }
   }
 }
