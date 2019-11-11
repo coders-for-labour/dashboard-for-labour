@@ -5,22 +5,39 @@
   "extends": [
     "timestamps"
   ],
-  "roles": [],
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": {
+      "GET": "allow"
+    }
+  }],
   "properties": {
     "name": {
       "__type": "string",
       "__required": true,
-      "__allowUpdate": true
+      "__allowUpdate": true,
+      "__permissions": [{
+        "role": "public",
+        "READ": "allow"
+      }]
     },
     "description": {
       "__type": "string",
       "__required": true,
-      "__allowUpdate": true
+      "__allowUpdate": true,
+      "__permissions": [{
+        "role": "public",
+        "READ": "allow"
+      }]
     },
     "scheduledExecution": {
       "__type": "date",
       "__required": true,
-      "__allowUpdate": true
+      "__allowUpdate": true,
+      "__permissions": [{
+        "role": "public",
+        "READ": "allow"
+      }]
     },
     "supporters": {
       "__type": "array",
