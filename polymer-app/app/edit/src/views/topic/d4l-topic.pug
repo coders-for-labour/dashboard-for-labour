@@ -118,12 +118,12 @@ dom-module#d4l-topic
     ltn-fab-menu(
       hidden$="[[!inAuthRole(auth.token, 'admin')]]"
     )
-      .fab-item
+      .fab-item(hidden$="[[!__hasSelectedItem]]")
         .label Thunderclap
         paper-icon-button(icon="add" title="Thunderclap", on-tap="__addTopicThunderclap")
       .fab-item(hidden$="[[!__hasSelectedItem]]")
         .label Issue
-        paper-icon-button(icon="add" title="Issue", on-tap="addIssue")
+        paper-icon-button(icon="add" title="Issue", on-tap="__addTopicIssue")
       .fab-item
         .label Topic
         paper-icon-button(icon="add" title="Topic", on-tap="addTopic")

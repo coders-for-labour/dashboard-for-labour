@@ -53,15 +53,6 @@ Polymer({
     '__observeSelectedItem(__selectedItem)'
   ],
 
-  __computeTopicBanner() {
-    const selectedItem = this.get('__selectedItem');
-    if (selectedItem && selectedItem.banner) {
-      return selectedItem.banner;
-    }
-
-    return '/images/homepage/homepage-01.jpg';
-  },
-
   __observeSelectedItem() {
     const ajax = this.$.ajax;
 
@@ -95,6 +86,26 @@ Polymer({
     }
 
     return this.addThunderclap(thunderclap);
+  },
+
+  __addTopicIssue() {
+    const selectedItem = this.get('__selectedItem');
+    const issue = this.get('db.Factory').create('issue');
+
+    if (selectedItem) {
+      issue.topicId = selectedItem.id;
+    }
+
+    return this.addIssue(issue);
+  },
+
+  __computeTopicBanner() {
+    const selectedItem = this.get('__selectedItem');
+    if (selectedItem && selectedItem.banner) {
+      return selectedItem.banner;
+    }
+
+    return '/images/homepage/homepage-01.jpg';
   },
 
   __computeThunderclapQuery: function () {
