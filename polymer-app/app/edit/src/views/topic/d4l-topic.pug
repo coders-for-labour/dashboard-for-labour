@@ -12,7 +12,9 @@ link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
+link(rel="import", href="/src/ltn-ajax/ltn-ajax.html")
 link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
+
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
@@ -48,6 +50,7 @@ dom-module#d4l-topic
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}")
     buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
 
+    ltn-ajax#ajax
     ltn-dialog#dialog
 
     iron-pages(

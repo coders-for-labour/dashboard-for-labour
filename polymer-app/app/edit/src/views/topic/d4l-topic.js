@@ -37,10 +37,12 @@ Polymer({
   },
 
   observers: [
-    '__observeSelectedItem(db.topic.data, __selectedItem)'
+    '__observeSelectedItem(__selectedItem)'
   ],
     
   __observeSelectedItem() {
+    const ajax = this.$.ajax;
+
     const db = this.get('db.topic.data');
     if (!db) return;
     const selectedItem = this.get('__selectedItem');
@@ -50,9 +52,16 @@ Polymer({
 
     this.__info('__observeSelectedItem', selectedItem);
 
-    let views = selectedItem.viewCount;
-    if (!views && views !== 0) views = 0;
-    this.set(['db.topic.data',dbIdx,'viewCount'], ++views);
+    // Send request to bump the count
+    return ajax.send({
+      url: '/api/v1/topic/view',
+      method: 'POST',
+      contentType: 'application/json',
+      body: {
+        id: selectedItem.id
+      }
+    })
+    .catch(err => this.__err(err));
   },
 
   __computeTopicsQuery(cr) {

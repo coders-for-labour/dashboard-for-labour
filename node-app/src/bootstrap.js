@@ -22,6 +22,7 @@ const AppRoles = require('../schema/appRoles.json');
 
 const Auth = require('./auth');
 const Thunderclap = require('./thunderclap');
+const Topic = require('./topic');
 const Queue = require('./api-queue');
 const Cache = require('./cache');
 // const Uploads = require('./uploads');
@@ -95,6 +96,7 @@ const __initWorker = () => {
   Auth.init(app);
   // Twibbyn.init(app);
   Thunderclap.init(app);
+  Topic.init(app);
   // Queue.Manager.init(app);
   Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   Cache.Manager.create(Cache.Constants.Type.TEAM);
