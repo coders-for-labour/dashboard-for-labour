@@ -51,7 +51,7 @@ dom-module#d4l-dashboard
 
     buttress-db-query(db="[[db]]", doc="[[db.people]]", query="[[__userQuery]]", find-all="{{__users}}")
     buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
-    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4", logging)
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
 
     .view-container.layout.vertical
       h1 Latest
