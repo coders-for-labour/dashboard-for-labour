@@ -36,6 +36,12 @@ Polymer({
       computed: '__computeThunderclapQuery(db.thunderclap.data.*, __selectedItem)'
     },
 
+    __topicBanner: {
+      type: String,
+      value: '',
+      computed: '__computeTopicBanner(__selectedItem.banner)'
+    },
+
     __hasSelectedItem: {
       type: Boolean,
       value: false,
@@ -46,7 +52,16 @@ Polymer({
   observers: [
     '__observeSelectedItem(__selectedItem)'
   ],
-    
+
+  __computeTopicBanner() {
+    const selectedItem = this.get('__selectedItem');
+    if (selectedItem && selectedItem.banner) {
+      return selectedItem.banner;
+    }
+
+    return '/images/homepage/homepage-01.jpg';
+  },
+
   __observeSelectedItem() {
     const ajax = this.$.ajax;
 
