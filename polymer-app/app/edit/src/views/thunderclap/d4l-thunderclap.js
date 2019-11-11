@@ -24,41 +24,7 @@ Polymer({
     campaign: {
       type: Object
     },
-    campaigns: {
-      type: Array
-    },
 
-    __campaignId: {
-      type: String
-    },
-    __campaignText: {
-      type: String
-    },
-
-    __tweetBody: {
-      type: Object
-    },
-
-    __openPostDialog: {
-      type: Boolean,
-      value: false
-    },
-
-    __thunderclapEndpoint: {
-      type: String,
-      value: '//%{D4L_CDN_URL}%'
-    },
-    __thunderclapTwitterUrl: {
-      type: String,
-      value: '/api/v1/thunderclap/twitter/subscribe'
-    },
-
-    __thunderclapSubscribeUrl: {
-      type: String
-    },
-    __thunderclapSubscribeBody: {
-      type: Object
-    },
 
     __thunderclap: Array,
     __thunderclapQuery: {
@@ -78,36 +44,6 @@ Polymer({
       value: false,
       computed: '__computeHasUserTwitter(auth.user, auth.user.auth.*)'
     }
-  },
-
-  __subscribeThunderclap: function(ev) {
-    this.__debug(ev.detail);
-    this.__campaignId = ev.detail.id;
-    this.__campaignText = ev.detail.text;
-    this.__openPostDialog = true;
-  },
-
-  __saveThunderclap: function(ev) {
-    this.__debug(ev.detail);
-    if (!this.__campaignId) {
-      this.__warn('No campaign set!');
-      return;
-    }
-
-    this.set('__thunderclapSubscribeUrl', this.get('__thunderclapTwitterUrl'));
-    this.set('__thunderclapSubscribeBody', {
-      id: this.__campaignId,
-      message: ev.detail.text
-    });
-
-    this.__campaignId = '';
-    this.__campaignText = '';
-
-    this.$.ajaxSubscribeThunderclap.generateRequest();
-  },
-
-  __thunderclapResponse: function(){
-    // this.__debug(res);
   },
 
   __sharedTw: function() {

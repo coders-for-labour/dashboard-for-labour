@@ -38,7 +38,10 @@ Polymer({
   __subscribeThunderclap: function(){
     const thunderclap = this.get('thunderclap');
 
-    this.fire('subscribe', {id: thunderclap.id, text: thunderclap.description});
+    this.fire('subscribe', {
+      id: thunderclap.id,
+      text: thunderclap.description
+    });
   },
 
   __computeUserCountLabel: function(){

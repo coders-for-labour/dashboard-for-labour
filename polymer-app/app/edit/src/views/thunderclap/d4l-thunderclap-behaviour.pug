@@ -12,10 +12,51 @@ script.
       
     },
 
+    subscribeThunderclap: function(ev) {
+      const dialog       = this.$.dialog;
+      const ajax         = this.$.ajax;
+      const campaignId   = ev.detail.id;
+      const campaignText = ev.detail.text;
+
+      dialog.setMetadata({
+        'title': 'Subscribe to thunderclap',
+        'description': 'Personalise the message that will be sent out as part of this Thunderclap',
+        'action': 'Subscribe',
+      });
+
+      //- TODO: Check to see if they are signed in using twitter first
+
+      return dialog.openDialog(this.parseInputSchema({
+        text: {
+          label: 'Tweet',
+          type: 'TEXTAREA',
+          default: campaignText
+        }
+      }))
+        .then(res => {
+          const message = res.values.text;
+
+          return ajax.send({
+            url: '/api/v1/thunderclap/twitter/subscribe',
+            method: 'PUT',
+            contentType: 'application/json',
+            body: {
+              id: campaignId,
+              message: message
+            }
+          });
+        })
+        .then(res => {
+          console.log(res.response);
+          //- TODO: Handle error & responce
+        })
+        .catch(err => this.__err(err));
+    },
+
     __presentIssueDialog(thunderclap, meta) {
       const dialog = this.$.dialog;
 
-      const inputSchema = {
+      const inputSchema = { 
         name: {
           label: 'Title',
           type: 'TEXT',
@@ -58,7 +99,7 @@ script.
         'title': 'Issue',
         'description': 'Add a new issue to the system',
         'action': 'Save',
-      }
+      };
       
       return this.__presentIssueDialog(thunderclap, dialogMeta)
         .then((result) => {
