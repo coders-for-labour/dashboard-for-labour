@@ -8,12 +8,12 @@ dom-module(id="shared-styles")
   template
     style.
       h1 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-primary-title;
       }
       h2 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-secondary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-secondary-title;
       }
 
       d4l-dashboard-card h1,
@@ -75,23 +75,23 @@ dom-module(id="shared-card-styles")
       }
 
       h1 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-small-card-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-small-card-primary-title;
         color: var(--text-dark-primary-color);
         /*margin-bottom:10px;*/
       }
       p,
       .third-line ::slotted(span) {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-small-card-primary-text);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-small-card-primary-text;
         color: var(--text-dark-primary-color);
       }
       p.secondary,
       p[secondary],
       .third-line ::slotted(span.secondary),
       .third-line ::slotted(span[secondary]) {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-small-card-secondary-text);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-small-card-secondary-text;
         color: var(--text-dark-secondary-color);
       }
 
@@ -155,23 +155,23 @@ dom-module#d4l-dialog-styles
     style(include="d4l-theme")
     style.
       h1 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-popup-primary-title;
         color: var(--default-primary-color);
       }
       h2 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-secondary-title);
+        @apply --d4l-font-common-base ;
+        @apply --d4l-font-popup-secondary-title ;
         color: var(--text-dark-primary-color);
       }
       p {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-primary-text);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-popup-primary-text;
         color: var(--text-dark-primary-color);
       }
       .dialog-header h2 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-popup-primary-title;
         font-weight: 200 !important;
         color: white;
       }

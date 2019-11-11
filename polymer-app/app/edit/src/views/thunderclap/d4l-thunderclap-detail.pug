@@ -18,7 +18,6 @@ link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
-link(rel="import", href="/src/views/twibbyn/d4l-twibbyn-overlay.html")
 
 dom-module#d4l-thunderclap-detail
   template
@@ -50,11 +49,7 @@ dom-module#d4l-thunderclap-detail
       }
 
       paper-button {
-        @apply(--d4l-button-primary);
-      }
-
-      d4l-twibbyn-overlay {
-        width: 250px;
+        @apply --d4l-button-primary;
       }
 
       paper-textarea {

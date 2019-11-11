@@ -9,8 +9,7 @@
     "npm": "~2.15.x"
   },
   "scripts": {
-    "dev": "polymer serve",
-    "build": "gulp build"
+    "build": "rm -rf ./app/build && cd ./app/serve && polymer build && mv ./build ../"
   },
   "repository": {
     "type": "git",

@@ -7,17 +7,19 @@
     "src/views/meme/d4l-meme.html",
     "src/views/thunderclap/d4l-thunderclap.html",
     "src/views/topic/d4l-topic.html",
-    "src/views/twibbyn/d4l-twibbyn.html",
     "src/views/view404/d4l-view404.html"
   ],
   "sources": [
-    "images/**/*",
-    "src/**/*"
+   "src/**/*",
+   "images/**/*",
+   "videos/**/*",
+   "bower.json"
   ],
   "extraDependencies": [
     "bower_components/webcomponentsjs/*.js",
     "!bower_components/webcomponentsjs/gulpfile.js",
-    "manifest.json"
+    "manifest.json",
+    "bower_components/sugar/dist/sugar.min.js"
   ],
   "lint": {
     "rules": ["polymer-2"]
