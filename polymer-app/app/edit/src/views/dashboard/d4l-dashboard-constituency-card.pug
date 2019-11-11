@@ -96,7 +96,7 @@ dom-module#d4l-dashboard-constituency-card
           flex.layout.vertical
             h1 [[constituency.name]]
             .layout.horizontal
-              paper-button(on-click="viewTopicConstituency") View
+              paper-button(on-click="viewTopicConstituency") View Topic
               paper-icon-button(on-click="__resetConstituency", icon="clear")
         template(is="dom-if", if="[[!__hasConstituency]]")
           .layout.horizontal.center
