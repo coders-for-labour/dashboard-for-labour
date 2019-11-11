@@ -1,4 +1,5 @@
-link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/polymer/polymer-element.html")
+link(rel="import" href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
@@ -12,6 +13,7 @@ link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
+link(rel="import", href="/src/ltn-ajax/ltn-ajax.html")
 link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
 
 link(rel="import", href="/src/d4l-theme.html")
@@ -33,6 +35,29 @@ dom-module#d4l-issue
         padding: var(--default-page-padding);
         padding-top: var(--default-header-offset);
       }
+      .content {
+        padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
+      }
+      .icon {
+        cursor: pointer;
+        margin: 1rem 1rem 1rem 0;
+      }
+      .response {
+        margin-top: 2rem;
+      }
+      .desc {
+        margin: 0 1rem;
+      }
+      .item:nth-child(even) {
+        background-color: #d4d4d4;
+      }
+      .source {
+        margin-top: 2rem;
+      }
+      .src-desc{
+        position: relative;
+        left: 20%;
+      }
 
     ltn-dialog#dialog
 
@@ -52,38 +77,51 @@ dom-module#d4l-issue
 
         div(hidden$="[[!__hasSelectedItem]]")
           .layout.horizontal.wrap
-            .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
-              d4l-dashboard-card.card.flex(background="thunderclap")
-                .layout.horizontal.center
-                  h1 [[__selectedItem.name]]
-                  p [[__selectedItem.description]]
-                  paper-button(on-click="__viewTopic") Topic
+          .page-content.flex.layout.vertical.card-group(mobile$="[[isMobile]]")
+            d4l-dashboard-card.card.flex(background="thunderclap", hero)
+              .layout.vertical
+                .layout.horizontal
+                  iron-icon(on-tap="__viewTopic" icon="arrow-back" class="icon")
+                  p Topic
+                h1 [[__selectedItem.name]]
+                p [[__selectedItem.description]]
 
-            .page-content.flex-2(mobile$="[[isMobile]]")
-              h1 Events
+          .content(mobile$="[[isMobile]]")
+            p Created At: [[computeDateFormat(__selectedItem.createdAt)]]
+            p Updated At: [[computeDateFormat(__selectedItem.updatedAt)]]
+            h1 Events
+            hr
+            .layout.vertical.desc
               template(is="dom-repeat", items="[[__selectedItem.events]]")
-                div Source [[item.source.description]]
-                ul
-                  template(is="dom-repeat", items="[[item.source.links]]")
-                    li
-                      a(href="[[item]]" target="_BLANK") [[item]]
+                div.item
+                  .layout.horizontal.source
+                    div Source: 
+                    div.src-desc [[item.source.description]]
+                  ul.src-desc
+                    template(is="dom-repeat", items="[[item.source.links]]")
+                      li
+                        a(href="[[item]]" target="_BLANK") [[item]]
+                  .layout.horizontal.response
+                    div Response:
+                    div.src-desc [[item.response.description]]
+                  ul.src-desc
+                    template(is="dom-repeat", items="[[item.response.links]]")
+                      li
+                        a(href="[[item]]" target="_BLANK") [[item]]
 
-                div Response: [[item.response.description]]
-                ul
-                  template(is="dom-repeat", items="[[item.response.links]]")
-                    li
-                      a(href="[[item]]" target="_BLANK") [[item]]
-
-              h1 Resource
-
-          ltn-fab-menu(
-            hidden$="[[!inAuthRole(auth.token, 'admin')]]"
-          )
-            .fab-item
-              .label Event
-              paper-icon-button(icon="add" title="Event", on-click="addIssueEvent")
-            .fab-item
-              .label Resource
-              paper-icon-button(icon="add" title="Resource", on-click="__addResource")
+            h1 Resources
+            hr
+            .layout.horizontal.row-3.wrap
+            template(is="dom-repeat", items="[[__selectedItem.resources]]")
+              //- img __selectedItem.resources;
+        ltn-fab-menu(
+          hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+        )
+          .fab-item
+            .label Event
+            paper-icon-button(icon="add" title="Event", on-click="addIssueEvent")
+          .fab-item
+            .label Resource
+            paper-icon-button(icon="add" title="Resource", on-click="__addResource")
 
   script(src="./d4l-issue.js")
