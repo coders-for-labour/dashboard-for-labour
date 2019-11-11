@@ -36,6 +36,10 @@ const __authenticateUser = (appAuth, existingUser) => {
       role: AppRoles.default,
       permissions: [
         {'route': 'app/schema', 'permission': 'read'},
+        {'route': 'topic', 'permission': 'read'},
+        {'route': 'issue', 'permission': 'read'},
+        {'route': 'thunderclap', 'permission': 'read'},
+        {'route': 'resource', 'permission': 'read'},
         // TODO: Fill in permissions for public users
       ],
     },
@@ -54,12 +58,29 @@ const __authenticateUser = (appAuth, existingUser) => {
 
   Logging.logDebug(`AUTH: Pending ${appAuth.name} using ${appAuth.username}`);
 
-  const cache = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
-  return cache.getData()
+  let constituencies = null;
+  const tCache = Cache.Manager.getCache(Cache.Constants.Type.TEAM);
+  const cCache = Cache.Manager.getCache(Cache.Constants.Type.CONSTITUENCIES);
+  return cCache.getData()
+    .then((data) => {
+      constituencies = data;
+    })
+    .then(tCache.getData)
     .then((users) => {
-      const authorised = users.find((u) => u.twitter === appAuth.username);
-      if (authorised) {
-        authorisation = 'authorised';
+      const authorised = users.find((u) => appAuth.app === 'twitter' && u.twitter === appAuth.username);
+      if (!authorised) {
+        return null;
+      }
+      authorisation = 'authorised';
+      return authorised;
+    })
+    .then((authorised) => {
+      if (!authorised) {
+        return;
+      }
+      const constituency = constituencies.find((c) => c.pano == authorised.pano);
+      if (!constituency) {
+        return;
       }
     })
     .then(() => Buttress.Auth.findOrCreateUser(appAuth, authentication[authorisation]))
