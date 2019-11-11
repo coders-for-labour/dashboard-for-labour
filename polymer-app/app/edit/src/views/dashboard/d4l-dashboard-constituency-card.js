@@ -63,7 +63,8 @@ Polymer({
       this.__warning(`Missing constituency`);
       return;
     }
-    let rootTopic = topics.find(t => !t.parentId && t.constituencyPano === constituency.pano );
+    let rootTopic = topics.find(t => !t.parentId && t.constituencyPano == constituency.pano );
+    this.__silly(topics, constituency, rootTopic);
     if (!rootTopic) {
       const dbFactory = this.get('db.Factory');
       const topic = dbFactory.create('topic');
@@ -88,7 +89,7 @@ Polymer({
         `;
       }
       topic.constituencyPano = constituency.pano;
-      this.__info(topic);
+      this.__silly(topic);
       this.push('db.topic.data', topic);
       rootTopic = topic;
     }
