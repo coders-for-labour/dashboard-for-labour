@@ -165,6 +165,7 @@ dom-module#ltn-ajax
 
       __ironAjaxError: function(ev) {
         const callback = this.get('__ironAjaxErrorCallback');
+        ev.detail.response = ev.detail.request.response;
         if (callback) callback(ev.detail);
       }
     });

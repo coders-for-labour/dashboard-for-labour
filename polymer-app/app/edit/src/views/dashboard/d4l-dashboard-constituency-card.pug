@@ -2,6 +2,8 @@ link(rel="import", href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
+link(rel="import", href="/src/ltn-ajax/ltn-ajax.html")
 
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
 link(rel="import", href="/src/d4l-theme.html")
@@ -86,12 +88,7 @@ dom-module#d4l-dashboard-constituency-card
         @apply(--d4l-button-primary);
       }
 
-    iron-ajax#findConstituency(
-      url="/api/v1/constituency",
-      handleAs="json",
-      params="{{__rqParams}}",
-      last-response="{{__rqResponse}}"
-    )
+    ltn-ajax#ajax
 
     .card(background="find-mp", disabled$="[[disabled]]")
       .card-content
@@ -105,7 +102,8 @@ dom-module#d4l-dashboard-constituency-card
           .layout.horizontal.center
             iron-icon(icon="d4l-icons:location")
             h1 Find a Constituency
-          paper-input(label="Enter a postcode here", value="{{__rqParams.postcode}}")
+          .error [[__formError]]
+          paper-input(label="Enter a postcode here", value="{{__postcode}}")
           paper-button(on-tap="__findConstituency") Search
 
 
