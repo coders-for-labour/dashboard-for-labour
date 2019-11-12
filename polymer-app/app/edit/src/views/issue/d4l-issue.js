@@ -13,6 +13,11 @@ Polymer({
       type: Object
     },
 
+    logLevel: {
+      type: Number,
+      value: 5
+    },
+
     __pageTitle: {
       type: String,
       value: 'Issues'
@@ -24,11 +29,21 @@ Polymer({
       computed: '__computeTopicQuery(__selectedItem, db.issue.data.*. db.topic.data.*)'
     },
 
+    __isTopicEditor: {
+      type: Boolean,
+      value: false,
+      computed: '__computeIsTopicEditor(topic, auth.token)'
+    },
+
     __hasSelectedItem: {
       type: Boolean,
       value: false,
       computed: 'computeIsSet(__selectedItem)'
     }
+  },
+
+  __formatEventDate(eventDate) {
+    return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{minutes}{tt}");
   },
 
   __viewTopic() {
@@ -44,4 +59,9 @@ Polymer({
       }
     };
   },
+  __sortEvents(a, b) {
+    if(a.createdAt > b.createdAt) return -1;
+    if(a.createdAt < b.createdAt) return 1;
+    return 0;
+  }
 });
