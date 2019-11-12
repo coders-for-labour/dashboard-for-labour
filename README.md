@@ -1,6 +1,6 @@
 # dashboard-for-labour
 
-Social media tools for activists for #ge17
+Digital campaigning dashboard for activists for #GE20119
 
 # What's New
 ## version: 1.3.7
