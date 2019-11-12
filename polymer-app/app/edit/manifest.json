@@ -6,7 +6,7 @@
   "display": "standalone",
   "start_url": "/",
   "description": "Change your profile pictures and get tweeting for Labour now.",
-  ​​"orientation": "portrait",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "images/icons/icon-72x72.png",
@@ -48,5 +48,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
+  ]
 }
