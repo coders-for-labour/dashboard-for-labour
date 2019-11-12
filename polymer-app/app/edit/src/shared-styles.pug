@@ -71,7 +71,7 @@ dom-module(id="shared-card-styles")
         margin: 0px;
       }
       .card[hero] {
-        padding: var(--default-hero-padding);
+        padding: 0;
       }
 
       h1 {
@@ -107,11 +107,15 @@ dom-module(id="shared-layout-styles")
   template
     style.
       .view-container {
-        width: 100%;
-        max-width: 1420px;
+        width: 1420px;
 
         margin-left: var(--default-page-gutter);
         margin-right: var(--default-page-gutter);
+      }
+      @media (max-width: 1520px) {
+        .view-container {
+          width: auto;
+        }
       }
 
       .page-sidebar {
