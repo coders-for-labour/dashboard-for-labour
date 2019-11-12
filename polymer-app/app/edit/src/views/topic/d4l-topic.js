@@ -111,6 +111,17 @@ Polymer({
     return this.addIssue(issue);
   },
 
+  __addTopic() {
+    const selectedItem = this.get('__selectedItem');
+    const topic = this.get('db.Factory').create('topic');
+
+    if (selectedItem) {
+      topic.parentId = selectedItem.id;
+    }
+
+    return this.addTopic(topic);
+  },
+
   __computeTopicBanner() {
     const selectedItem = this.get('__selectedItem');
     if (selectedItem && selectedItem.banner) {

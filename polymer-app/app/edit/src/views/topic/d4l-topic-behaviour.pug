@@ -75,8 +75,7 @@ script.
         });
     },
 
-    addTopic() {
-      const selectedItem = this.get('__selectedItem');
+    addTopic(topic) {
       const dbFactory = this.get('db.Factory');
       const dialogMeta = {
         'title': 'Topic',
@@ -94,10 +93,6 @@ script.
           topic.name = result.values.name;
           topic.description = result.values.description;
           topic.banner = result.values.banner;
-
-          if (selectedItem) {
-            topic.parentId = selectedItem.id;
-          }
 
           this.push('db.topic.data', topic);
         });
