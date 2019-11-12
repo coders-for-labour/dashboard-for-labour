@@ -54,6 +54,10 @@ Polymer({
     this.set('__shareTwStatus', 'ready');
   },
 
+  __addThunderclap: function() {
+    return this.addThunderclap();
+  },
+
   __computeThunderclapQuery: function () {
     return {
       scheduledExecution: {

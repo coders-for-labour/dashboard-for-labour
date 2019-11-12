@@ -106,14 +106,18 @@ dom-module(id="shared-card-styles")
 dom-module(id="shared-layout-styles")
   template
     style.
+      .view-container {
+        width: 100%;
+        max-width: 1420px;
+
+        margin-left: var(--default-page-gutter);
+        margin-right: var(--default-page-gutter);
+      }
+
       .page-sidebar {
         margin-bottom:30px;
       }
 
-      .page-content:not([mobile]) {
-        width: 100%;
-        margin-left: 00%;
-      }
       .page-sidebar:not([mobile]) {
         position: fixed;
         width: 28%;

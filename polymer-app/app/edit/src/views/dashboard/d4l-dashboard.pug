@@ -42,11 +42,6 @@ dom-module#d4l-dashboard
         font-size: 50px;
       }
 
-      .view-container {
-        margin-left: var(--default-page-gutter);
-        margin-right: var(--default-page-gutter);
-      }
-
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
     buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")

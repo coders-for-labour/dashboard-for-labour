@@ -51,7 +51,7 @@ dom-module(id="d4l-theme")
         };
 
         --default-page-padding: 0;
-        --default-page-gutter: 10px;        
+        --default-page-gutter: 10px;
         --default-header-offset: 64px;
         --default-hero-padding: 10px var(--default-page-gutter) 40px var(--default-page-gutter);
 
@@ -218,6 +218,11 @@ dom-module(id="d4l-theme")
       @media (min-width: 1024px) {
         :host {
           --default-page-gutter: 100px;
+        }
+      }
+      @media (min-width: 1520px) {
+        :host {
+          --default-page-gutter: auto;
         }
       }
 

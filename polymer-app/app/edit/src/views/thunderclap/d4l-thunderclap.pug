@@ -74,30 +74,31 @@ dom-module#d4l-thunderclap
           role='loaded'
         )
           div(name="list", mobile$="[[isMobile]]")
-            .page-content
-              d4l-dashboard-card.card(background="thunderclap", hero)
-                .layout.horizontal.center
-                  iron-icon(icon="d4l-social-icons:storm")
-                  h1 Thunderclap
-                p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
-                p Think your friends want to Amplify Labour’s message?
-                //- .share-buttons
-                //-   paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareTwitter") [[__shareTwButton]]
+            d4l-dashboard-card.card(background="thunderclap", hero)
+              .view-container
+                .page-header.layout.vertical
+                  .layout.horizontal.center
+                    iron-icon(icon="d4l-social-icons:storm")
+                    h1 Thunderclap
+                  p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
+                  p Think your friends want to Amplify Labour’s message?
+              //- .share-buttons
+              //-   paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareTwitter") [[__shareTwButton]]
 
-              .content
-                .layout.horizontal.row-3.wrap
-                  template(is="dom-repeat" items="[[__thunderclap]]")
-                    d4l-thunderclap-card.item(
-                      db="{{db}}",
-                      auth="[[auth]]",
-                      thunderclap="[[item]]",
-                      on-subscribe="subscribeThunderclap"
-                    )
+            .view-container.layout.vertical
+              .layout.horizontal.row-3.wrap
+                template(is="dom-repeat" items="[[__thunderclap]]")
+                  d4l-thunderclap-card.item(
+                    db="{{db}}",
+                    auth="[[auth]]",
+                    thunderclap="[[item]]",
+                    on-subscribe="subscribeThunderclap"
+                  )
 
             paper-fab(
               icon="add"
               hidden$="[[!inAuthRole(auth.token, 'admin')]]"
-              on-tap="addThunderclap"
+              on-click="__addThunderclap"
             )
 
           div(name="detail", mobile$="[[isMobile]]")

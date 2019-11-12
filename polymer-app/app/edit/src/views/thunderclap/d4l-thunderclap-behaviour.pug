@@ -123,8 +123,11 @@ script.
 
           thunderclap.name = result.values.name;
           thunderclap.description = result.values.description;
-          thunderclap.topicId = result.values.topicId;
-          thunderclap.scheduledExecution = date;
+          thunderclap.scheduledExecution = `${date}`;
+
+          if (result.values.topicId) {
+            thunderclap.topicId = result.values.topicId;
+          }
 
           this.push('db.thunderclap.data', thunderclap);
         });
