@@ -110,7 +110,7 @@ script.
       const isAdmin = this.inAuthRole(auth.token, 'admin.super');
       const isEditor = this.inAuthRole(auth.token, 'admin.editor');
 
-      this.__debug(`__computeIsTopicEditor`, topic, auth, `isAdmin: ${isAdmin}`, `isEditor: ${isEditor}`);
+      this.__silly(`__computeIsTopicEditor`, topic, auth, `isAdmin: ${isAdmin}`, `isEditor: ${isEditor}`);
 
       if (isAdmin === true) return true;
       if (isEditor === false) return false;
@@ -122,7 +122,7 @@ script.
       do {
         const editorIds = child.editorIds || [];
         editor = editorIds.indexOf(auth.user.id) !== -1;
-        this.__debug(`${child.name}: ${editor}`, child.parentId);
+        this.__silly(`${child.name}: ${editor}`, child.parentId);
         if (editor) break;
         child = db.find(t => t.id == child.parentId);
       } while(child);
@@ -131,7 +131,7 @@ script.
     },
 
     __computeParentQuery(topic, cr) {
-      this.__debug('__computeParentQuery', topic, cr.path);
+      this.__silly('__computeParentQuery', topic, cr.path);
 
       if (!topic) {
         return {
