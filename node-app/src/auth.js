@@ -36,10 +36,10 @@ const __authenticateUser = (appAuth, existingUser) => {
       role: AppRoles.default,
       permissions: [
         {'route': 'app/schema', 'permission': 'read'},
-        {'route': 'topic', 'permission': 'read'},
-        {'route': 'issue', 'permission': 'read'},
-        {'route': 'thunderclap', 'permission': 'read'},
-        {'route': 'resource', 'permission': 'read'},
+        {'route': 'topic', 'permission': 'list'},
+        {'route': 'issue', 'permission': 'list'},
+        {'route': 'thunderclap', 'permission': 'list'},
+        {'route': 'resource', 'permission': 'list'},
         // TODO: Fill in permissions for public users
       ],
     },
