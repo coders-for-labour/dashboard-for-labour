@@ -39,13 +39,63 @@ dom-module#d4l-issue
       .content {
         padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
       }
+
       .icon {
         cursor: pointer;
         margin: 1rem 1rem 1rem 0;
       }
 
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 0px 0px 0px;
+        overflow: hidden;
+        background-color: white;
+
+        margin: 20px;
+      }
+      .card-header .title {
+        font-size: 1.25rem;
+        line-height: 2rem;
+        font-weight: 200;
+        letter-spacing: .0125em;
+        padding: 16px 16px 0;
+        color: var(--text-secondary-color);
+      }
+
+      .card-content p {
+        font-size: .875rem;
+        line-height: 1.25rem;
+        font-weight: 400;
+        letter-spacing: .0178571429em;
+        text-decoration: inherit;
+        text-transform: inherit;
+        color: rgba(0, 0, 0, 0.6);
+        padding: 0 16px;
+      }
+
+      paper-button {
+        @apply --d4l-button-primary;
+      }
+
+      li {
+        list-style-type: none;
+      }
+
+      a {
+        @apply --d4l-font-common-base;
+        text-decoration: none;
+      }
+
+      h2 {
+        @apply --d4l-font-secondary-title;
+        font-weight: 500;
+      }
+
+
     ltn-dialog#dialog
-    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{topic}}", logging)
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{topic}}")
 
     iron-pages(
       selected='[[__loadMode]]',
@@ -57,44 +107,51 @@ dom-module#d4l-issue
         paper-spinner(active, alt="Loading data...", style="width: 64px; height: 64px;")
 
       div(name="loaded")
-        div(hidden$="[[__hasSelectedItem]]")
-          h1 No issue selected
-          p Please find an issue by selecting a topic
+        .layout.vertical
+          d4l-dashboard-card(hero, background="thunderclap")
+            .view-container
+              .page-header.layout.vertical(hidden$="[[__hasSelectedItem]]")
+                h1 Missing Issue
+                p Primum Theophrasti, Strato, physicum se voluit; Obsecro, inquit, Torquate, haec dicit Epicurus?
 
-        div(hidden$="[[!__hasSelectedItem]]")
-          .page-content.flex.layout(mobile$="[[isMobile]]")
-            d4l-dashboard-card.card.flex(background="thunderclap", hero)
-              .layout.vertical
+              .page-header.layout.vertical(hidden$="[[!__hasSelectedItem]]")
                 .layout.horizontal
                   iron-icon(on-tap="__viewTopic" icon="arrow-back" class="icon")
                   p [[topic.name]]
                 h1 [[__selectedItem.name]]
                 p [[__selectedItem.description]]
-                paper-button(on-click="__updateIssue", hidden$="[[__isTopicEditor]]") Edit
+                .layout.horizontal
+                  paper-button(on-click="__updateIssue", hidden$="[[!__isTopicEditor]]") Edit
 
 
-          .content(mobile$="[[isMobile]]")
-            p Updated At: [[computeDateFormat(__selectedItem.updatedAt)]]
+          .view-container.layout.vertical
             h1 Events
             hr
-            .layout.horizontal
-              template(is="dom-repeat", items="[[__selectedItem.events]]")
-                div.topic-media
+            .layout.vertical
+              template(is="dom-repeat", items="[[__selectedItem.events]]", sort="__sortEvents")
+                div
+                  h2 [[__formatEventDate(item.createdAt)]]
                   .layout.horizontal
-                    .layout.vertical
-                      div Created At: [[computeDateFormat(__selectedItem.createdAt)]]
-                    div.src-desc [[item.source.description]]
-                  ul.src-desc
-                    template(is="dom-repeat", items="[[item.source.links]]")
-                      li
-                        a(href="[[item]]" target="_BLANK") [[item]]
-                  .layout.horizontal
-                    div Response:
-                    div.src-desc [[item.response.description]]
-                  ul.src-desc
-                    template(is="dom-repeat", items="[[item.response.links]]")
-                      li
-                        a(href="[[item]]" target="_BLANK") [[item]]
+                    .card.flex
+                      .card-header
+                        h1.title Background
+                      .card-content
+                        p [[item.source.description]]
+                        ul
+                          template(is="dom-repeat", items="[[item.source.links]]")
+                            li
+                              a(href="[[item]]" target="_blank") [[item]]
+                  
+                    .card.flex
+                      .card-header
+                        h1.title Resources
+
+                      .card-content
+                        p [[item.response.description]]
+                        ul
+                          template(is="dom-repeat", items="[[item.response.links]]")
+                            li
+                              a(href="[[item]]" target="_blank") [[item]]
 
             //- h1 Resources
             //- hr
@@ -102,7 +159,7 @@ dom-module#d4l-issue
             //- template(is="dom-repeat", items="[[__selectedItem.resources]]")
               //- img __selectedItem.resources;
         ltn-fab-menu(
-          hidden$="[[!inAuthRole(auth.token, 'admin')]]"
+          hidden$="[[!__isTopicEditor]]"
         )
           .fab-item
             .label Event
