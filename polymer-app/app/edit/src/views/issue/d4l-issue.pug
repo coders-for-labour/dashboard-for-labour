@@ -51,19 +51,25 @@ dom-module#d4l-issue
         background-size: cover;
         padding: 0px 0px 0px;
         overflow: hidden;
-        background-color: white;
-
-        margin: 20px;
       }
+
+      .card-header {
+        position: relative;
+        padding: 16px 16px 0;
+      }
+
       .card-header .title {
         font-size: 1.25rem;
         line-height: 2rem;
         font-weight: 200;
         letter-spacing: .0125em;
-        padding: 16px 16px 0;
         color: var(--text-secondary-color);
+        margin-left: 16px;
       }
 
+      .card-content {
+        padding: 0 16px;
+      }
       .card-content p {
         font-size: .875rem;
         line-height: 1.25rem;
@@ -72,26 +78,39 @@ dom-module#d4l-issue
         text-decoration: inherit;
         text-transform: inherit;
         color: rgba(0, 0, 0, 0.6);
-        padding: 0 16px;
+        margin: 0 0 8px;
+      }
+
+      .single-box {
+        background-color:white;
       }
 
       paper-button {
         @apply --d4l-button-primary;
       }
-
+      
+      ul {
+        margin: 0 0 16px;
+        padding: 0;
+      }
       li {
         list-style-type: none;
+        padding: 0 0 8px;
       }
 
       a {
         @apply --d4l-font-common-base;
         text-decoration: none;
+        word-break: break-word;
+        color: rgba(211, 24, 55, 0.8);
       }
 
       h2 {
         @apply --d4l-font-secondary-title;
         font-weight: 500;
+        margin: 10px;
       }
+
 
 
     ltn-dialog#dialog
@@ -131,27 +150,30 @@ dom-module#d4l-issue
               template(is="dom-repeat", items="[[__selectedItem.events]]", sort="__sortEvents")
                 div
                   h2 [[__formatEventDate(item.createdAt)]]
-                  .layout.horizontal
-                    .card.flex
-                      .card-header
-                        h1.title Background
-                      .card-content
-                        p [[item.source.description]]
-                        ul
-                          template(is="dom-repeat", items="[[item.source.links]]")
-                            li
-                              a(href="[[item]]" target="_blank") [[item]]
+                  .layout.horizontal.row-2.wrap
+                    .item.card.layout.vertical
+                      .single-box.flex
+                        .card-header.layout.horizontal.center
+                          iron-icon(icon="icons:speaker-notes")
+                          h1.title.flex Background
+                        .card-content
+                          p [[item.source.description]]
+                          ul
+                            template(is="dom-repeat", items="[[item.source.links]]")
+                              li
+                                a(href="[[item]]" target="_blank") [[item]]
                   
-                    .card.flex
-                      .card-header
-                        h1.title Resources
-
-                      .card-content
-                        p [[item.response.description]]
-                        ul
-                          template(is="dom-repeat", items="[[item.response.links]]")
-                            li
-                              a(href="[[item]]" target="_blank") [[item]]
+                    .item.card.layout.vertical
+                      .single-box.flex
+                        .card-header.layout.horizontal.center
+                          iron-icon(icon="icons:star")
+                          h1.title Resources
+                        .card-content
+                          p [[item.response.description]]
+                          ul
+                            template(is="dom-repeat", items="[[item.response.links]]")
+                              li
+                                a(href="[[item]]" target="_blank") [[item]]
 
             //- h1 Resources
             //- hr
