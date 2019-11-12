@@ -152,5 +152,12 @@ script.
           this.push(`db.issue.data.${issueIdx}.events`, event);
         });
     }
-
+    //- __addResource() {
+    //-   const selectedItem = this.get('__selectedItem');
+    //-   console.log(selectedItem);
+    //-   if (!selectedItem) {
+    //-     throw new Error(`This dialog is only supported in a view with 'selectedItem'`);
+    //-   }
+    //-   const issueIdx = this.get('db.issue.data').findIndex(i => i.id === selectedItem.id);
+    //- }
   };
