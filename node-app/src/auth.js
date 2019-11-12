@@ -39,8 +39,7 @@ const __authenticateUser = (appAuth, existingUser) => {
         {'route': 'topic', 'permission': 'list'},
         {'route': 'issue', 'permission': 'list'},
         {'route': 'thunderclap', 'permission': 'list'},
-        {'route': 'resource', 'permission': 'list'},
-        // TODO: Fill in permissions for public users
+        {'route': 'resource', 'permission': 'list'}
       ],
     },
     authorised: {
@@ -48,8 +47,7 @@ const __authenticateUser = (appAuth, existingUser) => {
       domains: [`${Config.app.protocol}://${Config.app.host}`],
       role: 'admin.editor',
       permissions: [
-        {'route': '*', 'permission': '*'},
-        // TODO: Fill in permissions for authed users
+        {'route': '*', 'permission': '*'}
       ],
     },
   };
