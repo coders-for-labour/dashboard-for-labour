@@ -99,7 +99,7 @@ const __authenticateUser = (appAuth, existingUser) => {
     .then((_topic) => {
       if (_topic) return _topic;
 
-      const r17 = constituency.results['2017'].results;
+      const r17 = constituency['2017'].results;
       const mp = r17[0];
       const labourIdx = r17.findIndex((mp) => mp.party === 'Labour');
       const labour = r17[labourIdx];
