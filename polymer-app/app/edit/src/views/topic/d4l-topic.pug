@@ -75,7 +75,7 @@ dom-module#d4l-topic
         }
       }
 
-    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicsQuery]]", find-all="{{__topics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC")
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__parentQuery]]", find-one="{{parent}}")
     buttress-db-query(doc="[[db.issue]]", data-path="db.issue.data", query="[[__issuesQuery]]", find-all="{{__issues}}")
     buttress-db-query(doc="[[db.thunderclap]]", data-path="db.thunderclap.data", query="[[__thunderclapQuery]]", find-one="{{__thunderclap}}")
