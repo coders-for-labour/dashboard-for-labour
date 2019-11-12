@@ -83,7 +83,10 @@ script.
         'action': 'Add',
       };
 
-      const topic = dbFactory.create('topic');
+      if (!topic.banner) {
+        topic.banner = `/images/cards/photo${Math.floor((Math.random() * 32) + 1)}.jpg`;
+      }
+
       return this.__presentTopicDialog(topic, dialogMeta)
         .then((result) => {
           if (!result.values.name) {
