@@ -40,10 +40,6 @@
       "__required": false,
       "__default": null,
       "__allowUpdate": true,
-      "__permissions": [{
-        "role": "public",
-        "READ": "deny"
-      }]
     },
     "editorIds": {
       "__type": "array",
