@@ -109,14 +109,10 @@ const __authenticateUser = (appAuth, existingUser) => {
 
       let description = '';
       if (labour !== mp) {
-        description = `
-          This seat is currently held by ${mp.party} with a majority of ${mp.ahead}. The MP is ${mp.name}. 
-          The Labour MP in the 2017 election was ${labour.name}. We need ${labourBehind} votes to win this seat.
-        `;
+        description = `This seat is currently held by ${mp.party} with a majority of ${mp.ahead}. The MP is ${mp.name}.
+        The Labour MP in the 2017 election was ${labour.name}. We need ${labourBehind} votes to win this seat.`;
       } else {
-        description = `
-          This seat is currently held by Labour with a majority of ${mp.ahead}. Your MP is ${mp.name}.
-        `;
+        description = `This seat is currently held by Labour with a majority of ${mp.ahead}. Your MP is ${mp.name}.`;
       }
 
       return Buttress.getCollection('topic').save({
