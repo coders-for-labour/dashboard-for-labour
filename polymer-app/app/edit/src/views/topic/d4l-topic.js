@@ -23,6 +23,11 @@ Polymer({
       value: false,
       computed: '__computeIsTopicEditor(__selectedItem, auth.token)'
     },
+    __hasTopicEditor: {
+      type: Boolean,
+      value: true,
+      computed: '__computeHasTopicEditor(__selectedItem)'
+    },
 
     __topics: Array,
     __topicsQuery: {

@@ -45,6 +45,23 @@ dom-module#d4l-topic
         color: #444;
       }
 
+      .volunteer-callout {
+        background: #e4073b;
+        color: #FFF;
+        padding: 16px;
+        border-radius: 5px;
+      }
+      .volunteer-callout .title {
+        font-size: 1.75rem;
+        line-height: 2rem;
+        font-weight: 500;
+        letter-spacing: .0125em;
+        margin-bottom: 10px;
+      }
+      .volunteer-callout .desc {
+        
+      }
+
       paper-button {
         @apply --d4l-button-primary;
       }
@@ -100,34 +117,39 @@ dom-module#d4l-topic
                     on-subscribe="subscribeThunderclap"
                   )
 
-          .view-container.layout.vertical
-            div(hidden$="[[__hasSelectedItem]]")
-              .layout.horizontal.row-3.wrap
-                template(is="dom-repeat" items="[[__topics]]")
-                  d4l-topic-card.item(
-                    auth="[[auth]]", 
-                    db="{{db}}"
-                    topic="[[item]]"
-                  )
+          .view-container
+            .page-content.layout.vertical
+              div(hidden$="[[__hasSelectedItem]]")
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__topics]]")
+                    d4l-topic-card.item(
+                      auth="[[auth]]", 
+                      db="{{db}}"
+                      topic="[[item]]"
+                    )
 
-            div(hidden$="[[!__hasSelectedItem]]")
-              h1 Topics
-              .layout.horizontal.row-3.wrap
-                template(is="dom-repeat" items="[[__topics]]")
-                  d4l-topic-card.item(
-                    auth="[[auth]]", 
-                    db="{{db}}"
-                    topic="[[item]]"
-                  )
+              div(hidden$="[[!__hasSelectedItem]]")
+                .volunteer-callout(hidden$="[[__hasTopicEditor]]")
+                  .title We need your help!
+                  .desc We're looking for volenteers to manage the content within this topic. Please email test@example.com if you would like to help.
 
-              h1 Issues
-              .layout.horizontal.row-3.wrap
-                template(is="dom-repeat" items="[[__issues]]")
-                  d4l-issue-card.item(
-                    auth="[[auth]]",
-                    db="{{db}}"
-                    issue="[[item]]"
-                  )
+                h1 Topics
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__topics]]")
+                    d4l-topic-card.item(
+                      auth="[[auth]]", 
+                      db="{{db}}"
+                      topic="[[item]]"
+                    )
+
+                h1 Issues
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__issues]]")
+                    d4l-issue-card.item(
+                      auth="[[auth]]",
+                      db="{{db}}"
+                      issue="[[item]]"
+                    )
 
     ltn-fab-menu(
       hidden$="[[!__isTopicEditor]]"

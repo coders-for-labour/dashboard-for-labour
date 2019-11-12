@@ -85,15 +85,16 @@ dom-module#d4l-thunderclap
               //- .share-buttons
               //-   paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareTwitter") [[__shareTwButton]]
 
-            .view-container.layout.vertical
-              .layout.horizontal.row-3.wrap
-                template(is="dom-repeat" items="[[__thunderclap]]")
-                  d4l-thunderclap-card.item(
-                    db="{{db}}",
-                    auth="[[auth]]",
-                    thunderclap="[[item]]",
-                    on-subscribe="subscribeThunderclap"
-                  )
+            .view-container
+              .page-content.layout.vertical
+                .layout.horizontal.row-3.wrap
+                  template(is="dom-repeat" items="[[__thunderclap]]")
+                    d4l-thunderclap-card.item(
+                      db="{{db}}",
+                      auth="[[auth]]",
+                      thunderclap="[[item]]",
+                      on-subscribe="subscribeThunderclap"
+                    )
 
             paper-fab(
               icon="add"

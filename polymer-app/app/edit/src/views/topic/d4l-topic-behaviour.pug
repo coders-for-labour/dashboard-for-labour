@@ -128,6 +128,25 @@ script.
       return editor;
     },
 
+    __computeHasTopicEditor(topic) {
+      if (!topic) return false;
+
+      const db = this.get('db.topic.data');
+
+      let child = topic;
+      let hasEditor = false;
+      do {
+        if (child.editorIds) {
+          hasEditor = true;
+        }
+        this.__silly(`${child.name}: ${hasEditor}`, child.parentId);
+        if (hasEditor) break;
+        child = db.find(t => t.id == child.parentId);
+      } while(child);
+
+      return hasEditor;
+    },
+
     __computeParentQuery(topic, cr) {
       this.__silly('__computeParentQuery', topic, cr.path);
 
