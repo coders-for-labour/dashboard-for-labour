@@ -24,7 +24,7 @@ D4L.Logging = {
     },
     logLevel: {
       type: Number,
-      value: 2
+      value: 3
     }
   },
   __assert: function() {
