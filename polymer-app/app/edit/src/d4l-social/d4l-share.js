@@ -107,7 +107,7 @@ Polymer.D4LShare = {
     const url = '%{D4L_BUTTRESS_URL}%';
     this.set('__shareFbStatus', 'sharing');
 
-    this.__shareUrl(postText, url, (err, postResponse) => {
+    this.__shareUrl(postText, url, (err) => {
       if (err) {
         this.__err(err);
         this.set('__shareFbStatus', 'ready');
@@ -132,7 +132,7 @@ Polymer.D4LShare = {
   },
   __sharedTwErr: function() {
     this.set('__shareTwStatus', 'ready');
-    this.fire('appViewError', ev);
+    // this.fire('appViewError', ev);
   },
 
   __computeDisableShareFb: function(status) {
