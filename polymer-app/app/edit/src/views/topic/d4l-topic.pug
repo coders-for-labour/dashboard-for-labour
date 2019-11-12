@@ -24,6 +24,7 @@ link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-behaviour.html")
 
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/topic/d4l-topic-card.html")
+link(rel="import", href="/src/views/issue/d4l-issue-card.html")
 link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-card.html")
 
 dom-module#d4l-topic
@@ -123,13 +124,13 @@ dom-module#d4l-topic
                   )
 
               h1 Issues
-              hr
               .layout.horizontal.row-3.wrap
                 template(is="dom-repeat" items="[[__issues]]")
-                  .item
-                    h1 [[item.name]]
-                    p [[item.description]]
-                    paper-button(on-click="viewIssueItem") View
+                  d4l-issue-card.item(
+                    auth="[[auth]]",
+                    db="{{db}}"
+                    issue="[[item]]"
+                  )
 
     ltn-fab-menu(
       hidden$="[[!__isTopicEditor]]"

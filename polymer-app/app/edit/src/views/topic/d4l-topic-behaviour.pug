@@ -131,20 +131,20 @@ script.
     },
 
     __computeParentQuery(topic, cr) {
-    this.__debug('__computeParentQuery', topic, cr.path);
+      this.__debug('__computeParentQuery', topic, cr.path);
 
-    if (!topic) {
+      if (!topic) {
+        return {
+          __crPath: cr.path,
+        };
+      }
+
       return {
         __crPath: cr.path,
+        id: {
+          $eq: topic.parentId
+        }
       };
-    }
-
-    return {
-      __crPath: cr.path,
-      id: {
-        $eq: topic.parentId
-      }
-    };
-  },
+    },
 
   };

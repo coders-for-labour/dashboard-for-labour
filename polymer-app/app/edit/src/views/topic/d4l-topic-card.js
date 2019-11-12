@@ -20,6 +20,7 @@ Polymer({
     },
     __isTopicEditor: {
       type: Boolean,
+      value: false,
       computed: '__computeIsTopicEditor(topic, parent, auth.token)'
     },
     __topicSummary: {

@@ -9,10 +9,10 @@ link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
+link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
 
-
-dom-module#d4l-topic-card
+dom-module#d4l-issue-card
   template
     style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
     style(include="d4l-theme")
@@ -30,17 +30,17 @@ dom-module#d4l-topic-card
         overflow: hidden;
       } 
 
-      .topic-media {
+      .card-media {
         width: 100%;
         height: 200px;
         background: #d4d4d4;
       }
 
 
-      .topic-header {
+      .card-header {
         
       }
-      .topic-header .title {
+      .card-header .title {
         font-size: 1.25rem;
         line-height: 2rem;
         font-weight: 500;
@@ -48,7 +48,7 @@ dom-module#d4l-topic-card
         padding: 16px 16px 0;
       }
 
-      .topic-content p {
+      .card-content p {
         font-size: .875rem;
         line-height: 1.25rem;
         font-weight: 400;
@@ -58,31 +58,30 @@ dom-module#d4l-topic-card
         color: rgba(0, 0, 0, 0.6);
         padding: 0 16px;
       }
-      .topic-footer {
+      .card-footer {
         padding: 10px 20px 10px;
         color: var(--text-dark-secondary-color);
         padding: 0 16px 16px;
       }
-      .topic-footer iron-icon {
+      .card-footer iron-icon {
         margin-right: 10px;
       }
 
     ltn-dialog#dialog
-    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__parentQuery]]", find-one="{{parent}}")
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{topic}}")
 
     .card
-      iron-image.topic-media(src="[[topic.banner]]" sizing="cover")
-      .topic-header
-        .title [[topic.name]]
-      .topic-content
-        p [[__topicSummary]]
+      //- iron-image.card-media(src="[[issue.banner]]" sizing="cover")
+      .card-header
+        .title [[issue.name]]
+      .card-content
+        p [[__issueSummary]]
 
-      .topic-footer(hidden$="[[!__showButtons]]")
-        .flex.layout.horizontal(style="justify-content: flex-start;")
-          div(style="align-self:center") [[__viewCount]] Views
+      .card-footer(hidden$="[[!__showButtons]]")
+        .layout.horizontal.center
           .flex
           .buttons
-            paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewTopic")
-            paper-icon-button(hidden$="[[!__isTopicEditor]]", icon="create", on-tap="__updateTopic")
+            paper-icon-button(icon="d4l-icons:view-circle", on-tap="__viewIssue")
+            paper-icon-button(hidden$="[[!__isIssueEditor]]", icon="create", on-tap="__updateIssue")
 
-  script(src="./d4l-topic-card.js")
+  script(src="./d4l-issue-card.js")

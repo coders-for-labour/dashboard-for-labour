@@ -69,6 +69,30 @@ script.
       return dialog.openDialog(this.parseInputSchema(inputSchema));
     },
 
+    updateIssue(issue) {
+      const issues = this.get('db.issue.data');
+      const issueIdx = issues.findIndex(i => i.id === issue.id);
+      const dialogMeta = {
+        'title': 'Issue',
+        'description': 'Update a issue to the system',
+        'action': 'Update',
+      };
+
+      if (issueIdx === -1) {
+        throw new Error('Invalid issue');
+      }
+
+      return this.__presentIssueDialog(issue, dialogMeta)
+        .then((result) => {
+          if (!result.values.name) {
+            throw new Error('Issue requires a name');
+          }
+
+          this.set(['db.issue.data', issueIdx, 'name'], result.values.name);
+          this.set(['db.issue.data', issueIdx, 'description'], result.values.description);
+        });
+    },
+
     addIssue(issue) {
       const selectedItem = this.get('__selectedItem');
       if (!issue) {
@@ -83,7 +107,7 @@ script.
       return this.__presentIssueDialog(issue, dialogMeta)
         .then((result) => {
           if (!result.values.name) {
-            throw new Error('Thunderclap requires a name');
+            throw new Error('Issue requires a name');
           }
 
           issue.name = result.values.name;
