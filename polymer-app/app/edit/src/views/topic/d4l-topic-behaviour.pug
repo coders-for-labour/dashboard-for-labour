@@ -129,6 +129,7 @@ script.
     },
 
     __computeHasTopicEditor(topic) {
+      this.__silly(`__computeHasTopicEditor`, topic);
       if (!topic) return false;
 
       const db = this.get('db.topic.data');
@@ -136,10 +137,10 @@ script.
       let child = topic;
       let hasEditor = false;
       do {
-        if (child.editorIds) {
+        if (child.editorIds && child.editorIds.length > 0) {
           hasEditor = true;
         }
-        this.__silly(`${child.name}: ${hasEditor}`, child.parentId);
+        this.__silly(`__computeHasTopicEditor ${child.name}: ${hasEditor}`, child.parentId);
         if (hasEditor) break;
         child = db.find(t => t.id == child.parentId);
       } while(child);

@@ -13,6 +13,11 @@ Polymer({
       type: Object
     },
 
+    logLevel: {
+      type: Number,
+      value: 3,
+    },
+
     __pageTitle: {
       type: String,
       value: 'Topics'

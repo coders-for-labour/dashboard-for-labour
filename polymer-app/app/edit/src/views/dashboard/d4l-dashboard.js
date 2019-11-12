@@ -8,7 +8,7 @@ Polymer({
   properties: {
     logLevel: {
       type: Number,
-      value: 3
+      value: 4
     },
     auth: {
       type: Object,
@@ -63,6 +63,8 @@ Polymer({
   },
 
   __computeLatestTopicsQuery(cr) {
+    this.__debug(`__computeLatestTopicsQuery`, cr);
+
     return {
       __crPath: cr.path,
       parentId: {
