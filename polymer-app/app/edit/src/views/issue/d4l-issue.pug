@@ -35,6 +35,7 @@ dom-module#d4l-issue
         padding: var(--default-page-padding);
         padding-top: var(--default-header-offset);
       }
+
       .content {
         padding: 0px var(--default-page-gutter) 0px var(--default-page-gutter);
       }
@@ -42,24 +43,9 @@ dom-module#d4l-issue
         cursor: pointer;
         margin: 1rem 1rem 1rem 0;
       }
-      .response {
-        margin-top: 2rem;
-      }
-      .desc {
-        margin: 0 1rem;
-      }
-      .item:nth-child(even) {
-        background-color: #d4d4d4;
-      }
-      .source {
-        margin-top: 2rem;
-      }
-      .src-desc{
-        position: relative;
-        left: 20%;
-      }
 
     ltn-dialog#dialog
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{topic}}", logging)
 
     iron-pages(
       selected='[[__loadMode]]',
@@ -76,32 +62,33 @@ dom-module#d4l-issue
           p Please find an issue by selecting a topic
 
         div(hidden$="[[!__hasSelectedItem]]")
-          .layout.horizontal.wrap
-          .page-content.flex.layout.vertical.card-group(mobile$="[[isMobile]]")
+          .page-content.flex.layout(mobile$="[[isMobile]]")
             d4l-dashboard-card.card.flex(background="thunderclap", hero)
               .layout.vertical
                 .layout.horizontal
                   iron-icon(on-tap="__viewTopic" icon="arrow-back" class="icon")
-                  p Topic
+                  p [[topic.name]]
                 h1 [[__selectedItem.name]]
                 p [[__selectedItem.description]]
+                paper-button(on-click="__updateIssue", hidden$="[[__isTopicEditor]]") Edit
+
 
           .content(mobile$="[[isMobile]]")
-            p Created At: [[computeDateFormat(__selectedItem.createdAt)]]
             p Updated At: [[computeDateFormat(__selectedItem.updatedAt)]]
             h1 Events
             hr
-            .layout.vertical.desc
+            .layout.horizontal
               template(is="dom-repeat", items="[[__selectedItem.events]]")
-                div.item
-                  .layout.horizontal.source
-                    div Source: 
+                div.topic-media
+                  .layout.horizontal
+                    .layout.vertical
+                      div Created At: [[computeDateFormat(__selectedItem.createdAt)]]
                     div.src-desc [[item.source.description]]
                   ul.src-desc
                     template(is="dom-repeat", items="[[item.source.links]]")
                       li
                         a(href="[[item]]" target="_BLANK") [[item]]
-                  .layout.horizontal.response
+                  .layout.horizontal
                     div Response:
                     div.src-desc [[item.response.description]]
                   ul.src-desc
@@ -109,10 +96,10 @@ dom-module#d4l-issue
                       li
                         a(href="[[item]]" target="_BLANK") [[item]]
 
-            h1 Resources
-            hr
-            .layout.horizontal.row-3.wrap
-            template(is="dom-repeat", items="[[__selectedItem.resources]]")
+            //- h1 Resources
+            //- hr
+            //- .layout.horizontal.row-3.wrap
+            //- template(is="dom-repeat", items="[[__selectedItem.resources]]")
               //- img __selectedItem.resources;
         ltn-fab-menu(
           hidden$="[[!inAuthRole(auth.token, 'admin')]]"
