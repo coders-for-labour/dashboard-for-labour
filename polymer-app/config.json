@@ -22,7 +22,7 @@
       "title": "Dashboard For Labour",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
-      "version": "1.3.7",
+      "version": "2.0.0",
       "protocol": "%D4L_APP_PROTOCOL%",
       "host": "%D4L_APP_HOST%",
       "port": "%D4L_APP_PORT%"
