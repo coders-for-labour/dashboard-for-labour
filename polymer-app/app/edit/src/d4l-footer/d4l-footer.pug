@@ -53,14 +53,14 @@ dom-module#d4l-footer
       }
 
     .footer-group.layout.horizontal.center(mobile$="[[isMobile]]")
-      .flex.text-left.info
-        .layout.horizontal.center
-          a(href="http://www.labour.org.uk/" target="_BLANK")
-            iron-image.labour-icon(src="/images/c4l-logo-white.svg", sizing="contain", position="left")
-          a(href="https://github.com/coders-for-labour/dashboard-for-labour" target="_BLANK")
-            div v%{D4L_BUILD_VERSION}% - %{D4L_BUILD_DATE}%
+      .flex.layout.horizontal.center
+        a(href="http://www.labour.org.uk/" target="_BLANK")
+          iron-image.labour-icon(src="/images/c4l-logo-white.svg", sizing="contain", position="left")
+        a(href="https://github.com/coders-for-labour/dashboard-for-labour" target="_BLANK")
+          div v%{D4L_BUILD_VERSION}% - %{D4L_BUILD_DATE}%
 
-      .flex.text-right
+      .flex.layout.horizontal.end-justified
+        a(href="https://www.codersforlabour.com/privacy-policy/" target="_BLANK") Privacy Policy
         div Built with ❤️ by volunteers at 
           a(href="https://www.codersforlabour.com" target="_blank") Coders For Labour
 
