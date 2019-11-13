@@ -4,7 +4,7 @@ Digital campaigning dashboard for activists for #GE2019
 
 ## What's New
 
-### Latest: v2.0.0 (13/11/2019) 🎉
+### Latest: v2.0.1 🎉
 
 #### :star: Features:
 
