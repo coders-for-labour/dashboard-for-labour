@@ -2,6 +2,7 @@ link(rel="import", href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/iron-media-query/iron-media-query.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/d4l-icons.html")
@@ -46,7 +47,6 @@ dom-module#d4l-footer
       }
 
       .footer-group .labour-icon {
-        margin-right: 10px;
         width: 18px;
         height: 18px;
         @apply --footer-icon;
@@ -57,6 +57,8 @@ dom-module#d4l-footer
         .layout.horizontal.center
           a(href="http://www.labour.org.uk/" target="_BLANK")
             iron-image.labour-icon(src="/images/c4l-logo-white.svg", sizing="contain", position="left")
+          a(href="https://github.com/coders-for-labour/dashboard-for-labour" target="_BLANK")
+            div v%{D4L_BUILD_VERSION}% - %{D4L_BUILD_DATE}%
 
       .flex.text-right
         div Built with ❤️ by volunteers at 

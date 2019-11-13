@@ -1,7 +1,8 @@
 Polymer({
   is: 'd4l-footer',
   behaviors: [
-    D4L.Logging
+    D4L.Logging,
+    D4L.Helpers
   ],
   properties: {
     logLevel: {
