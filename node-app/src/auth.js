@@ -360,7 +360,17 @@ module.exports.init = (app) => {
     )(req, res, next);
   });
   app.get('/auth/twitter/callback', (req, res, next) => {
+    const rp = req.session.returnPath;
     Logging.logSilly('AUTHENTICATE: /auth/twitter/callback');
+
+    // Check to see if user is already auth'd, if they are
+    // the return them to the app.
+    if (req.user) {
+      Logging.logInfo('AUTHENTICATE: Redirecting already authed user from /auth/twitter/callback');
+      req.session.returnPath = '';
+      res.redirect(rp ? rp : '/');
+      return next();
+    }
 
     passport.authenticate('twitter', (err, appAuth, info) => {
       Logging.logSilly('AUTHENTICATE: Authenticated');
@@ -371,7 +381,6 @@ module.exports.init = (app) => {
           Logging.logDebug(user);
           req.login(user, (err) => {
             if (err) throw err;
-            const rp = req.session.returnPath;
             req.session.returnPath = '';
             res.redirect(rp ? rp : '/');
           });
