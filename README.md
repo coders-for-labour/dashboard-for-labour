@@ -1,78 +1,51 @@
 # dashboard-for-labour
 
-Social media tools for activists for #ge17
+Digital campaigning dashboard for activists for #GE2019
 
-# What's New
-## version: 1.3.7
-- Api-queue error items are now pushed into a separate list
-- Manage api-queue timeout so it can be called asap
-- Tidy debug messages
+## What's New
 
-## 1.3.6
-- Disabled facebook from being used with Twibbyn
-- Tiny UI tweak
+### Latest: v2.0.0 (13/11/2019) 🎉
 
-## 1.3.5
-- REFACTOR: Api-queue to use sorted sets instead of lists
-- ADDED: Timing class to helpers
+#### :star: Features:
 
-## 1.3.4
-- Updated facebook share to use Share Dialog UI
-- Minor bug fixes
+- [#14](https://github.com/coders-for-labour/dashboard-for-labour/issues/14) Topics & Issues as a top-level entities.
 
-## 1.3.3
-- Added improved share flow to twibbon.
-- Added share flwo to storm.
-- Improve manifest.json (better PWA experience)
+#### :hammer: Enhancements:
 
-## 1.3.2
-- Added metadata, updated icons, copy.
-- Removed Images card.
+- Updated Polymer framework to version 2 & replaced coders-for-labour/rhizome with wearelighten/buttress-js-db.
+- Updated the general styling of the UI & added cards for entities in the system.
+- [#12](https://github.com/coders-for-labour/dashboard-for-labour/issues/12) Removed the need to authenticate before using the application.
+- [#10](https://github.com/coders-for-labour/dashboard-for-labour/issues/10) Merged the admin actions into the application, removing the need for a separate admin pplication.
+- [#17](https://github.com/coders-for-labour/dashboard-for-labour/issues/17) Replace Labour branding with Coders for Labour Branding
 
-## 1.3.1
-- Added realtime use count to twibbyn card
-- Change Thunderclap to Storm
+#### :beetle: Fixes:
 
-## 1.3.0
-- Added support for thunderclap campaigns.
+- [#15](https://github.com/coders-for-labour/dashboard-for-labour/issues/15) Remove levelDB and replace with Redis
+- [#2](https://github.com/coders-for-labour/dashboard-for-labour/issues/2) Pressing return/enter on the postcode input box doesn't perform a search
+- [#17](https://github.com/coders-for-labour/dashboard-for-labour/issues/17) Using the back arrow after an authenticated login yields a server error
 
-## 1.2.2
-- Request 'publish_actions' permissions for facebook (needed) for thunderclap
-- Enhanced composer to support preservation of image aspect ratios
-- Added basic UI for repositioning non-square avatars
-- Extended the twibbyn API
-- Minor bug fixes
+## Coders For Labour
 
-## 1.2.1
-- Fixed issues with Facebook App Id  
+Coders For Labour is a collection of enthusiastic developers trying to further the interests and values of the Labour Party.
 
-## 1.2.0
-- Small UI Tweaks
-- API Queue is now shared using redis
+## Getting Started
 
-## 1.1.1
-- Added thunderclap list view
-- Fixed polymer build process
-- Added Labour branding
-- Session handling moved to redis for improved scalability
+- Read our code of conduct and manifesto
+- Introduce yourself on the Facebook group: [https://www.facebook.com/groups/codersforcorbyn](https://www.facebook.com/groups/codersforcorbyn)
+- Discuss new/ongoing projects on Discord: [https://discord.gg/F9GdXnJ](https://discord.gg/F9GdXnJ)
+- Read the [Dashboard for Labour Wiki](https://github.com/coders-for-labour/dashboard-for-labour/wiki)
+- **Get coding!**
 
-## 1.1.0
-- Added ability for users to upload images (for moderation)
- 
-## 1.0.2
-- Fixed Issue #5: Avatar doesn't display if changed in twitter after first dashboard login.
+## Contributing
 
-## 1.0.1
-- Fixed Issue #3: Constituency search input is illegible
-- Fixed Issue #4: Selecting a campaign should be more obvious
-- Fixed problem with tweeting memes.
-- Fixed problem persisting user's constituency.
-- Added basic validation on constituency lookup.
+- Comment code as you go, this will make life easier for somebody that steps into a project you have been working on.
+- If you are editing somebody else’s code, follow the same style/syntax and try to avoid cleaning somebody else’s code. Edit lines relevant to your task for a simpler git merge. Refactoring is a separate job.
+- Communicate with others if you are unsure. Join the [Discord server](https://discord.gg/F9GdXnJ), post on [Facebook](https://www.facebook.com/groups/codersforcorbyn), whatever makes you feel most comfortable. There is no question too silly.
 
-## 1.0.0
-- Added constituency lookups. Now displays key consituency information
-- Added meme campaigns. Users can post images directly to facebook and twitter
+## Code Distribution
 
-## 0.9.1
-- Optimised initial api loading
-- Changed permissions to enable authenticated users to write their own metadata
+Code and other work product is distributed under the Coders For Labour Github org under an MIT licence. Other assets are released under a Creative Commons Attribution-ShareAlike 4.0 International license.
+
+- [https://github.com/coders-for-labour](https://github.com/coders-for-labour)
+- [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT)
+- [https://creativecommons.org/licenses/by-sa/4.0/](https://creativecommons.org/licenses/by-sa/4.0/)
