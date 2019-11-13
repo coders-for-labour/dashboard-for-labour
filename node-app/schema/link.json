@@ -1,0 +1,74 @@
+{
+  "name": "link",
+  "type": "collection",
+  "collection": "link",
+  "extends": [
+    "timestamps"
+  ],
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": {
+      "GET": "allow"
+    },
+    "dataDisposition": {
+      "READ": "allow"
+    }
+  }],
+  "properties": {
+    "uri": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "type": {
+      "__type": "string",
+      "__default": "article",
+      "__enum": ["article", "video", "download"],
+      "__allowUpdate": true
+    },
+    "og": {
+      "canonical": {
+        "__type": "string",
+        "__required": true,
+        "__allowUpdate": true
+      },
+      "type": {
+        "__type": "string",
+        "__required": true,
+        "__allowUpdate": true
+      },
+      "title": {
+        "__type": "string",
+        "__required": true,
+        "__allowUpdate": true
+      },
+      "description": {
+        "__type": "string",
+        "__required": true,
+        "__allowUpdate": true
+      },
+      "image": {
+        "uri": {
+          "__type": "string",
+          "__required": true,
+          "__allowUpdate": true
+        },
+        "mimeType": {
+          "__type": "string",
+          "__required": true,
+          "__allowUpdate": true
+        },
+        "width": {
+          "__type": "string",
+          "__required": true,
+          "__allowUpdate": true
+        },
+        "height": {
+          "__type": "string",
+          "__required": true,
+          "__allowUpdate": true
+        }
+      }
+    }
+  }
+}
