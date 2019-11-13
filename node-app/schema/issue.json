@@ -48,7 +48,7 @@
           },
           "links": {
             "__type": "array",
-            "__itemtype": "string",
+            "__itemtype": "id",
             "__default": [],
             "__allowUpdate": true
           }
