@@ -1,12 +1,12 @@
 Polymer({
   is: 'd4l-thunderclap-detail',
   behaviors: [
-    Polymer.D4LLogging
+    D4L.Logging
   ],
   properties: {
     logLevel: {
       type: Number,
-      value: 4
+      value: 3
     },
     auth: {
       type: Object,

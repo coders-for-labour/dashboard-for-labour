@@ -2,6 +2,10 @@
   "extends": "google",
   "rules": {
     "max-len": [ 2, 200, 4 ],
+    "indent": ["error", 2],
     "max-lines": ["error", {"max": 500, "skipComments": true, "skipBlankLines": true}]
+  },
+  "env": {
+    "es6": true
   }
 }

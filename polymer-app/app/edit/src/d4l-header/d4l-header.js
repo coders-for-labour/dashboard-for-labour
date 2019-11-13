@@ -1,12 +1,16 @@
 Polymer({
   is: 'd4l-header',
   behaviors: [
-    Polymer.D4LLogging
+    D4L.Logging,
+    D4L.Helpers
   ],
   properties: {
     logLevel: {
       type: Number,
       value: 3
+    },
+    app: {
+      type: Object
     },
     auth: {
       type: Object
@@ -27,7 +31,7 @@ Polymer({
     },
     responsivePageTitle: {
       type: String,
-      computed: '__computeResponsivePageTitle(pageTitle, isMobile)'
+      computed: '__computeResponsivePageTitle(pageTitle, app.title)'
     },
     pageMode: {
       type: String
@@ -46,7 +50,7 @@ Polymer({
     },
     __userImage: {
       type: String,
-      computed: '__computeUserImage(auth.user.profiles.0.images.profile)'
+      computed: '__computeUserImage(auth.user.person.avatar)'
     }
   },
 
@@ -65,8 +69,10 @@ Polymer({
     this.fire('back-button-clicked');
   },
 
-  __computeResponsivePageTitle: function(title, isMobile) {
-    return !isMobile ? Sugar.String.truncate(title, 35) : Sugar.String.truncate(title, 17);
+  __computeResponsivePageTitle: function(title) {
+    const defaultTitle = this.get('app.title');
+    if (!title) return defaultTitle;
+    return title;
   },
 
   __computeUserImage: function(image){

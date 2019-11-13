@@ -1,7 +1,8 @@
 Polymer({
   is: 'd4l-dashboard',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
+    D4L.Issue.Helpers,
     Polymer.D4LViewList
   ],
   properties: {
@@ -16,7 +17,7 @@ Polymer({
 
     __pageTitle: {
       type: String,
-      value: 'Amplify'
+      value: '%{D4L_APP_TITLE}%'
     },
 
     __users: {
@@ -24,7 +25,19 @@ Polymer({
     },
     __userQuery: {
       type: String,
-      computed: '__computeUserQuery(db.user.data.*)'
+      computed: '__computeUserQuery(db.people.data.*)'
+    },
+
+    __latestIssues: Array,
+    __latestIssuesQuery: {
+      type: Object,
+      computed: '__computeLatestIssuesQuery(db.issue.data.*)'
+    },
+
+    __latestTopics: Array,
+    __latestTopicsQuery: {
+      type: Object,
+      computed: '__computeLatestTopicsQuery(db.topic.data.*)'
     },
 
     __post: {
@@ -43,11 +56,36 @@ Polymer({
     }
   },
 
+  __computeLatestIssuesQuery() {
+    return {
+      
+    };
+  },
+
+  __computeLatestTopicsQuery(cr) {
+    this.__debug(`__computeLatestTopicsQuery`, cr);
+
+    return {
+      __crPath: cr.path,
+      parentId: {
+        $eq: null
+      }
+    };
+  },
+
+  __viewLatestIssue: function(ev) {
+    const issue = ev.model.get('issue');
+    this.fire('view-entity', `/issue/${issue.id}`);
+  },
+
   __viewTwibbyn: function () {
     this.fire('view-entity', '/twibbyn');
   },
   __viewThunderclap: function () {
-    this.fire('view-entity', '/storm');
+    this.fire('view-entity', '/thunderclap');
+  },
+  __viewTopics: function () {
+    this.fire('view-entity', '/topic');
   },
   __viewMemes: function () {
     this.fire('view-entity', '/meme');

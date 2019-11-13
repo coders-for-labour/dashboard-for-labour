@@ -1,80 +1,85 @@
-//
-// Includes
-//
+'use strict';
 
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
-const clean = require('gulp-clean');
+const gulpClean = require('gulp-clean');
 const bump = require('gulp-bump');
 
 //
 // Scripts
 //
-
-gulp.task('js', function() {
-  return gulp.src('app/server/**/*.js')
+const js = function() {
+  return gulp.src('src/**/*.js')
 		.pipe(eslint())
 		.pipe(eslint.format())
 		.pipe(gulp.dest('deploy'));
-});
-
-gulp.task('scripts', function() {
-  return gulp.start(['js']);
-});
+};
+const scripts = function(done) {
+	return gulp.series('js')(done);
+};
 
 //
 // Static resources
 //
-gulp.task('json', function() {
-  return gulp.src('app/server/*.json')
+const json = function() {
+  return gulp.src('src/*.json')
     .pipe(gulp.dest('deploy'));
-});
-
-gulp.task('resources', function() {
-  return gulp.start(['json']);
-});
+};
+const resources = function(done) {
+	return gulp.series('json')(done);
+};
 
 //
 // Commands
 //
+const clean = function() {
+	return gulp.src(['deploy/*'], {read: false})
+		.pipe(gulpClean());
+};
+const build = function(done) {
+	return gulp.series('clean', gulp.parallel('scripts', 'resources'))(done);
+};
+const watch = function(done) {
+  return gulp.series('build', function() {
+    gulp.watch(['src/**/*.js'], gulp.series('scripts'));
+    gulp.watch('src/**/*.json', gulp.series('resources'));
+  })(done);
+};
 
-gulp.task('watch', ['clean'], function() {
-  gulp.start('scripts', 'resources');
+const bumpMajor = () => {
+	return gulp.src(['./package.json', '../README.md', './src/config.json'], {base: './'})
+		.pipe(bump({type: 'major'}))
+		.pipe(gulp.dest('./'));
+};
+const bumpMinor = () => {
+	return gulp.src(['./package.json', '../README.md', './src/config.json'], {base: './'})
+		.pipe(bump({type: 'minor'}))
+		.pipe(gulp.dest('./'));
+};
+const bumpPatch = () => {
+	return gulp.src(['./package.json', '../README.md', './src/config.json'], {base: './'})
+		.pipe(bump({type: 'patch'}))
+		.pipe(gulp.dest('./'));
+};
+const bumpPrerelease = () => {
+	return gulp.src(['./package.json', '../README.md', './src/config.json'], {base: './'})
+		.pipe(bump({type: 'prerelease'}))
+		.pipe(gulp.dest('./'));
+};
 
-  gulp.watch(['app/server/**/*.js'], ['scripts']);
-  gulp.watch('app/server/**/*.json', ['resources']);
-});
+module.exports = {
+	js,
+	scripts,
 
-gulp.task('clean', function() {
-  return gulp.src(['deploy/*'], {read: false})
-  .pipe(clean());
-});
+	json,
+	resources,
 
-gulp.task('build', ['clean'], function() {
-  return gulp.start('scripts', 'resources');
-});
+	clean,
+	build,
+	watch,
 
-gulp.task('bump-major', function() {
-  return gulp.src(['./package.json', '../README.md', './app/server/config.json'], {base: './'})
-    .pipe(bump({type: 'major'}))
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('bump-minor', function() {
-  return gulp.src(['./package.json', '../README.md', './app/server/config.json'], {base: './'})
-    .pipe(bump({type: 'minor'}))
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('bump-patch', function() {
-  return gulp.src(['./package.json', '../README.md', './app/server/config.json'], {base: './'})
-    .pipe(bump({type: 'patch'}))
-    .pipe(gulp.dest('./'));
-});
-
-gulp.task('bump-prerelease', function() {
-  return gulp.src(['./package.json', '../README.md', './app/server/config.json'], {base: './'})
-    .pipe(bump({type: 'prerelease'}))
-    .pipe(gulp.dest('./'));
-});
-
+	bumpMajor,
+	bumpMinor,
+	bumpPatch,
+	bumpPrerelease,
+};

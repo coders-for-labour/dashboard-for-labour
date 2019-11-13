@@ -4,6 +4,7 @@ link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-cla
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-card/d4l-card-behaviors.html")
 
 link(rel="import", href="/src/d4l-theme.html")
@@ -11,68 +12,77 @@ link(rel="import", href="/src/d4l-icons.html")
 link(rel="import", href="/src/shared-styles.html")
 
 dom-module#d4l-thunderclap-card
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="d4l-theme")
-  style(include="shared-styles")
-  style(include="shared-card-styles").
-    :host {
-      display: block;
-      min-width: 350px;
-    }
-
-    .card {
-      position: relative;
-      -webkit-background-size: cover;
-      background-size: cover;
-      padding: 0px 0px 0px;
-      color: var(--text-light-primary-color);
-    }
-
-    .thunderclap-content{
-      background: var(--app-color-primary-red);
-      padding: 10px 20px;
-    }
-    .thunderclap-text {
-      word-break: break-all;
-    }
-
-    .thunderclap-footer {
-      padding: 10px 20px 10px;
-      color: var(--text-dark-secondary-color);
-    }
-    .thunderclap-footer iron-icon {
-      margin-right: 10px;
-    }
-
-    .footer.tray{
-      position: relative;
-      margin: -30px -20px -10px;
-    }
-    .footer.tray paper-icon-button {
-      color: var(--app-color-secondary-grey);
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-card-styles").
+      :host {
+        display: block;
+        min-width: 350px;
+      }
+
+      .card {
+        position: relative;
+        -webkit-background-size: cover;
+        background-size: cover;
+        padding: 0px 0px 0px;
+        overflow: hidden;
+        cursor: pointer;
+      } 
+
+      .card-media {
+        width: 100%;
+        height: 200px;
+        background: #d4d4d4;
+      }
+
+      .card-header {
+        padding: 16px 16px 0;
+      }
+      .card-header .title {
+        font-size: 1.25rem;
+        line-height: 2rem;
+        font-weight: 500;
+        letter-spacing: .0125em;
+      }
+
+      .card-content {
+        padding: 0 16px;
+      }
+      .card-content p {
+        font-size: .875rem;
+        line-height: 1.25rem;
+        font-weight: 400;
+        letter-spacing: .0178571429em;
+        text-decoration: inherit;
+        text-transform: inherit;
+        color: rgba(0, 0, 0, 0.6);
+      }
+      .card-footer {
+        padding: 10px 20px 10px;
+        color: var(--text-dark-secondary-color);
+        padding: 0 16px 16px;
+      }
+      .card-footer iron-icon {
+        margin-right: 10px;
+      }
+
     .card
-      .thunderclap-content
-        div.thunderclap-text "[[campaign.description]]"
-        div.text-right [[__thunderClapFormatted]]
-      .thunderclap-footer
+      .card-header
         .layout.horizontal.center
-          .flex-2.layout.horizontal.wrap
-            h1 [[campaign.name]]
-          .flex.layout.horizontal.wrap
-            iron-icon(icon="d4l-icons:member")
-            div [[__userCountLabel]]
+          .title.flex [[thunderclap.name]]
+          div [[computeDateFormatRelative(thunderclap.scheduledExecution)]]
 
-          .flex.layout.horizontal.center
-            iron-icon(icon="d4l-icons:time")
-            div [[__thunderClapDaysLeft]]
+      .card-content
+        p "[[thunderclap.description]]"
 
-        .footer.tray(hidden$="[[!__showButtons]]")
-          .layout.horizontal.center
+      .card-footer
+        .layout.horizontal.center
+          iron-icon(icon="d4l-icons:member")
+          div [[__userCountLabel]]
+          .flex
+          .buttons
             paper-icon-button(icon="d4l-icons:view-circle", on-tap="__subscribeThunderclap")
-            div Subscribe
-
 
   script(src="./d4l-thunderclap-card.js")

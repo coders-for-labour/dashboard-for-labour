@@ -1,0 +1,62 @@
+{
+  "name": "topic",
+  "type": "collection",
+  "collection": "topic",
+  "extends": [
+    "timestamps"
+  ],
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": {
+      "GET": "allow"
+    },
+    "dataDisposition": {
+      "READ": "allow"
+    }
+  }],
+  "properties": {
+    "name": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "description": {
+      "__type": "string",
+      "__required": false,
+      "__allowUpdate": true
+    },
+    "banner": {
+      "__type": "string",
+      "__required": false,
+      "__allowUpdate": true
+    },
+    "parentId": {
+      "__type": "id",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "constituencyPano": {
+      "__type": "string",
+      "__required": false,
+      "__default": null,
+      "__allowUpdate": true
+    },
+    "editorIds": {
+      "__type": "array",
+      "__itemtype": "id",
+      "__required": true,
+      "__default": [],
+      "__allowUpdate": true,
+      "__permissions": [{
+        "role": "public",
+        "READ": "deny"
+      }]
+    },
+    "viewCount": {
+      "__type": "number",
+      "__required": false,
+      "__default": 0,
+      "__allowUpdate": true
+    }
+  }
+}

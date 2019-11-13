@@ -1,6 +1,8 @@
 Polymer({
   is: "d4l-auth",
   properties: {
+    app: Object,
+
     auth: {
       type: Object,
       value: {

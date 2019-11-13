@@ -13,10 +13,12 @@ html(lang="en")
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no")
 
-    title Amplify
-    meta(name="description", content="Social media tools for activists for #ge17")
+    title %{D4L_APP_TITLE}%
+    meta(name="description", content="Digital campaigning dashboard for activists for #GE2019")
 
-    link(rel="shortcut icon", type="image/x-icon", href="/images/favicon.ico")
+    link(rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png")
+    link(rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png")
 
     //- See https://goo.gl/OOhYW5
     link(rel="manifest", href="/manifest.json")
@@ -27,28 +29,28 @@ html(lang="en")
     //- Twitter card
     meta(name="twitter:card", value="summary_large_image")
     meta(name="twitter:site", content="@UKLabour")
-    meta(name="twitter:title", content="Amplify – Labour’s tool for supporters")
+    meta(name="twitter:title", content="%{D4L_APP_TITLE}% – Labour’s tool for supporters")
     meta(name="twitter:description", content="Change your profile pictures and get tweeting for Labour now.")
     meta(name="twitter:creator", content="@UkLabour")
     //-Twitter summary card with large image must be at least 280x150px -->
-    meta(name="twitter:image:src", content="https://amplify.labour.org.uk/images/amplify-promo.png")
+    meta(name="twitter:image:src", content="%{D4L_BUTTRESS_URL}%/images/dashboard-promo.png")
 
     <!-- Open Graph data -->
     meta(property="fb:app_id", content="%{D4L_FACEBOOK_APP_ID}%")
-    meta(property="og:title", content="Amplify – Labour’s tool for supporters")
+    meta(property="og:title", content="%{D4L_APP_TITLE}% – Labour’s tool for supporters")
     meta(property="og:type", content="article")
-    meta(property="og:url", content="https://amplify.labour.org.uk/")
-    meta(property="og:image", content="https://amplify.labour.org.uk/images/amplify-promo.png")
+    meta(property="og:url", content="%{D4L_BUTTRESS_URL}%")
+    meta(property="og:image", content="%{D4L_BUTTRESS_URL}%/images/dashboard-promo.png")
     meta(property="og:description", content="Change your profile pictures and get tweeting for Labour now.")
 
     //- Add to homescreen for Chrome on Android. Fallback for manifest.json
     meta(name="mobile-web-app-capable", content="yes")
-    meta(name="application-name", content="Amplify")
+    meta(name="application-name", content="%{D4L_APP_TITLE}%")
 
     //- Add to homescreen for Safari on iOS -->
     meta(name="apple-mobile-web-app-capable", content="yes")
     meta(name="apple-mobile-web-app-status-bar-style", content="black-translucent")
-    meta(name="apple-mobile-web-app-title", content="Amplify")
+    meta(name="apple-mobile-web-app-title", content="%{D4L_APP_TITLE}%")
 
     //- Homescreen icons -->
     link(rel="apple-touch-icon", href="/images/manifest/icon-48x48.png")
@@ -65,49 +67,17 @@ html(lang="en")
     link(href="https://fonts.googleapis.com/css?family=Raleway:300,500,700", rel="stylesheet")
 
     script.
-      // Setup Polymer options
-      window.Polymer = {
-        dom: 'shadow',
-        lazyRegister: true
-      };
+      window.Polymer = {rootPath: '/'};
 
-      // Load webcomponentsjs polyfill if browser does not support native Web Components
-      (function() {
-        'use strict';
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('service-worker.js', {
+            scope: Polymer.rootPath,
+          });
+        });
+      }
 
-        var onload = function() {
-          // For native Imports, manually fire WebComponentsReady so user code
-          // can use the same code path for native and polyfill'd imports.
-          if (!window.HTMLImports) {
-            document.dispatchEvent(
-              new CustomEvent('WebComponentsReady', {bubbles: true})
-            );
-          }
-        };
-
-        var webComponentsSupported = (
-          'registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')
-        );
-
-        if (!webComponentsSupported) {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
-          script.onload = onload;
-          document.head.appendChild(script);
-        } else {
-          onload();
-        }
-      })();
-
-      // Load pre-caching Service Worker
-      //if ('serviceWorker' in navigator) {
-      //  window.addEventListener('load', function() {
-      //    navigator.serviceWorker.register('/service-worker.js');
-      //  });
-      //}
+    script(src="/bower_components/webcomponentsjs/webcomponents-loader.js")
 
     link(rel="import" href="/src/d4l-app/d4l-app.html")
 
@@ -120,31 +90,5 @@ html(lang="en")
       }
 
   body
-    script.
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '%{D4L_FACEBOOK_APP_ID}%',
-          cookie     : true,
-          xfbml      : true,
-          version    : 'v2.8'
-        });
-        FB.AppEvents.logPageView();
-      };
-
-      (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-
-    style(is="custom-style").
-      iron-overlay-backdrop {
-        --iron-overlay-backdrop-opacity: 0.0;
-      }
-
     d4l-app
-
-    script(src="/bower_components/sugar/dist/sugar.min.js")
 

@@ -5,13 +5,13 @@
 
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
-const clean = require('gulp-clean');
-const pug = require('gulp-pug');
-const htmlPrettify = require('gulp-html-prettify');
-const bowerFiles = require('main-bower-files');
+const gulpClean = require('gulp-clean');
+const gulpPug = require('gulp-pug');
+const mainBowerFiles = require('main-bower-files');
 const imagemin = require('gulp-imagemin');
 const babel = require('gulp-babel');
-const replace = require('gulp-replace');
+const gulpReplace = require('gulp-replace');
+const Config = require('node-env-obj')('../');
 
 const Paths = {
   SOURCE: 'app/edit',
@@ -37,138 +37,107 @@ const Globs = {
   IMAGES: [`${Paths.SOURCE}/images/**/*.png`,`${Paths.SOURCE}/images/**/*.jpg`,`${Paths.SOURCE}/images/**/*.svg`,`${Paths.SOURCE}/images/**/*.gif`,`${Paths.SOURCE}/images/**/*.ico`]
 };
 
-let Environment = {
-  NODE_ENV: '',
-  D4L_CDN_DEV_URL: '',
-  D4L_CDN_PROD_URL: '',
-  D4L_RHIZOME_DEV_URL: '',
-  D4L_RHIZOME_PROD_URL: '',
-  D4L_RHIZOME_TEST_URL: '',
-  D4L_FB_APP_ID: ''
-};
+const buildDate = new Date().toLocaleString('en-GB');
+const EnvReplacments = [
+  { key: 'D4L_APP_TITLE', value: Config.app.title },
+  { key: 'D4L_CDN_URL', value: Config.cdn.url },
+  { key: 'D4L_BUTTRESS_URL', value: Config.buttress.url },
+  { key: 'D4L_BUTTRESS_PUBLIC_ID', value: Config.buttress.publicId },
+  { key: 'D4L_BUTTRESS_PUBLIC_USER_ID', value: Config.buttress.publicUserId },
+  { key: 'D4L_BUTTRESS_PUBLIC_USER_TOKEN', value: Config.buttress.publicUserToken },
+  { key: 'D4L_FACEBOOK_APP_ID', value: Config.auth.facebook.appId },
+  { key: 'D4L_BUILD_DATE', value: buildDate },
+  { key: 'D4L_BUILD_MODE', value: Config.env }
+];
 
-for (let variable in Environment) {
-  if (!process.env[variable]) {
-    throw new Error(`You must specify the ${variable} environment variable`);
-  }
-  if (process.env[variable]) {
-    Environment[variable] = process.env[variable];
-  }
-}
-
-function environmentReplace(stream) {
-  let outStr = null;
-  switch (Environment.NODE_ENV) {
-    case 'production':
-      outStr = stream.pipe(replace('%{D4L_CDN_URL}%', Environment.D4L_CDN_PROD_URL))
-        .pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_PROD_URL))
-        .pipe(replace('%{D4L_FACEBOOK_APP_ID}%', Environment.D4L_FB_APP_ID));
-      break;
-    case 'development':
-      outStr = stream.pipe(replace('%{D4L_CDN_URL}%', Environment.D4L_CDN_DEV_URL))
-        .pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL))
-        .pipe(replace('%{D4L_FACEBOOK_APP_ID}%', Environment.D4L_FB_APP_ID));
-      break;
-    case 'test':
-      outStr = stream.pipe(replace('%{D4L_RHIZOME_URL}%', Environment.D4L_RHIZOME_DEV_URL));
-      break;
-  }
-
-  return outStr;
+function configReplacer(stream) {
+  return EnvReplacments.reduce((out, replacment) => {
+    return out.pipe(gulpReplace(`%{${replacment.key}}%`, replacment.value));
+  }, stream);
 }
 
 //
 // Scripts
 //
-gulp.task('js', function() {
+const js = function() {
   let content = gulp.src(Globs.SCRIPTS, {base: Paths.SOURCE})
-		.pipe(eslint())
-		.pipe(eslint.format());
+    .pipe(eslint())
+    .pipe(eslint.format());
 
-  return environmentReplace(content)
-    .pipe(babel({
-      presets: ['es2015']
-    }))
-		.pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('scripts', function() {
-  return gulp.start(['js']);
-});
+  return configReplacer(content)
+    // .pipe(babel({
+    //   presets: ['@babel/env']
+    // }))
+    .pipe(gulp.dest(Paths.DEST));
+};
+const scripts = function(done) {
+	return gulp.series('js')(done);
+};
 
 //
 // Markup
 //
-gulp.task('html', function() {
+const html = function() {
   return gulp.src(Globs.HTML, {base: Paths.SOURCE})
 		.pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('pug', function() {
+};
+const pug = function() {
   let content = gulp.src(Globs.PUG, {base: Paths.SOURCE})
-		.pipe(pug())
-    .pipe(htmlPrettify());
+    .pipe(gulpPug());
 
-  return environmentReplace(content)
-		.pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('markup', function() {
-  return gulp.start(['pug', 'html']);
-});
+  return configReplacer(content)
+    .pipe(gulp.dest(Paths.DEST));
+};
+const markup = function(done) {
+	return gulp.series('html', 'pug')(done);
+};
 
 //
 // images
 //
-gulp.task('png', function() {
+const png = function() {
   return gulp.src(Globs.PNG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('jpg', function() {
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+};
+const jpg = function() {
   return gulp.src(Globs.JPG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('ico', function() {
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+};
+const ico = function() {
   return gulp.src(Globs.ICO)
     .pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('svg', function() {
+};
+const svg = function() {
   return gulp.src(Globs.SVG)
     .pipe(imagemin())
-		.pipe(gulp.dest(Paths.DEST_IMAGES));
-});
-
-gulp.task('images', function() {
-  return gulp.start(['png','jpg','ico','svg']);
-});
+    .pipe(gulp.dest(Paths.DEST_IMAGES));
+};
+const images = function(done) {
+	return gulp.series('png','jpg','ico','svg')(done);
+};
 
 //
 // videos
 //
-gulp.task('mp4', function() {
+const mp4 = function() {
   return gulp.src(Globs.MP4)
     .pipe(gulp.dest(Paths.DEST_VIDEOS));
-});
-
-gulp.task('videos', function() {
-  return gulp.start(['mp4']);
-});
+};
+const videos = function(done) {
+	return gulp.series('mp4')(done);
+};
 
 //
 // Static resources
 //
-gulp.task('json', function() {
+const json = function() {
   return gulp.src(Globs.JSON)
     .pipe(gulp.dest(Paths.DEST));
-});
-
-gulp.task('bower-files', function() {
-  return gulp.src(bowerFiles({
+};
+const bowerFiles = function() {
+  return gulp.src(mainBowerFiles({
     paths: {
       bowerDirectory: `${Paths.SOURCE}/bower_components`,
       bowerJson: `${Paths.SOURCE}/bower.json`
@@ -176,46 +145,55 @@ gulp.task('bower-files', function() {
   }), {
     base: `${Paths.SOURCE}/bower_components`
   }).pipe(gulp.dest(`${Paths.DEST}/bower_components`));
-});
-
-gulp.task('resources', function() {
-  return gulp.start(['json', 'bower-files']);
-});
+};
+const resources = function(done) {
+	return gulp.series('json', 'bowerFiles')(done);
+};
 
 //
 //
 //
-gulp.task('clean', function() {
-  return gulp.src([`${Paths.DEST}/*`], {read: false})
-  .pipe(clean())
-});
+const clean = function() {
+	return gulp.src([`${Paths.DEST}/*`], {read: false})
+		.pipe(gulpClean());
+};
+const build = function(done) {
+	return gulp.series('clean', gulp.parallel('resources', 'scripts', 'images', 'videos', 'markup'))(done);
+};
+const watch = function(done) {
+  return gulp.series('build', function() {
+    gulp.watch(['src/**/*.js'], gulp.series('scripts'));
+    gulp.watch('src/**/*.json', gulp.series('resources'));
+    gulp.watch(Globs.SCRIPTS, gulp.series('scripts'));
+    gulp.watch(Globs.MP4, gulp.series('mp4'));
+    gulp.watch(Globs.MARKUP, gulp.series('markup'));
+    gulp.watch(Globs.BOWER_JSON, gulp.series('bowerFiles'));
+    gulp.watch(Globs.JSON, gulp.series('json'));
+  })(done);
+};
 
-gulp.task('build', ['clean'], function() {
-  return gulp.start(['resources', 'scripts', 'images', 'videos', 'markup']);
-});
+module.exports = {
+	js,
+	scripts,
 
-gulp.task('build-sw', function(cb){
-  var swPrecache = require('sw-precache');
-  var rootDir = Paths.BUNDLED;
+	html,
+  pug,
+  markup,
 
-  swPrecache.write(`${rootDir}/service-worker.js`, {
-    staticFileGlobs: [
-      `${Paths.BUNDLED}/manifest.json`,
-      `${Paths.BUNDLED}/bower_components/webcomponentsjs/webcomponents-lite.min.js`,
-      `${Paths.BUNDLED}/src/**/*`,
-      `${Paths.BUNDLED}/images/**/*`,
-      `${Paths.BUNDLED}/videos/**/*`
-    ],
-    stripPrefix: rootDir
-  }, cb);
-});
+  png,
+  jpg,
+  ico,
+  svg,
+  images,
 
+  mp4,
+  videos,
 
-gulp.task('watch', ['build'], function() {
-  gulp.watch(Globs.SCRIPTS, ['scripts']);
-  gulp.watch(Globs.MP4, ['MP4']);
-  gulp.watch(Globs.VIDEOS, ['videos']);
-  gulp.watch(Globs.MARKUP, ['markup']);
-  gulp.watch(Globs.BOWER_JSON, ['bower-files']);
-  gulp.watch(Globs.JSON, ['json']);
-});
+  json,
+  bowerFiles,
+  resources,
+
+	clean,
+	build,
+	watch
+};

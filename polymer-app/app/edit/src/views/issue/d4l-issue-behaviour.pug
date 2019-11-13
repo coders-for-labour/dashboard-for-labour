@@ -1,0 +1,163 @@
+link(rel="import" href="/bower_components/polymer/polymer.html")
+
+script.
+  window.D4L = window.D4L || {};
+  window.D4L.Issue = window.D4L.Issue || {};
+
+  /**
+  * @polymerBehavior D4L.Issue.Helpers
+  */
+  D4L.Issue.Helpers = {
+    properties: {
+      
+    },
+
+    viewIssueItem(ev) {
+      this.viewIssue(ev.model.get('item.id'));
+    },
+    viewIssue(issueId) {
+      this.fire('view-entity', `/issue/${issueId}`);
+    },
+
+    __presentIssueEventDialog(event, meta) {
+      const dialog = this.$.dialog;
+
+      const inputSchema = {
+        sourceDescription: {
+          label: 'Source Description',
+          type: 'TEXTAREA',
+          default: event.source.description
+        },
+        sourceLinks: {
+          label: 'Source Links',
+          type: 'TEXTAREA',
+          default: event.source.description
+        },
+        responseDescription: {
+          label: 'Response Description',
+          type: 'TEXTAREA',
+          default: event.response.description
+        },
+        responseLinks: {
+          label: 'Response Links',
+          type: 'TEXTAREA',
+          default: event.response.description
+        },
+      };
+
+      dialog.setMetadata(meta);
+      return dialog.openDialog(this.parseInputSchema(inputSchema));
+    },
+
+    __presentIssueDialog(issue, meta) {
+      const dialog = this.$.dialog;
+
+      const inputSchema = {
+        name: {
+          label: 'Title',
+          type: 'TEXT',
+          default: issue.name
+        },
+        description: {
+          label: 'Description',
+          type: 'TEXTAREA',
+          default: issue.description
+        }
+      };
+
+      dialog.setMetadata(meta);
+      return dialog.openDialog(this.parseInputSchema(inputSchema));
+    },
+
+    updateIssue(issue) {
+      const issues = this.get('db.issue.data');
+      const issueIdx = issues.findIndex(i => i.id === issue.id);
+      const dialogMeta = {
+        'title': 'Issue',
+        'description': 'Update a issue to the system',
+        'action': 'Update',
+      };
+
+      if (issueIdx === -1) {
+        throw new Error('Invalid issue');
+      }
+
+      return this.__presentIssueDialog(issue, dialogMeta)
+        .then((result) => {
+          if (!result.values.name) {
+            throw new Error('Issue requires a name');
+          }
+
+          this.set(['db.issue.data', issueIdx, 'name'], result.values.name);
+          this.set(['db.issue.data', issueIdx, 'description'], result.values.description);
+        });
+    },
+
+    addIssue(issue) {
+      const selectedItem = this.get('__selectedItem');
+      if (!issue) {
+        issue = this.get('db.Factory').create('issue');
+      }
+      const dialogMeta = {
+        'title': 'Issue',
+        'description': 'Add a new issue to the system',
+        'action': 'Save',
+      }
+      
+      return this.__presentIssueDialog(issue, dialogMeta)
+        .then((result) => {
+          if (!result.values.name) {
+            throw new Error('Issue requires a name');
+          }
+
+          issue.name = result.values.name;
+          issue.description = result.values.description;
+
+          if (selectedItem) {
+            issue.topicId = selectedItem.id;
+          }
+
+          this.push('db.issue.data', issue);
+        });
+    },
+
+    addIssueEvent() {
+      const selectedItem = this.get('__selectedItem');
+      if (!selectedItem) {
+        throw new Error(`This dialog is only supported in a view with 'selectedItem'`);
+      }
+      const issueIdx = this.get('db.issue.data').findIndex(i => i.id === selectedItem.id);
+
+      const dbFactory = this.get('db.Factory');
+      const event = dbFactory.createFromPath('issue', 'events');
+      const dialogMeta = {
+        'title': 'Issue',
+        'description': 'Add a new issue to the system',
+        'action': 'Save',
+      }
+      
+      return this.__presentIssueEventDialog(event, dialogMeta)
+        .then((result) => {
+          event.source.description = result.values.sourceDescription;
+
+          if (result.values.sourceLinks) {
+            event.source.links = result.values.sourceLinks.split(/\r?\n/);
+          }
+
+          event.response.description = result.values.responseDescription;
+          if (result.values.responseLinks) {
+            event.response.links = result.values.responseLinks.split(/\r?\n/);
+          }
+
+          this.push(`db.issue.data.${issueIdx}.events`, event);
+        });
+    }
+    //- __addResource() {
+    //-   const selectedItem = this.get('__selectedItem');
+    //-   console.log(selectedItem);
+    //-   if (!selectedItem) {
+    //-     throw new Error(`This dialog is only supported in a view with 'selectedItem'`);
+    //-   }
+    //-   const issueIdx = this.get('db.issue.data').findIndex(i => i.id === selectedItem.id);
+    //- }
+  };

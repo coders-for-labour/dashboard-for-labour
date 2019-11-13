@@ -9,76 +9,80 @@ link(rel="import", href="/bower_components/paper-spinner/paper-spinner.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
-
-link(rel="import", href="/src/d4l-app-db/d4l-app-db-query.html")
-
-link(rel="import", href="/src/d4l-header/d4l-header.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
 link(rel="import", href="./d4l-dashboard-card.html")
+link(rel="import", href="./d4l-dashboard-constituency-card.html")
+link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/views/topic/d4l-topic-card.html")
 
 dom-module#d4l-dashboard
-  style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
-  style(include="shared-styles")
-  style(include="shared-layout-styles").
-    :host {
-      display: block;
-
-      padding: var(--default-page-padding);
-      padding-top: 95px;
-    }
-
-    .members-stat {
-      font-size: 50px;
-    }
-
   template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+
+        padding: var(--default-page-padding);
+        padding-top: var(--default-header-offset);
+      }
+
+      paper-button {
+        @apply --d4l-button-primary;
+      }
+
+      .members-stat {
+        font-size: 50px;
+      }
+
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    d4l-app-db-query(db="[[db]]", doc="[[db.user]]", query="[[__userQuery]]", find-all="{{__users}}")
+    buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
 
-    d4l-header(
-      auth="[[auth]]",
-      db="{{db}}",
-      page="Dashboard",
-      page-title="[[__pageTitle]]",
-      page-mode="[[__pageMode]]",
-      header="{{header}}",
-    )
+    .view-container
+      .page-content.layout.vertical
+        h1 Latest
+        .layout.horizontal.row-3.wrap
+          template(is="dom-repeat" items="[[__latestTopics]]")
+            d4l-topic-card.item(
+              auth="[[auth]]"
+              db="{{db}}",
+              topic="[[item]]"
+            )
+        paper-button(on-tap="__viewTopics") See All Topics
+        
+        .layout.horizontal.row-3.wrap
+          d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="thunderclap")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-social-icons:storm")
+              h1 Thunderclap
+            p Sign up to tweet our important messages.
+            paper-button(on-tap="__viewThunderclap") Get Started
 
-    .flex.self-strech.layout.vertical(mobile$="[[isMobile]]", style="min-height: 90vh")
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
-        d4l-dashboard-card.card.flex(background="twibbyn")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-social-icons:social")
-            h1 Twibbyns
-          p Change your profile pictures to show your support.
-          paper-button(on-tap="__viewTwibbyn") Get Started
+          //- d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="meme", disabled)
+          //-   .layout.horizontal.center
+          //-     iron-icon(icon="d4l-icons:picture")
+          //-     h1 Images
+          //-   p Gorgeous covers, posters and infographics to share
+          //-   paper-button(on-tap="__viewMemes") Get Started
 
-        d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="thunderclap")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-social-icons:storm")
-            h1 Storm
-          p Sign up to tweet our important messages.
-          paper-button(on-tap="__viewThunderclap") Get Started
+          d4l-dashboard-constituency-card.item.flex(
+            auth="[[auth]]",
+            db="{{db}}"
+          )
 
-        //-d4l-dashboard-card.card.flex(mobile$="[[isMobile]]", background="meme", disabled)
-          .layout.horizontal.center
-            iron-icon(icon="d4l-icons:picture")
-            h1 Images
-          p Gorgeous covers, posters and infographics to share
-          paper-button(on-tap="__viewMemes") Get Started
-
-      .flex.self-strech.layout.horizontal.wrap.card-group(mobile$="[[isMobile]]")
-        d4l-dashboard-card.card.flex(background="members")
-          .layout.horizontal.center
-            iron-icon(icon="d4l-icons:member")
-            h1 Members
-          h2.members-stat [[__users.length]]
+          d4l-dashboard-card.item.flex(background="members")
+            .layout.horizontal.center
+              iron-icon(icon="d4l-icons:member")
+              h1 Topics
+            h2.members-stat [[db.topic.data.length]]
 
   script(src="d4l-dashboard.js")

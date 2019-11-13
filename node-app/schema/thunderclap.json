@@ -1,0 +1,49 @@
+{
+  "name": "thunderclap",
+  "type": "collection",
+  "collection": "thunderclap",
+  "extends": [
+    "timestamps"
+  ],
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": {
+      "GET": "allow"
+    },
+    "dataDisposition": {
+      "READ": "allow"
+    }
+  }],
+  "properties": {
+    "name": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "description": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "scheduledExecution": {
+      "__type": "date",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "topicId": {
+      "__type": "id",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "supporters": {
+      "__type": "array",
+      "__required": true,
+      "__allowUpdate": true,
+      "__itemtype": "id",
+      "__permissions": [{
+        "role": "public",
+        "READ": "deny"
+      }]
+    }
+  }
+}

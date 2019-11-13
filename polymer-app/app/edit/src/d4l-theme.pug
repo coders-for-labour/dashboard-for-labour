@@ -5,7 +5,7 @@ link(rel="import", href="../bower_components/paper-styles/typography.html")
 dom-module(id="d4l-theme")
   template
     style(is="custom-style").
-      :root {
+      :host {
         --app-color-primary-grey: #616161;
         --app-color-secondary-grey: #9e9e9e;
         --app-color-primary-red: #e4003b;
@@ -50,7 +50,11 @@ dom-module(id="d4l-theme")
           -webkit-font-smoothing: antialiased;
         };
 
-        --default-page-padding: 64px 20px 20px;
+        --default-page-padding: 0;
+        --default-page-gutter: 10px;
+        --default-header-offset: 64px;
+        --default-hero-padding: 10px var(--default-page-gutter) 40px var(--default-page-gutter);
+
 
         --d4l-font-common-base: {
           font-family: 'Raleway', 'Lato', sans-serif;
@@ -61,6 +65,7 @@ dom-module(id="d4l-theme")
         --d4l-button-primary: {
           background: var(--paper-button-primary-color);
           color: var(--text-light-primary-color);
+          margin: 0px;
         };
 
         --d4l-font-primary-title: {
@@ -209,4 +214,16 @@ dom-module(id="d4l-theme")
         --notifications-dropdown-width: 500px;
         --notifications-dropdown-height: 600px;
       }
+
+      @media (min-width: 1024px) {
+        :host {
+          --default-page-gutter: 100px;
+        }
+      }
+      @media (min-width: 1520px) {
+        :host {
+          --default-page-gutter: auto;
+        }
+      }
+
 

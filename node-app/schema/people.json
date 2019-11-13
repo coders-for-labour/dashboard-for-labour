@@ -1,0 +1,36 @@
+{
+  "name": "people",
+  "type": "collection",
+  "collection": "people",
+  "extends": [
+    "timestamps"
+  ],
+  "roles": [],
+  "properties": {
+    "authId": {
+      "__type": "id",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "name": {
+      "__type": "string",
+      "__default": "",
+      "__allowUpdate": true
+    },
+    "forename": {
+      "__type": "string",
+      "__default": "",
+      "__allowUpdate": true
+    },
+    "avatar": {
+      "__type": "string",
+      "__default": "",
+      "__allowUpdate": true
+    },
+    "constituencyPano": {
+      "__type": "string",
+      "__required": false,
+      "__allowUpdate": true
+    }
+  }
+}

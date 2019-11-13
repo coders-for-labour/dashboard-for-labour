@@ -1,0 +1,89 @@
+{
+  "name": "issue",
+  "type": "collection",
+  "collection": "issue",
+  "extends": [
+    "timestamps"
+  ],
+  "roles": [{
+    "name": "public",
+    "endpointDisposition": {
+      "GET": "allow"
+    },
+    "dataDisposition": {
+      "READ": "allow"
+    }
+  }],
+  "properties": {
+    "name": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "topicId": {
+      "__type": "id",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "description": {
+      "__type": "string",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "events": {
+      "__type": "array",
+      "__default": [],
+      "__allowUpdate": true,
+      "__schema": {
+        "id": {
+          "__type": "id",
+          "__required": true,
+          "__allowUpdate": false
+        },
+        "source": {
+          "description": {
+            "__type": "string",
+            "__required": true,
+            "__allowUpdate": true
+          },
+          "links": {
+            "__type": "array",
+            "__itemtype": "string",
+            "__default": [],
+            "__allowUpdate": true
+          }
+        },
+        "response": {
+          "description": {
+            "__type": "string",
+            "__required": true,
+            "__allowUpdate": true
+          },
+          "links": {
+            "__type": "array",
+            "__itemtype": "string",
+            "__default": [],
+            "__allowUpdate": true
+          }
+        },
+        "createdAt": {
+          "__type": "date",
+          "__value": "now",
+          "__required": false,
+          "__allowUpdate": false
+        },
+        "updatedAt": {
+          "__type": "date",
+          "__required": false,
+          "__allowUpdate": true
+        }
+      }
+    },
+    "resources": {
+      "__type": "array",
+      "__itemtype": "id",
+      "__required": true,
+      "__allowUpdate": true
+    }
+  }
+}

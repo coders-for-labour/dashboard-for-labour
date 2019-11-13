@@ -1,8 +1,8 @@
 Polymer({
   is: 'd4l-app',
   behaviors: [
-    Polymer.D4LLogging,
-    Polymer.D4LRealtimeDbMsgHandler
+    D4L.Logging,
+    D4L.Helpers
   ],
   properties: {
     logLevel: {
@@ -10,16 +10,18 @@ Polymer({
       value: 3
     },
 
+    app: {
+      type: Object,
+      value: function() {
+        return {
+          title: '%{D4L_APP_TITLE}%'
+        };
+      }
+    },
+
     auth: {
       type: Object,
-      value: {
-        user: null,
-      },
       notify: true
-    },
-    authStatus: {
-      type: String,
-      value: "idle",
     },
     mode: {
       type: String,
@@ -30,73 +32,56 @@ Polymer({
       type: Object,
       notify: true
     },
-    iodb: {
+
+    routes: {
       type: Object,
       value: function() {
         return {
-          endpoint: '//%{D4L_RHIZOME_URL}%',
-          connected: false,
-          rxEvents: [
-            'db-activity'
-          ],
-          rx: []
-        };
+          route: null,
+          subroute: null,
+          action: null,
+          id: null
+        }
+      }
+    },
+    rootPath: String,
+    __routesData: {
+      type: Object,
+      value: function() {
+        return {
+          route: {
+            route: null,
+            parts: null,
+            active: false,
+            queryParams: null
+          },
+          subroute: {
+            route: null,
+            parts: null,
+            active: false
+          },
+          action: {
+            route: null,
+            parts: null,
+            active: false
+          },
+          id: {
+            route: null,
+            parts: null,
+            active: false
+          }
+        }
       }
     },
 
-    route: {
-      type: Object,
-      notify: true,
-    },
-    routeData: {
-      type: Object,
-      notify: true,
-      observer: '__routePageChanged'
-    },
-    subroute: {
-      type: Object,
-      notify: true
-    },
-    subrouteData: {
-      type: Object,
-      notify: true,
-      observer: '__subrouteChanged'
-    },
-    subrouteAction: {
-      type: Object,
-      notify: true
-    },
-    subrouteActionData: {
-      type: Object,
-      notify: true
-    },
-    subrouteActionId: {
-      type: Object,
-      notify: true
-    },
-    subrouteActionIdData: {
-      type: Object,
-      notify: true
-    },
-
-    page: {
+    __appRoute: {
       type: String,
       reflectToAttribute: true,
-      observer: '__pageChanged'
-    },
-    pageMode: {
-      type: String
+      observer: '__pageChanged',
     },
     pageFirstLoad: {
       type: Boolean,
       value: true
-    },
-    subPageTitle: {
-      type: String
-    },
-    mainTitle: {
-      type: String,
-      computed: '__computeMainTitle(page)'
     },
 
     __hideMenuButton: {
@@ -110,125 +95,70 @@ Polymer({
   },
 
   observers: [
-    '__authChanged(authStatus)',
-    '__dbConnected(iodb.connected)',
-    '__ioConnected(io.connected)'
+    '__authChanged(auth.status)',
+    '__routePathChanged(__routesData.route.route.path, __routesData.route.queryParams)',
+    '__routesRouteChanged(routes.route)',
   ],
   listeners: {
-    'view-entity': '__viewEntity'
+    'view-entity': '__viewEntity',
+    'back-button-clicked': '__viewBack',
   },
 
   attached: function() {
-    this.authStatus = "begin";
+    this.set('auth.status', 'begin');
+
+    if (Sugar) {
+      Sugar.Date.setLocale('en-GB');
+    }
   },
 
   __authChanged: function() {
-    if ( this.authStatus !== "done") {
+    if ( this.get('auth.status') !== "done") {
       return;
     }
-    this.__silly(this.auth.user);
-    if (this.auth.user) {
-      this.mode = "application";
+  },
+
+  __routePathChanged: function() {
+    const route = this.get('__routesData.route');
+    const subroute = this.get('__routesData.subroute');
+    const action = this.get('__routesData.action');
+    const id = this.get('__routesData.id');
+
+    if (!route || !subroute || !action || !id) {
+      return;
+    }
+
+    if (this.get('navDrawerOpened')) {
+      this.set('navDrawerOpened', false);
+    }
+
+    if (route && route.active) {
+      this.set('routes.route', route.parts.data);
     } else {
-      this.mode = "authenticate";
+      this.set('routes.route', false);
+    }
+    if (subroute && subroute.active) {
+      this.set('routes.subroute', subroute.parts.data);
+    } else {
+      this.set('routes.subroute', false);
+    }
+    if (action && action.active) {
+      this.set('routes.action', action.parts.data);
+    } else {
+      this.set('routes.action', false);
+    }
+    if (id && id.active) {
+      this.set('routes.id', id.parts.data);
+    } else {
+      this.set('routes.id', false);
     }
   },
 
-  __dbConnected: function(connected) {
-    this.__debug(`db: connected: ${connected}`);
-  },
-  __ioConnected: function(connected) {
-    this.__debug(`io: connected: ${connected}`);
-    if (connected !== true) {
-      return;
-    }
+  __routesRouteChanged: function(next) {
+    const current = this.get('__appRoute');
+    if (current && next === current) return;
 
-    this.push('io.tx', {type: 'add-user', payload: {userId: this.get('auth.user.id')}});
-  },
-  __dbRxEvent: function(ev) {
-    let authUser = this.get('auth.user');
-    if (!authUser) {
-      return;
-    }
-
-    this.__handleRxEvent(ev, authUser);
-  },
-  __rxEvent: function(ev) {
-    let type = ev.detail.type;
-    let payload = ev.detail.payload;
-    if (payload.userId === this.get('auth.user.id')) {
-      return;
-    }
-    this.__debug(`receiving message: ${type}`);
-    this.__debug(payload);
-
-    let user = this.db.user.data.find(u => u.id == payload.userId);
-    switch (type) {
-      default: {
-        this.__err(new Error('SocketIO: Unhandled message type'));
-      } break;
-      case 'chat': {
-        if (this.chats.length > 0) {
-          this.push('chats.0.messages', {
-            user: user,
-            text: payload.text,
-            timestamp: payload.timestamp,
-          });
-        }
-      } break;
-      case 'message': {
-      } break;
-      case 'add-user': {
-        if (user && user.person) {
-          this.fire('create-action-toast', {
-            label: '',
-            text: `${user.person.name} just connected...`
-          });
-        }
-      } break;
-      case 'rm-user': {
-        if (user && user.person) {
-          this.fire('create-action-toast', {
-            label: '',
-            text: `${user.person.name} just left...`
-          });
-        }
-      } break;
-    }
-  },
-  __dataServiceError: function(ev) {
-    this.__silly(ev);
-
-    this.fire('create-action-toast', {
-      label: '',
-      text: ev.detail.error.message
-    });
-  },
-
-  __routePageChanged: function(data, prevData) {
-    const page = data.page;
-
-    if(prevData && data.page !== prevData.page && this.pageFirstLoad){
-      this.__debug('No longer first load');
-      this.pageFirstLoad = false;
-    }
-
-    this.page = page || 'dashboard';
-    this.navDrawerOpened = false;
-    this.chatDrawerOpened = false;
-  },
-  __subrouteChanged: function(data, prevData) {
-    const id = data.id;
-    if (!id) {
-      return;
-    }
-
-    if(prevData && data.id !== prevData.id && this.pageFirstLoad){
-      this.pageFirstLoad = false;
-    }
-
-    this.navDrawerOpened = false;
-    this.chatDrawerOpened = false;
+    this.set('__appRoute', next || 'dashboard');
   },
 
   __pageChanged: function(page) {
@@ -237,12 +167,12 @@ Polymer({
       return window.location = '/logout';
     }
 
-    if (page === 'storm') {
-      page = 'thunderclap';
-    }
-
-    let resolvedPageUrl = this.resolveUrl(`../views/${page}/d4l-${page}.html`);
-    this.importHref(resolvedPageUrl, null, this.__showPage404, true);
+    Polymer.importHref(
+      this.resolveUrl(`/src/views/${page}/d4l-${page}.html`),
+      null,
+      () => this.set('__appRoute', 'view404'),
+      true
+    );
   },
   __showPage404: function() {
     this.page = 'view404';
@@ -252,26 +182,32 @@ Polymer({
   },
 
   __viewEntity: function(ev) {
-    let path = ev.detail;
-    if (!path) {
+    let path = ev.detail || ev;
+    if (!path) return;
+
+    if (path.indexOf('/') !== 0) {
+      path = `/${path}`;
+    }
+
+    window.history.pushState({}, null, path);
+    this.fire('location-changed');
+  },
+  __viewBack: function() {
+    const routes = this.get('routes');
+    const pageFirstLoad = this.get('pageFirstLoad');
+
+    if(!pageFirstLoad && window.history.length > 0){
+      return window.history.back();
+    }
+
+    if (routes.subroute) {
+      this.__viewEntity(`/${routes.route}`);
       return;
     }
 
-    this.set('route.path', path);
+    this.__viewEntity('/');
   },
 
-  __computeMainTitle: function(page) {
-    if (this.subPageTitle) {
-      return this.subPageTitle;
-    }
-    let titles = {
-      'dashboard': 'Amplify'
-    };
-    if (!page || !titles[page]) {
-      return 'Admin';
-    }
-    return titles[page];
-  },
   __computeHideMenuButton: function() {
     return this.subroute.path ? true : false
   },

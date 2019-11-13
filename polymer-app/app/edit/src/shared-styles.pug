@@ -8,18 +8,39 @@ dom-module(id="shared-styles")
   template
     style.
       h1 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-primary-title;
       }
       h2 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-secondary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-secondary-title;
       }
 
       d4l-dashboard-card h1,
       d4l-dashboard-card h2,
       d4l-dashboard-card h3 {
         color: var(--text-light-primary-color);
+      }
+
+      paper-fab, ltn-fab-menu {
+        position: fixed;
+        right: 35px;
+        bottom: 35px;
+      }
+      ltn-fab-menu paper-icon-button {
+        background: rgb(198, 40, 40, 0.7);
+        color: #FFF;
+        border-radius: 50%;
+      }
+
+      ltn-fab-menu .fab-item {
+        position: relative;
+      }
+      ltn-fab-menu .fab-item .label {
+        position: absolute;
+        right: 100%;
+        margin-right: 6px;
+        line-height: 40px;
       }
 
       .text-left {
@@ -49,21 +70,28 @@ dom-module(id="shared-card-styles")
         background-color: #fff;
         margin: 0px;
       }
+      .card[hero] {
+        padding: 0;
+      }
 
       h1 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-small-card-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-small-card-primary-title;
         color: var(--text-dark-primary-color);
         /*margin-bottom:10px;*/
       }
-      p, .third-line ::content span {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-small-card-primary-text);
+      p,
+      .third-line ::slotted(span) {
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-small-card-primary-text;
         color: var(--text-dark-primary-color);
       }
-      p.secondary, p[secondary], .third-line ::content span.secondary, .third-line ::content span[secondary] {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-small-card-secondary-text);
+      p.secondary,
+      p[secondary],
+      .third-line ::slotted(span.secondary),
+      .third-line ::slotted(span[secondary]) {
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-small-card-secondary-text;
         color: var(--text-dark-secondary-color);
       }
 
@@ -78,71 +106,94 @@ dom-module(id="shared-card-styles")
 dom-module(id="shared-layout-styles")
   template
     style.
+      .view-container {
+        width: 1420px;
+
+        margin-left: var(--default-page-gutter);
+        margin-right: var(--default-page-gutter);
+      }
+      @media (max-width: 1520px) {
+        .view-container {
+          width: auto;
+        }
+      }
+
+      .page-header {
+        padding: 16px 0 32px;
+      }
+      .page-content {
+        padding: 16px 0;
+      }
+
       .page-sidebar {
         margin-bottom:30px;
       }
 
-      .page-content:not([mobile]) {
-        width: 70%;
-        margin-left: 30%;
-      }
       .page-sidebar:not([mobile]) {
         position: fixed;
         width: 28%;
         height: 88%;
       }
 
-      .card {
-        margin-bottom: 30px;
+      .row-2, .row-4, .row-3 {
+        margin: 10px -10px;
       }
-      .card.flex {
-        flex: none;
-        width: 100%;
+
+      .row-2 > .item,
+      .row-4 > .item, 
+      .row-3 > .item {
+        padding: 10px;
+        box-sizing: border-box;
       }
-      .card.flex:not([mobile]) {
-        flex: 1;
+
+      .row-2 > .item {
+        flex: 0 1 50%;
       }
-      .card-group[mobile] {
-        display: block;
-        flex: none;
-        width: 100%;
+      .row-3 > .item {
+        flex: 0 1 33.333333%;
       }
-      .card-group:not([mobile]) > .card {
-        margin-right: 30px;
+      .row-4 > .item {
+        flex: 0 1 25%;
       }
-      .card-group > .card:last-child {
-        margin-right: 0px;
+
+      @media (max-width: 768px) {
+        .row-2 > .item,
+        .row-4 > .item,
+        .row-3 > .item {
+          flex-basis: 50%;
+        }
       }
-      .card-group.group-2 > .card {
-        width: 49%;
-        margin-right: 2%;
+      @media (max-width: 576px) {
+        .row-2 > .item,
+        .row-4 > .item,
+        .row-3 > .item {
+          flex-basis: 100%;
+        }
       }
-      .card-group.group-2 > .card:nth-child(2n) {
-        margin-right: 0px;
-      }
+
 
 dom-module#d4l-dialog-styles
   template
     style(include="d4l-theme")
     style.
       h1 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-popup-primary-title;
         color: var(--default-primary-color);
       }
       h2 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-secondary-title);
+        @apply --d4l-font-common-base ;
+        @apply --d4l-font-popup-secondary-title ;
         color: var(--text-dark-primary-color);
       }
       p {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-primary-text);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-popup-primary-text;
         color: var(--text-dark-primary-color);
       }
       .dialog-header h2 {
-        @apply(--d4l-font-common-base);
-        @apply(--d4l-font-popup-primary-title);
+        @apply --d4l-font-common-base;
+        @apply --d4l-font-popup-primary-title;
         font-weight: 200 !important;
         color: white;
       }

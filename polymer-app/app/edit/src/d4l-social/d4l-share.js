@@ -7,8 +7,8 @@ Polymer.D4LShare = {
       type: Object,
       value: function() {
         return {
-          fb: 'I\'ve just Amplified Labour! https://amplify.labour.org.uk #votelabour',
-          tw: 'I\'ve just Amplified Labour! https://amplify.labour.org.uk #votelabour'
+          fb: 'I\'ve just Amplified Labour! %{D4L_BUTTRESS_URL}% #votelabour',
+          tw: 'I\'ve just Amplified Labour! %{D4L_BUTTRESS_URL}% #votelabour'
         };
       }
     },
@@ -50,17 +50,17 @@ Polymer.D4LShare = {
 
   __shareAmplify: function(){
     let user = this.get('auth.user');
-    if (!user || !user.profiles.length) {
+    if (!user || !user.auth.length) {
       this.__warn('No auth');
       return;
     }
 
     let postText = this.get('__shareText.fb');
-    const url = 'https://amplify.labour.org.uk';
+    const url = '%{D4L_BUTTRESS_URL}%';
     this.set('__shareTwStatus', 'sharing');
 
-    let authFb = user.profiles.find(p => p.app === 'facebook') !== -1;
-    let authTw = user.profiles.find(p => p.app === 'twitter') !== -1;
+    let authFb = user.auth.find(p => p.app === 'facebook') !== -1;
+    let authTw = user.auth.find(p => p.app === 'twitter') !== -1;
 
     this.__debug(`AuthFb: ${authFb}`, `AuthTw: ${authTw}`);
 
@@ -104,10 +104,10 @@ Polymer.D4LShare = {
 
   __shareAmplifyFb: function(){
     let postText = this.get('__shareText.fb');
-    const url = 'https://amplify.labour.org.uk';
+    const url = '%{D4L_BUTTRESS_URL}%';
     this.set('__shareFbStatus', 'sharing');
 
-    this.__shareUrl(postText, url, (err, postResponse) => {
+    this.__shareUrl(postText, url, (err) => {
       if (err) {
         this.__err(err);
         this.set('__shareFbStatus', 'ready');
@@ -117,7 +117,7 @@ Polymer.D4LShare = {
     });
   },
 
-  __shareAmplifyTw: function(){
+  __shareTwitter: function(){
     let postText = this.get('__shareText.fb');
     this.set('__shareTwStatus', 'sharing');
 
@@ -132,7 +132,7 @@ Polymer.D4LShare = {
   },
   __sharedTwErr: function() {
     this.set('__shareTwStatus', 'ready');
-    this.fire('appViewError', ev);
+    // this.fire('appViewError', ev);
   },
 
   __computeDisableShareFb: function(status) {

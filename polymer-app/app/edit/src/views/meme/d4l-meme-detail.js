@@ -1,13 +1,13 @@
 Polymer({
   is: 'd4l-meme-detail',
   behaviors: [
-    Polymer.D4LLogging,
+    D4L.Logging,
     Polymer.D4LFacebook
   ],
   properties: {
     logLevel: {
       type: Number,
-      value: 4
+      value: 3
     },
     auth: {
       type: Object,
@@ -236,7 +236,7 @@ Polymer({
       return false;
     }
 
-    return user.profiles.findIndex(a => a.app === app) !== -1;
+    return user.auth.findIndex(a => a.app === app) !== -1;
   },
 
   __computeTwitterConnected: function() {
