@@ -103,7 +103,7 @@ dom-module#d4l-dashboard-constituency-card
             iron-icon(icon="d4l-icons:location")
             h1 Find a Constituency
           .error [[__formError]]
-          paper-input(label="Enter a postcode here", value="{{__postcode}}")
+          paper-input(label="Enter a postcode here", value="{{__postcode}}", on-keydown="__checkForReturn")
           paper-button(on-tap="__findConstituency") Search
 
 

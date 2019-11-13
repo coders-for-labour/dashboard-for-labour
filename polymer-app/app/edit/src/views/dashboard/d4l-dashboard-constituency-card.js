@@ -128,6 +128,12 @@ Polymer({
     });
   },
 
+  __checkForReturn: function(ev) {
+    if (ev.key === 'Enter') {
+      this.__findConstituency();
+    }
+  },
+
   __computeHasConstituency: function() {
     return this.get('constituency') ? true : false;
   }
