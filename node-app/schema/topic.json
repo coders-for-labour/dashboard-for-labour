@@ -39,7 +39,7 @@
       "__type": "string",
       "__required": false,
       "__default": null,
-      "__allowUpdate": true,
+      "__allowUpdate": true
     },
     "editorIds": {
       "__type": "array",
@@ -56,7 +56,7 @@
       "__type": "number",
       "__required": false,
       "__default": 0,
-      "__allowUpdate": true    
+      "__allowUpdate": true
     }
   }
 }
