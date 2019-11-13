@@ -47,6 +47,7 @@ const EnvReplacments = [
   { key: 'D4L_BUTTRESS_PUBLIC_USER_TOKEN', value: Config.buttress.publicUserToken },
   { key: 'D4L_FACEBOOK_APP_ID', value: Config.auth.facebook.appId },
   { key: 'D4L_BUILD_DATE', value: buildDate },
+  { key: 'D4L_BUILD_VERSION', value: Config.app.version },
   { key: 'D4L_BUILD_MODE', value: Config.env }
 ];
 

@@ -42,10 +42,18 @@ const __authenticateUser = (appAuth, existingUser) => {
         {'route': 'resource', 'permission': 'list'}
       ],
     },
-    authorised: {
+    editor: {
       authLevel: 1,
       domains: [`${Config.app.protocol}://${Config.app.host}`],
       role: 'admin.editor',
+      permissions: [
+        {'route': '*', 'permission': '*'}
+      ],
+    },
+    super: {
+      authLevel: 1,
+      domains: [`${Config.app.protocol}://${Config.app.host}`],
+      role: 'admin.super',
       permissions: [
         {'route': '*', 'permission': '*'}
       ],
@@ -73,29 +81,44 @@ const __authenticateUser = (appAuth, existingUser) => {
     })
     .then(() => tCache.getData())
     .then((users) => {
-      const authorised = users.find((u) => appAuth.app === 'twitter' && u.twitter === appAuth.username);
+      const authorised = users.find((u) => appAuth.app === 'twitter' && u.twitter.toUpperCase() === appAuth.username.toUpperCase());
       if (!authorised) {
+        Logging.logDebug(`AUTH: Pending ${appAuth.name} Not found in team sheet`);
         return null;
       }
 
-      authorisation = 'authorised';
+      if (authorised.teamName === 'National') {
+        authorisation = 'super';
+        Logging.logDebug(`AUTH: Matched ${appAuth.name} as team ${authorised.teamName}`);
+      } else {
+        authorisation = 'editor';
+        Logging.logDebug(`AUTH: Matched ${appAuth.name} as team ${authorised.teamName}`);
+      }
+
       return authorised;
     })
     .then((authorised) => {
       if (!authorised) {
         return;
       }
+
       constituency = constituencies.find((c) => c.pano == authorised.teamName);
       if (!constituency) {
         return;
       }
+
       return Buttress.getCollection('topic').getAll();
     })
     .then((topics) => {
+      if (!topics) {
+        return null;
+      }
+
       return topics.find((t) => t.constituencyPano == constituency.pano);
     })
     .then((_topic) => {
       if (_topic) return _topic;
+      if (_topic === null) return;
 
       const r17 = constituency['2017'].results;
       const mp = r17[0];
