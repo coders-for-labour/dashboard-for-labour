@@ -12,6 +12,13 @@
     },
     "dataDisposition": {
       "READ": "allow"
+    },
+    "authFilter": {
+      "query": {
+        "published": {
+          "eq": true
+        }
+      }
     }
   }],
   "properties": {
@@ -28,6 +35,12 @@
     "banner": {
       "__type": "string",
       "__required": false,
+      "__allowUpdate": true
+    },
+    "published": {
+      "__type": "boolean",
+      "__required": false,
+      "__value": true,
       "__allowUpdate": true
     },
     "parentId": {

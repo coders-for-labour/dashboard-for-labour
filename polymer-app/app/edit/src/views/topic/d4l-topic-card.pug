@@ -28,7 +28,10 @@ dom-module#d4l-topic-card
         background-size: cover;
         padding: 0px 0px 0px;
         overflow: hidden;
-      } 
+      }
+      .card[unpublished] {
+        opacity: 0.6;
+      }
 
       .topic-media {
         width: 100%;
@@ -70,7 +73,7 @@ dom-module#d4l-topic-card
     ltn-dialog#dialog
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__parentQuery]]", find-one="{{parent}}")
 
-    .card
+    .card(unpublished$="[[!topic.published]]")
       iron-image.topic-media(src="[[topic.banner]]" sizing="cover")
       .topic-header
         .title [[topic.name]]

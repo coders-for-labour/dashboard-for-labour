@@ -34,6 +34,11 @@ script.
           type: 'TEXTAREA',
           default: topic.description
         },
+        published: {
+          label: 'Published',
+          type: 'TOGGLE',
+          default: topic.published
+        },
         banner: {
           label: 'Banner Image',
           type: 'TEXT',
@@ -67,6 +72,7 @@ script.
 
           this.set(['db.topic.data', topicIdx, 'name'], result.values.name);
           this.set(['db.topic.data', topicIdx, 'description'], result.values.description);
+          this.set(['db.topic.data', topicIdx, 'published'], result.values.published);
           this.set(['db.topic.data', topicIdx, 'banner'], result.values.banner);
 
           if (selectedItem && selectedItem.id != topic.id) {
@@ -95,6 +101,7 @@ script.
 
           topic.name = result.values.name;
           topic.description = result.values.description;
+          topic.published = result.values.published;
           topic.banner = result.values.banner;
 
           this.push('db.topic.data', topic);
