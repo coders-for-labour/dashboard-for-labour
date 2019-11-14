@@ -156,18 +156,31 @@ Polymer({
   },
 
   __computeTopicsQuery(cr) {
+    const isAdminSuper = this.inAuthRole(this.get('auth.token'), 'admin.super');
+    const isTopicEditor = this.get('__isTopicEditor');
     const selectedItem = this.get('__selectedItem');
 
     let parentId = null;
     if (selectedItem) {
       parentId = selectedItem.id;
     }
+    
+    const $and = [];
+
+    if (!isAdminSuper && !isTopicEditor) {
+      $and.push({
+        published: {
+          $eq: true
+        }
+      });
+    }
 
     return {
       __crPath: cr.path,
       parentId: {
         $eq: parentId
-      }
+      },
+      $and: $and
     };
   },
 

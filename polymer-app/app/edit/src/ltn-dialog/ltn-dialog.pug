@@ -8,6 +8,7 @@ link(rel="import" href="/bower_components/paper-listbox/paper-listbox.html")
 link(rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html")
 link(rel="import" href="/bower_components/paper-input/paper-input.html")
 link(rel="import" href="/bower_components/paper-input/paper-textarea.html")
+link(rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html")
 
 dom-module#ltn-dialog
   template
@@ -49,6 +50,10 @@ dom-module#ltn-dialog
         margin: 0px 0.2rem;
       }
 
+      .label {
+        color: rgba(0,0,0,0.6);
+      }
+
     paper-dialog#dialog(
       on-iron-overlay-opened="__patchOverlay",
       on-iron-overlay-closed="__dialogClosed")
@@ -83,6 +88,12 @@ dom-module#ltn-dialog
                 //- TEXT
                 template(is="dom-if", if="[[__compareString(input.type, 'TEXTAREA', input.value)]]")
                   paper-textarea(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", rows="3", auto-validate)
+                
+                //- TOGGLE
+                template(is="dom-if", if="[[__compareString(input.type, 'TOGGLE', input.value)]]")
+                  .layout.horizontal
+                    .label.flex [[input.label]]
+                    paper-toggle-button(class$="[[input.class]]", name="[[input.name]]", checked="{{input.value}}", auto-validate)
 
                 //- DATE
                 template(is="dom-if", if="[[__compareString(input.type, 'DATE', input.value)]]")
