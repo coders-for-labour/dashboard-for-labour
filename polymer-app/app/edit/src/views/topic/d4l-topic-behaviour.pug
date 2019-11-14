@@ -109,10 +109,10 @@ script.
     },
 
     __computeIsTopicEditor(topic) {
-      if (!topic) return false;
-
       const auth = this.get('auth');
       const isAdmin = this.inAuthRole(auth.token, 'admin.super');
+      if (!topic) return isAdmin;
+
       const isEditor = this.inAuthRole(auth.token, 'admin.editor');
 
       this.__silly(`__computeIsTopicEditor`, topic, auth, `isAdmin: ${isAdmin}`, `isEditor: ${isEditor}`);
