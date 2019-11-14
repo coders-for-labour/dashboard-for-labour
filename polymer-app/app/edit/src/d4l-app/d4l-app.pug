@@ -56,6 +56,14 @@ dom-module#d4l-app
         background-color: var(--default-background-color);
       }
 
+      #desyncToast {
+        --paper-toast-background-color: #d30437;
+        --paper-toast-color: white;
+      }
+      #desyncToast a {
+        color: #FFF;
+      }
+
       .app-container {
         min-height: 100vh;
       }
@@ -120,14 +128,21 @@ dom-module#d4l-app
       error="{{dbError}}",
       settings="{{dbSettings}}",
       db="{{db}}",
+      io="{{io}}",
       core-collections="[[dbCoreCollections]]"
     )
+
+    paper-toast#desyncToast.fit-bottom(duration="0" on-click="__reload")
+      .layout.horizontal
+        .flex New version available 
+        a(href="#") Reload to update
 
     .app-container.layout.vertical
       d4l-header(
         app="[[app]]",
         db="{{db}}",
-        auth="[[auth]]"
+        io="[[io]]",
+        auth="[[auth]]",
       )
 
       iron-pages.flex(

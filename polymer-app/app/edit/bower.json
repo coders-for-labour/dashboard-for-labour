@@ -29,7 +29,7 @@
     "paper-item": "PolymerElements/paper-item#^2.1.1",
     "neon-animation": "PolymerElements/neon-animation#^2.0.0",
     "iron-image": "PolymerElements/iron-image#^2.2.1",
-    "paper-toast": "PolymerElements/paper-toast#^2.1.1",
+    "paper-toast": "PolymerElements/paper-toast#^2.0.1",
     "paper-spinner": "PolymerElements/paper-spinner#^2.1.0",
     "iron-a11y-keys": "PolymerElements/iron-a11y-keys#^2.0.0",
     "iron-scroll-target-behavior": "PolymerElements/iron-scroll-target-behavior#^2.0.0",

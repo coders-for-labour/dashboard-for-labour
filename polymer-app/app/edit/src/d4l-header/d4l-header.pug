@@ -6,6 +6,8 @@ link(rel="import", href="/bower_components/iron-media-query/iron-media-query.htm
 link(rel="import", href="/bower_components/iron-pages/iron-pages.html")
 link(rel="import", href="/bower_components/paper-icon-button/paper-icon-button.html")
 link(rel="import", href="/bower_components/paper-item/paper-icon-item.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
@@ -33,6 +35,11 @@ dom-module#d4l-header
       app-toolbar {
         font-size:24px;
       }
+      .title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .header-toolbar {
         width: 100%;
       }
@@ -41,6 +48,14 @@ dom-module#d4l-header
         color: var(--text-light-primary-color);
         height: 42px;
         width: 42px;
+      }
+      .status-icon {
+        margin-left: 10px;
+        height: 46px;
+      }
+      .user-avatar {
+        margin-left: 10px;
+        height: 46px;
       }
       .user-image {
         height: 42px;
@@ -61,8 +76,11 @@ dom-module#d4l-header
       app-toolbar
         .layout.horizontal.center.header-toolbar
           iron-image.header-logo(src="/images/c4l-logo-white.svg", sizing="contain", on-tap="__viewHome")
-          div.flex(main-title) [[responsivePageTitle]]
-          iron-image.user-image(hidden$="[[!auth.signedIn]]", src="[[__userImage]]", sizing="contain")
-          paper-icon-button.twitter-auth(hidden$="[[auth.signedIn]]", icon="d4l-social-icons:twitter", on-click="authTwitter")
+          div.title.flex(main-title) [[responsivePageTitle]]
+          iron-icon.status-icon(hidden$="[[io.synced]]" icon="icons:report-problem")
+          iron-icon.status-icon(hidden$="[[io.connected]]" icon="icons:cloud-off")
+          .user-avatar
+            iron-image.user-image(hidden$="[[!auth.signedIn]]", src="[[__userImage]]", sizing="contain")
+            paper-icon-button.twitter-auth(hidden$="[[auth.signedIn]]", icon="d4l-social-icons:twitter", on-click="authTwitter")
 
   script(src="d4l-header.js")

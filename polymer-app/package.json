@@ -1,6 +1,6 @@
 {
   "name": "dashboard-for-labour",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Digital campaigning dashboard for activists for #GE2019",
   "author": "Coders for Labour",
   "private": true,
@@ -9,7 +9,10 @@
     "npm": "~2.15.x"
   },
   "scripts": {
-    "build": "rm -rf ./app/build && cd ./app/serve && polymer build && mv ./build ../"
+    "build": "rm -rf ./app/build && cd ./app/serve && polymer build && mv ./build ../",
+    "cert": "cd ../nginx/certs && sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout local-dashboard-forlabour.key -out local-dashboard-forlabour.crt -config ./local-dashboard-forlabour.conf",
+    "add-cert": "cd ../nginx/certs && sudo cp *.crt /etc/ssl/certs && sudo cp *.key /etc/ssl/private",
+    "add-trust": "cd ../nginx/certs && certutil -d sql:$HOME/.pki/nssdb -A -t \"P,,\" -n \"local-dashboard-forlabour\" -i local-dashboard-forlabour.crt"
   },
   "repository": {
     "type": "git",
