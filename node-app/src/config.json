@@ -32,7 +32,8 @@
     "D4L_REDIS_PORT": "6379",
     "D4L_CLUSTER_APP": "primary",
     "D4L_APP_SUBDOMAIN": "dashboard",
-    "D4L_APP_DOMAIN": "forlabour.com"
+    "D4L_APP_DOMAIN": "forlabour.com",
+    "D4L_CONSTITUENCIES_TOPIC_ID": ""
   },
   "global": {
     "env": "%NODE_ENV%",
@@ -93,6 +94,9 @@
     "cdn": {
       "url": "D4L_CDN_URL",
       "bucket": "D4L_CDN_BUCKET"
+    },
+    "topics": {
+      "constituenciesTopicId": "%D4L_CONSTITUENCIES_TOPIC_ID%"
     }
   }
 }

@@ -143,7 +143,7 @@ const __authenticateUser = (appAuth, existingUser) => {
         description: description,
         constituencyPano: constituency.pano,
         banner: `/images/cards/photo${Math.floor((Math.random() * 32) + 1)}.jpg`,
-        parentId: null,
+        parentId: Config.topics.constituenciesTopicId,
         editorIds: [],
         viewCount: 0,
       });
