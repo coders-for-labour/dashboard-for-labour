@@ -32,6 +32,9 @@ Polymer({
       type: Object,
       notify: true
     },
+    io: {
+      type: Object
+    },
 
     routes: {
       type: Object,
@@ -98,6 +101,7 @@ Polymer({
     '__authChanged(auth.status)',
     '__routePathChanged(__routesData.route.route.path, __routesData.route.queryParams)',
     '__routesRouteChanged(routes.route)',
+    '__checkIODesync(io.synced)',
   ],
   listeners: {
     'view-entity': '__viewEntity',
@@ -179,6 +183,18 @@ Polymer({
   },
   __backButton: function() {
     this.set('subroute.path', '');
+  },
+  __reload: function() {
+    location.reload();
+  },
+
+  __checkIODesync:function () {
+    const toast = this.$.desyncToast;
+    const sync = this.get('io.synced');
+
+    if (!sync && !toast.opened) {
+      toast.open();
+    }
   },
 
   __viewEntity: function(ev) {

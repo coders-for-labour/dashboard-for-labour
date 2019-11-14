@@ -18,6 +18,9 @@ Polymer({
     db: {
       type: Object
     },
+    io: {
+      type: Object
+    },
     mode: {
       type: String,
       value: 'detail'
