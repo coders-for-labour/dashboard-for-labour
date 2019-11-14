@@ -1,11 +1,11 @@
 {
-  "name": "Dashboard For Labour - A tool for activists",
-  "short_name": "Dashboard For Labour",
+  "name": "Dashboard For Labour",
+  "short_name": "D4L",
   "theme_color": "#e4003b",
   "background_color": "#e4003b",
   "display": "standalone",
   "start_url": "/",
-  "description": "Change your profile pictures and get tweeting for Labour now.",
+  "description": "Digital campaigning dashboard for Labour activists #GE2019",
   "orientation": "portrait",
   "icons": [
     {
