@@ -146,6 +146,7 @@ const __authenticateUser = (appAuth, existingUser) => {
         parentId: Config.topics.constituenciesTopicId,
         editorIds: [],
         viewCount: 0,
+        published: true,
       });
     })
     .then((_topic) => topic = _topic)

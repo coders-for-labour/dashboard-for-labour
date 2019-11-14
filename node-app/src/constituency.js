@@ -139,6 +139,7 @@ class Constituency {
       parentId: Config.topics.constituenciesTopicId,
       editorIds: [],
       viewCount: 0,
+      published: true,
     });
   }
 }
