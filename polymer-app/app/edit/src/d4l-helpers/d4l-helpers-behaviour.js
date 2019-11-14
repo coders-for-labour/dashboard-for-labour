@@ -33,6 +33,9 @@ D4L.Helpers = {
         case 'NUMBER':
           value = 0;
           break;
+        case 'TOGGLE':
+          value = false;
+          break;
         case 'SELECT':
           value = null;
           break;
@@ -48,6 +51,10 @@ D4L.Helpers = {
         value = Sugar.Date.create(input.default);
       } else if (input.default) {
         value = input.default;
+      }
+
+      if (input.type === 'TOGGLE') {
+        value = (value) ? true : false;
       }
 
       if (input.type === 'DATE') {
