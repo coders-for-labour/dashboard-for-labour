@@ -56,8 +56,8 @@ Polymer({
     };
   },
   __sortEvents(a, b) {
-    if(a.createdAt > b.createdAt) return -1;
-    if(a.createdAt < b.createdAt) return 1;
+    const sA = Sugar.Date.create(a.createdAt);
+    if(Sugar.Date.isBefore(sA, b.createdAt)) return 1;
     return 0;
   }
 });

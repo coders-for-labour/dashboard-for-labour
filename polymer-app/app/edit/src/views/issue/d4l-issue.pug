@@ -111,8 +111,6 @@ dom-module#d4l-issue
         margin: 10px;
       }
 
-
-
     ltn-dialog#dialog
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{topic}}")
 
@@ -142,12 +140,11 @@ dom-module#d4l-issue
                 .layout.horizontal
                   paper-button(on-click="__updateIssue", hidden$="[[!__isTopicEditor]]") Edit
 
-
           .view-container.layout.vertical
             h1 Events
             hr
             .layout.vertical
-              template(is="dom-repeat", items="[[__selectedItem.events]]", sort="__sortEvents")
+              template#events(is="dom-repeat", items="[[__selectedItem.events]]", sort="__sortEvents", observe="createdAt updatedAt")
                 div
                   h2 [[__formatEventDate(item.createdAt)]]
                   .layout.horizontal.row-2.wrap
