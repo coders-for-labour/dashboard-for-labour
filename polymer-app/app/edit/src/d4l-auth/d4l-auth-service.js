@@ -26,9 +26,9 @@ Polymer({
   observers: [
     '__onStatusChanged(auth.status)'
   ],
-
-  onAjaxResponse: function(ev, detail) {
-    if (!detail.response) {
+  
+  __handleAuthResponse(res) {
+    if (!res) {
       this.set('auth.user', {
         "id": "%{D4L_BUTTRESS_PUBLIC_USER_ID}%",
         "auth": [],
@@ -38,7 +38,7 @@ Polymer({
         }]
       });
     } else {
-      this.set('auth.user', detail.response.user);
+      this.set('auth.user', res.user);
       this.set('auth.signedIn', true);
     }
 
@@ -52,10 +52,15 @@ Polymer({
     }
 
     this.set('auth.token', user.tokens[0]);
+  },
+
+  onAjaxResponse: function(ev, detail) {
+    this.__handleAuthResponse(detail.response);
     this.set('auth.status', 'done');
   },
 
   onAjaxError: function() {
+    this.__handleAuthResponse();
     this.set('auth.status', 'error');
   },
 
