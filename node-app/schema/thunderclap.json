@@ -35,6 +35,12 @@
       "__required": true,
       "__allowUpdate": true
     },
+    "supportersCount": {
+      "__type": "number",
+      "__required": false,
+      "__default": 0,
+      "__allowUpdate": true
+    },
     "supporters": {
       "__type": "array",
       "__required": true,

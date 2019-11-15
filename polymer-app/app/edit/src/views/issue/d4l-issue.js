@@ -10,7 +10,8 @@ Polymer({
   ],
   properties: {
     db: {
-      type: Object
+      type: Object,
+      notify: true
     },
 
     __pageTitle: {
@@ -37,8 +38,16 @@ Polymer({
     }
   },
 
+  __updateIssue: function() {
+    this.updateIssue(this.get('__selectedItem'));
+  },
+
   __formatEventDate(eventDate) {
     return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{minutes}{tt}");
+  },
+
+  __computeHasResponce(response) {
+    return (response.description !== '' || response.links.length > 0);
   },
 
   __viewTopic() {
@@ -55,8 +64,9 @@ Polymer({
     };
   },
   __sortEvents(a, b) {
-    if(a.createdAt > b.createdAt) return -1;
-    if(a.createdAt < b.createdAt) return 1;
+    const sA = Sugar.Date.create(a.createdAt);
+    if(Sugar.Date.isBefore(sA, b.createdAt)) return 1;
+    if(Sugar.Date.isAfter(sA, b.createdAt)) return -1;
     return 0;
   }
 });

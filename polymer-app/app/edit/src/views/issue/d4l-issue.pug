@@ -111,8 +111,6 @@ dom-module#d4l-issue
         margin: 10px;
       }
 
-
-
     ltn-dialog#dialog
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{topic}}")
 
@@ -142,12 +140,11 @@ dom-module#d4l-issue
                 .layout.horizontal
                   paper-button(on-click="__updateIssue", hidden$="[[!__isTopicEditor]]") Edit
 
-
           .view-container.layout.vertical
             h1 Events
             hr
             .layout.vertical
-              template(is="dom-repeat", items="[[__selectedItem.events]]", sort="__sortEvents")
+              template#events(is="dom-repeat", items="[[__selectedItem.events]]", sort="__sortEvents", observe="createdAt updatedAt")
                 div
                   h2 [[__formatEventDate(item.createdAt)]]
                   .layout.horizontal.row-2.wrap
@@ -155,19 +152,19 @@ dom-module#d4l-issue
                       .single-box.flex
                         .card-header.layout.horizontal.center
                           iron-icon(icon="icons:speaker-notes")
-                          h1.title.flex Background
+                          h1.title.flex Statement
                         .card-content
                           p [[item.source.description]]
                           ul
                             template(is="dom-repeat", items="[[item.source.links]]")
                               li
                                 a(href="[[item]]" target="_blank") [[item]]
-                  
-                    .item.card.layout.vertical
+
+                    .item.card.layout.vertical(hidden$="[[!__computeHasResponce(item.response)]]")
                       .single-box.flex
                         .card-header.layout.horizontal.center
                           iron-icon(icon="icons:star")
-                          h1.title Resources
+                          h1.title Response
                         .card-content
                           p [[item.response.description]]
                           ul
@@ -175,11 +172,6 @@ dom-module#d4l-issue
                               li
                                 a(href="[[item]]" target="_blank") [[item]]
 
-            //- h1 Resources
-            //- hr
-            //- .layout.horizontal.row-3.wrap
-            //- template(is="dom-repeat", items="[[__selectedItem.resources]]")
-              //- img __selectedItem.resources;
         ltn-fab-menu(
           hidden$="[[!__isTopicEditor]]"
         )

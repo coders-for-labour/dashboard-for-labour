@@ -16,7 +16,8 @@ Polymer({
       type: Object
     },
     db: {
-      type: Object
+      type: Object,
+      notify: true
     },
     io: {
       type: Object

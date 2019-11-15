@@ -179,10 +179,16 @@ const __authenticateUser = (appAuth, existingUser) => {
         return;
       }
 
-      return Buttress.getCollection('topic').update(topic.id, {
-        path: 'editorIds',
-        value: user.id,
-      });
+      return Promise.all([
+        Buttress.getCollection('topic').update(topic.id, {
+          path: 'editorIds',
+          value: user.id,
+        }),
+        Buttress.getCollection('topic').update(topic.id, {
+          path: 'hasEditors',
+          value: true,
+        }),
+      ]);
     })
     .then(() => Buttress.getCollection('people').getAll())
     .then((people) => {

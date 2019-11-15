@@ -54,6 +54,12 @@
       "__default": null,
       "__allowUpdate": true
     },
+    "hasEditors": {
+      "__type": "boolean",
+      "__required": false,
+      "__default": false,
+      "__allowUpdate": true
+    },
     "editorIds": {
       "__type": "array",
       "__itemtype": "id",

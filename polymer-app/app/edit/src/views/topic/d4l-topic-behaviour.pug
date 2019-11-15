@@ -144,7 +144,7 @@ script.
       let child = topic;
       let hasEditor = false;
       do {
-        if (child.editorIds && child.editorIds.length > 0) {
+        if (child.hasEditors) {
           hasEditor = true;
         }
         this.__silly(`__computeHasTopicEditor ${child.name}: ${hasEditor}`, child.parentId);

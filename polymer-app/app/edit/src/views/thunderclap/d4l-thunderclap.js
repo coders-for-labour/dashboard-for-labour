@@ -58,8 +58,9 @@ Polymer({
     return this.addThunderclap();
   },
 
-  __computeThunderclapQuery: function () {
+  __computeThunderclapQuery: function (cr) {
     return {
+      __crPath: cr.path,
       scheduledExecution: {
         $gtDate: Sugar.Date.create('now')
       }

@@ -16,12 +16,6 @@ Polymer({
     db: {
       type: Object,
       notify: true
-    },
-
-    __userCountLabel: {
-      type: Number,
-      value: 0,
-      computed: '__computeUserCountLabel(thunderclap, thunderclap.supporters.length)'
     }
   },
   observers: [
