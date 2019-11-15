@@ -187,7 +187,7 @@ const __authenticateUser = (appAuth, existingUser) => {
         Buttress.getCollection('topic').update(topic.id, {
           path: 'hasEditors',
           value: true,
-        })
+        }),
       ]);
     })
     .then(() => Buttress.getCollection('people').getAll())
