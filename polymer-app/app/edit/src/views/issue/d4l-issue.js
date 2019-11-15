@@ -42,6 +42,10 @@ Polymer({
     return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{minutes}{tt}");
   },
 
+  __computeHasResponce(response) {
+    return (response.description !== '' || response.links.length > 0);
+  },
+
   __viewTopic() {
     this.viewTopic(this.get('__selectedItem.topicId'));
   },
@@ -58,6 +62,7 @@ Polymer({
   __sortEvents(a, b) {
     const sA = Sugar.Date.create(a.createdAt);
     if(Sugar.Date.isBefore(sA, b.createdAt)) return 1;
+    if(Sugar.Date.isAfter(sA, b.createdAt)) return -1;
     return 0;
   }
 });
