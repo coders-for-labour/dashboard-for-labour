@@ -63,6 +63,10 @@ const _subscribeThunderclap = (req, res) => {
         path: 'supporters',
         value: req.user.id,
       });
+      Buttress.getCollection('thunderclap').update(id, {
+        path: 'supportersCount',
+        value: thunderclap.supporters.length + 1,
+      });
 
       return Queue.Manager.add({
         app: Queue.Constants.App.TWITTER,
