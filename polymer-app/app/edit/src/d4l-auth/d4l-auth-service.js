@@ -56,7 +56,7 @@ Polymer({
   },
 
   onAjaxError: function() {
-    this.set('status', 'error');
+    this.set('auth.status', 'error');
   },
 
   __onStatusChanged: function() {
