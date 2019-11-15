@@ -38,6 +38,10 @@ Polymer({
     }
   },
 
+  __updateIssue: function() {
+    this.updateIssue(this.get('__selectedItem'));
+  },
+
   __formatEventDate(eventDate) {
     return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{minutes}{tt}");
   },
