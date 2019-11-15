@@ -38,23 +38,15 @@
     "paper-slider": "PolymerElements/paper-slider#^2.0.0",
     "iron-list": "PolymerElements/iron-list#^2.0.18",
     "paper-badge": "PolymerElements/paper-badge#^2.0.0",
-    "paper-date-picker": "polymer-paper-date-picker#^2.0.0",
     "paper-tooltip": "PolymerElements/paper-tooltip#^2.0.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
     "sugar": "^2.0.4",
-    "buttress-js-db": "^2.1.0",
-    "google-apis": "^1.1.7"
+    "buttress-js-db": "^2.1.0"
   },
   "overrides": {
     "pdfjs-dist": {
       "main": [
         "./build/*.js"
-      ]
-    },
-    "google-apis": {
-      "main": [
-        "./**/*.html",
-        "./**/*.js"
       ]
     },
     "webcomponentsjs": {
@@ -147,9 +139,6 @@
     "neon-animation": {
       "main": "./**/*.html"
     },
-    "paper-date-picker": {
-      "main": "./**/*.html"
-    },
     "paper-dialog-behavior": {
       "main": "./**/*.html"
     },
@@ -183,8 +172,5 @@
     "paper-tooltip": {
       "main": "./**/*.html"
     }
-  },
-  "resolutions": {
-    "paper-date-picker": "^1.2.0"
   }
 }
