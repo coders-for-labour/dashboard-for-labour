@@ -10,7 +10,8 @@ Polymer({
   ],
   properties: {
     db: {
-      type: Object
+      type: Object,
+      notify: true
     },
 
     __pageTitle: {
