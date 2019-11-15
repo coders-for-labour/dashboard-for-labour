@@ -39,7 +39,7 @@ const __authenticateUser = (appAuth, existingUser) => {
         {'route': 'topic', 'permission': 'list'},
         {'route': 'issue', 'permission': 'list'},
         {'route': 'thunderclap', 'permission': 'list'},
-        {'route': 'resource', 'permission': 'list'}
+        {'route': 'resource', 'permission': 'list'},
       ],
     },
     editor: {
@@ -47,7 +47,7 @@ const __authenticateUser = (appAuth, existingUser) => {
       domains: [`${Config.app.protocol}://${Config.app.host}`],
       role: 'admin.editor',
       permissions: [
-        {'route': '*', 'permission': '*'}
+        {'route': '*', 'permission': '*'},
       ],
     },
     super: {
@@ -55,7 +55,7 @@ const __authenticateUser = (appAuth, existingUser) => {
       domains: [`${Config.app.protocol}://${Config.app.host}`],
       role: 'admin.super',
       permissions: [
-        {'route': '*', 'permission': '*'}
+        {'route': '*', 'permission': '*'},
       ],
     },
   };
