@@ -11,11 +11,11 @@
  */
 
 // const path = require('path');
-const Helpers = require('./helpers');
+// const Helpers = require('./helpers');
 const Logging = require('./logging');
 const Buttress = require('buttress-js-api');
-const Queue = require('./api-queue');
-const Sugar = require('sugar');
+// const Queue = require('./api-queue');
+// const Sugar = require('sugar');
 
 /* ************************************************************
  *

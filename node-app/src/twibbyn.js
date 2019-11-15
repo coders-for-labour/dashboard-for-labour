@@ -12,7 +12,7 @@
 
 const Config = require('node-env-obj')('../../');
 
-const fs = require('fs');
+// const fs = require('fs');
 const path = require('path');
 
 const Logging = require('./logging');
@@ -129,7 +129,7 @@ const _saveTwibbyn = (req, res) => {
   const imgUrl = twAuth.images.profile.replace('_normal', '');
   const pathname = `${Config.data.path}/user_data/${req.user.id}_twibbyn_twitter_avatar_backup`;
 
-  _getAvatar(filename, imgUrl, req.body.ignoreBackup)
+  _getAvatar(pathname, imgUrl, req.body.ignoreBackup)
     .then((avatarBuffer) => {
       Logging.logDebug('Composing Twibbyn');
       _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.body.file}`, {toBuffer: true, gravity: req.body.gravity})
@@ -167,7 +167,7 @@ const _getFbTwibbyn = (req, res) => {
   const imgUrl = `https://graph.facebook.com/${fbAuth.appId}/picture?width=500`;
   const pathname = `${Config.data.path}/user_data/${req.user.id}_twibbyn_facebook_avatar_backup`;
 
-  _getAvatar(filename, imgUrl, req.query.ignoreBackup)
+  _getAvatar(pathname, imgUrl, req.query.ignoreBackup)
     .then((avatarBuffer) => {
       Logging.logDebug(`Composing Twibbyn: ${imgUrl}`);
       _composeTwibbyn(avatarBuffer, imgUrl, `http://${Config.cdnUrl}/${req.query.file}`, {gravity: req.query.gravity})

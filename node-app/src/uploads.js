@@ -12,7 +12,7 @@
 
 const Config = require('node-env-obj')('../../');
 
-const fs = require('fs');
+// const fs = require('fs');
 const crypto = require('crypto');
 const Logging = require('./logging');
 const Helpers = require('./helpers');

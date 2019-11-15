@@ -40,6 +40,12 @@ const Defaults = {
  *
  */
 class Helpers {
+  /**
+   * @param {string} salt
+   * @param {int} length
+   * @param {boolean} numeric
+   * @return {string} string
+   */
   static getRandomString(salt, length, numeric) {
     salt = salt || Date.now();
     length = length || Defaults.LENGTH;
@@ -66,6 +72,10 @@ class Helpers {
  * @description Simple Time-based One Time Password
  */
 class STOTP {
+  /**
+   * @param {object} options
+   * @return {void}
+   */
   constructor(options) {
     options = options || {};
     this.mode = options.mode ? options.mode : Defaults.MODE;
@@ -113,6 +123,9 @@ class STOTP {
     return matches;
   }
 
+  /**
+   * @return {void}
+   */
   _getWindow() {
     const interval = (Date.now() - this.epoch) / 1000;
     return Math.floor(interval / this.windowSize, 0);

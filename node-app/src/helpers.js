@@ -31,22 +31,28 @@ module.exports.Promise = {
   inject: (value) => (() => value),
 };
 
-/* ************************************************************
- *
- * Timer
- *
- **************************************************************/
-
+/**
+ * @class Timer
+ */
 class Timer {
+  /**
+   * @return {void}
+   */
   constructor() {
     this._start = 0;
   }
 
+  /**
+   * @return {void}
+   */
   start() {
     const hrTime = process.hrtime();
     this._last = this._start = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
   }
 
+  /**
+   * @return {float}
+   */
   get lapTime() {
     const hrTime = process.hrtime();
     const time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);
@@ -54,6 +60,10 @@ class Timer {
     this._last = time;
     return (lapTime / 1000000);
   }
+
+  /**
+   * @return {float}
+   */
   get interval() {
     const hrTime = process.hrtime();
     const time = (hrTime[0] * 1000000) + (hrTime[1] / 1000);

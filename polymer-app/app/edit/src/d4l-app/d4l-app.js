@@ -23,10 +23,6 @@ Polymer({
       type: Object,
       notify: true
     },
-    mode: {
-      type: String,
-      value: "authenticating"
-    },
 
     db: {
       type: Object,
@@ -98,7 +94,6 @@ Polymer({
   },
 
   observers: [
-    '__authChanged(auth.status)',
     '__routePathChanged(__routesData.route.route.path, __routesData.route.queryParams)',
     '__routesRouteChanged(routes.route)',
     '__checkIODesync(io.synced)',
@@ -113,12 +108,6 @@ Polymer({
 
     if (Sugar) {
       Sugar.Date.setLocale('en-GB');
-    }
-  },
-
-  __authChanged: function() {
-    if ( this.get('auth.status') !== "done") {
-      return;
     }
   },
 

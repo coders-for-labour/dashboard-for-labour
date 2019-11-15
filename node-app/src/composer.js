@@ -30,6 +30,12 @@ let _memCache = null;
  * @class Composer
  */
 class Composer {
+  /**
+   * @param {int} width
+   * @param {int} height
+   * @param {boolean} toBuffer
+   * @return {void}
+   */
   constructor(width, height, toBuffer) {
     this._width = width;
     this._height = height;
@@ -40,10 +46,18 @@ class Composer {
     this._toBuffer = toBuffer;
   }
 
+  /**
+   * @return {void}
+   */
   disableCache() {
     this._noCache = true;
   }
 
+  /**
+   * @param {string} param
+   * @param {string} value
+   * @return {void}
+   */
   params(param, value) {
     this._id += `${param},${value}`;
     this._renderQueue.push((context) => {
@@ -56,6 +70,11 @@ class Composer {
     });
   }
 
+  /**
+   * @param {string} imgUrl
+   * @param {object} options
+   * @return {void}
+   */
   imageFromUrl(imgUrl, options) {
     this._id += imgUrl;
 
@@ -89,6 +108,11 @@ class Composer {
     });
   }
 
+  /**
+   * @param {string} imgFile
+   * @param {object} options
+   * @return {void}
+   */
   imageFromFile(imgFile, options) {
     const file = options.cacheFile ? _memCache.load(imgFile) : fs.readFileSync(imgFile);
     this._id += imgFile;
@@ -96,11 +120,22 @@ class Composer {
     return this.__imageFromBuffer(file, options);
   }
 
+  /**
+   * @param {string} imgBuffer
+   * @param {string} uid
+   * @param {object} options
+   * @return {void}
+   */
   imageFromBuffer(imgBuffer, uid, options) {
     this._id += uid;
     return this.__imageFromBuffer(imgBuffer, options);
   }
 
+  /**
+   * @param {string} imgBuffer
+   * @param {object} options
+   * @return {void}
+   */
   __imageFromBuffer(imgBuffer, options) {
     this._id += options.preserveAspect;
     this._id += options.gravity;
@@ -126,6 +161,11 @@ class Composer {
     });
   }
 
+  /**
+   * @param {string} text
+   * @param {object} options
+   * @return {void}
+   */
   text(text, options) {
     const o = this._options(options);
     this._id += text;
@@ -157,6 +197,9 @@ class Composer {
     });
   }
 
+  /**
+   * @return {Promise}
+   */
   render() {
     return this._cache.tryLoadCachedImage(this._id)
       .then((cachedFile) => {
@@ -190,6 +233,10 @@ class Composer {
       });
   }
 
+  /**
+   * @param {object} options
+   * @return {object}
+   */
   _options(options) {
     options.top = options.top || 0;
     options.left = options.left || 0;
@@ -250,6 +297,12 @@ class Composer {
     }, p);
   }
 
+  /**
+   * @param {object} ctx
+   * @param {string} text
+   * @param {int} width
+   * @return {array} phrases
+   */
   _splitText(ctx, text, width) {
     const wa = text.split(' ');
     const phrases = [];
@@ -272,6 +325,10 @@ class Composer {
     return phrases;
   }
 
+  /**
+   * @param {object} options
+   * @return {object}
+   */
   _applyGravity(options) {
     const pos = {top: 0, left: 0};
     const topRel = options.top;
@@ -305,13 +362,20 @@ class Composer {
 }
 
 /**
- *
+ * @class Cache
  */
 class Cache {
+  /**
+   * @return {void}
+   */
   constructor() {
     this.__cachePath = `${Config.data.path}/image_cache`;
   }
 
+  /**
+   * @param {Object} options
+   * @return {Promise}
+   */
   tryLoadCachedImage(options) {
     const filename = this._genFilename(options);
 
@@ -333,6 +397,11 @@ class Cache {
     });
   }
 
+  /**
+   * @param {Buffer} buffer
+   * @param {String} id
+   * @return {Promise}
+   */
   addImage(buffer, id) {
     return new Promise((resolve, reject) => {
       Logging.logSilly(`Hash Input: ${id}`);
@@ -352,6 +421,10 @@ class Cache {
     });
   }
 
+  /**
+   * @param {String} id
+   * @return {String} digest
+   */
   _genFilename(id) {
     const hash = crypto.createHash('sha1');
     return hash.update(id, 'ascii').digest('hex');
@@ -364,10 +437,17 @@ _cache = new Cache();
  * @class MemCache
  */
 class MemCache {
+  /**
+   * @return {void}
+   */
   constructor() {
     this._cache = {};
   }
 
+  /**
+   * @param {String} filename
+   * @return {Objet} cache
+   */
   load(filename) {
     if (this._cache[filename]) {
       return this._cache[filename];
@@ -377,6 +457,10 @@ class MemCache {
     return this._cache[filename];
   }
 
+  /**
+   * @param {String} filename
+   * @return {void}
+   */
   purge(filename) {
     delete this._cache[filename];
   }
