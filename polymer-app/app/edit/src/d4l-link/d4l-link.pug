@@ -1,0 +1,64 @@
+link(rel="import", href="/bower_components/polymer/polymer.html")
+link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
+link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
+link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
+
+link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
+link(rel="import", href="/src/ltn-ajax/ltn-ajax.html")
+link(rel="import", href="/src/d4l-theme.html")
+link(rel="import", href="/src/shared-styles.html")
+
+
+dom-module#d4l-link
+  template
+    style(is="custom-style" include="iron-flex iron-positioning iron-flex-alignment iron-flex-factors")
+    style(include="d4l-theme")
+    style(include="shared-styles")
+    style(include="shared-layout-styles").
+      :host {
+        display: block;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      h1 {
+        color: var(--text-secondary-color);
+        font-weight: 500;
+        font-size: 0.8rem; 
+        margin-top: 0px;
+      }
+
+      p {
+        color: var(--text-tertiary-color);
+        font-weight: 300;
+        font-size: 0.8rem;
+        margin: 0px;
+      }
+
+      p.small {
+        font-size: 0.6rem;
+        font-style: italic;
+      }
+
+      img {
+        margin-right: 10px;
+      }
+
+    ltn-ajax#ajax
+    buttress-db-query(doc="[[db.link]]", data-path="db.link.data", query="[[__linkQuery]]", find-one="{{link}}")
+
+    template(is="dom-if", if="[[!link.og.title]]")
+      h1 Loading link data...
+    template(is="dom-if", if="[[link.og.title]]")
+      .layout.horizontal
+        img.flex(src="[[link.og.image.uri]]", width="200")
+        .flex-4.layout.vertical
+          h1 [[link.og.title]]
+          p [[link.og.description]]
+          .flex
+          p.small [[link.og.site]]
+
+
+  script(src="./d4l-link.js") 

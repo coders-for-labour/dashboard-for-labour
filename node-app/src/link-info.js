@@ -49,9 +49,8 @@ class Link {
           return scrape(options);
         })
         .then((results) => {
-          console.log(results);
-
           const og = {
+            site: results.data.ogSiteName ? results.data.ogSiteName : 'Not Specified',
             title: results.data.ogTitle,
             description: results.data.ogDescription,
             image: {
@@ -59,10 +58,16 @@ class Link {
             },
           };
 
+          // console.log(og);
+
           return Buttress.getCollection('link').update(linkId, [
             {
               path: 'type',
               value: 'article',
+            },
+            {
+              path: 'og.site',
+              value: og.site, // @todo: Use the domain if no site is specified
             },
             {
               path: 'og.title',

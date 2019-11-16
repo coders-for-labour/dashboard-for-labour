@@ -37,6 +37,11 @@
         "__required": true,
         "__allowUpdate": true
       },
+      "site": {
+        "__type": "string",
+        "__default": "Not Specified",
+        "__allowUpdate": true
+      },
       "title": {
         "__type": "string",
         "__required": true,
