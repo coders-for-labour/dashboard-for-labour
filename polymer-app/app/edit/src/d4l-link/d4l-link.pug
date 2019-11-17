@@ -21,6 +21,7 @@ dom-module#d4l-link
         display: block;
         margin-bottom: 10px;
         cursor: pointer;
+        background-color: var(--default-background-color);
       }
 
       h1 {
@@ -42,6 +43,10 @@ dom-module#d4l-link
         font-style: italic;
       }
 
+      a {
+        text-decoration: none;
+      }
+
       img {
         margin-right: 10px;
       }
@@ -49,16 +54,25 @@ dom-module#d4l-link
     ltn-ajax#ajax
     buttress-db-query(doc="[[db.link]]", data-path="db.link.data", query="[[__linkQuery]]", find-one="{{link}}")
 
-    template(is="dom-if", if="[[!link.og.title]]")
+    template(is="dom-if", if="[[!linkLoaded]]")
       h1 Loading link data...
-    template(is="dom-if", if="[[link.og.title]]")
-      .layout.horizontal
-        img.flex(src="[[link.og.image.uri]]", width="200")
-        .flex-4.layout.vertical
-          h1 [[link.og.title]]
-          p [[link.og.description]]
-          .flex
-          p.small [[link.og.site]]
-
+    template(is="dom-if", if="[[linkLoaded]]")
+      template(is="dom-if", if="[[linkTypeArticle]]")
+        a(href="[[link.uri]]", target="_blank")
+          .layout.horizontal
+            img.flex(hidden$="[[!link.og.image.uri]]", src="[[link.og.image.uri]]", width="200")
+            .flex-4.layout.vertical
+              h1 [[link.og.title]]
+              p [[link.og.description]]
+              .flex
+              p.small [[link.og.site]]
+      template(is="dom-if", if="[[linkTypeImage]]")
+        .layout.horizontal
+          a.flex(href="[[link.uri]]", target="_blank")
+            img(src="[[link.uri]]", width="400")
+      template(is="dom-if", if="[[linkTypeDocument]]")
+        a(href="[[link.uri]]", target="_blank")
+          p.small [[link.uri]]
+  
 
   script(src="./d4l-link.js") 

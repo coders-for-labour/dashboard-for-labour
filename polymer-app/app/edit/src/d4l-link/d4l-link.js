@@ -23,20 +23,45 @@ Polymer({
     __linkQuery: {
     	type: Object,
     	computed: '__computeLinkQuery(linkId, db.link.data.*)'
+    },
+    linkLoaded: {
+    	type: Boolean,
+    	computed: '__computeLinkLoaded(link, link.type)'
+    },
+    linkTypeArticle: {
+    	type: Boolean,
+    	computed: '__computeLinkTypeArticle(link, link.type)'
+    },
+    linkTypeImage: {
+    	type: Boolean,
+    	computed: '__computeLinkTypeImage(link, link.type)'
+    },
+    linkTypeDocument: {
+    	type: Boolean,
+    	computed: '__computeLinkTypeDocument(link, link.type)'
     }
   },
   observers: [
   	'__linkChanged(link)'
   ],
-  listeners: {
-  	'click': '__onClick'
+
+  __computeLinkLoaded(link) {
+  	if (!link) return false;
+  	if (link.type === 'article' && !link.og.title) return false;
+  	return true;
   },
 
-  __onClick(ev) {
-  	this.__debug(ev);
-  	const link = this.get('link');
-  	if (!link) return;
-  	window.open(link.uri);
+  __computeLinkTypeArticle(link, linkType) {
+  	this.__debug(`__computeLinkTypeArticle`, linkType === 'article');
+  	return link && linkType === 'article';
+  },
+  __computeLinkTypeImage(link, linkType) {
+  	this.__debug(`__computeLinkTypeImage`, linkType === 'image');
+  	return link && linkType === 'image';
+  },
+  __computeLinkTypeDocument(link, linkType) {
+  	this.__debug(`__computeLinkTypeDocument`, linkType === 'document');
+  	return link && linkType === 'document';
   },
 
   __linkChanged(link) {
@@ -52,6 +77,7 @@ Polymer({
   		return;
   	}
   	if (link.og && link.og.title) return;
+  	if (link.type !== 'article') return;
   	this.__refreshLinkData(this.get('linkId'));
   },
 
