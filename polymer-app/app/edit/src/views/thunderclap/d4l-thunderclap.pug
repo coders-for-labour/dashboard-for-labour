@@ -79,22 +79,25 @@ dom-module#d4l-thunderclap
                 .page-header.layout.vertical
                   .layout.horizontal.center
                     iron-icon(icon="d4l-social-icons:storm")
-                    h1 Thunderclap
-                  p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
-                  p Think your friends want to Amplify Labour’s message?
-              //- .share-buttons
-              //-   paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareTwitter") [[__shareTwButton]]
+                    h1 Thunderclap             
+
+                  h2 Join forces with the Labour community and boost Labour's message together!
 
             .view-container
               .page-content.layout.vertical
-                .layout.horizontal.row-3.wrap
-                  template(is="dom-repeat" items="[[__thunderclap]]")
-                    d4l-thunderclap-card.item(
-                      db="{{db}}",
-                      auth="[[auth]]",
-                      thunderclap="[[item]]",
-                      on-subscribe="subscribeThunderclap"
-                    )
+                if [[__thunderclap]]
+                  .layout.horizontal.row-3.wrap
+                    template(is="dom-repeat" items="[[__thunderclap]]")
+                      d4l-thunderclap-card.item(
+                        db="{{db}}",
+                        auth="[[auth]]",
+                        thunderclap="[[item]]",
+                        on-subscribe="subscribeThunderclap"
+                      )
+                else
+                  h1 The calm before the storm...
+                  p It's all quiet right now, try again later
+                endif
 
             paper-fab(
               icon="add"
