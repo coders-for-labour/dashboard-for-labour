@@ -23,7 +23,7 @@
     "type": {
       "__type": "string",
       "__default": "article",
-      "__enum": ["article", "video", "download"],
+      "__enum": ["article", "tweet", "video", "image", "document", "download"],
       "__allowUpdate": true
     },
     "og": {
