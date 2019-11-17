@@ -168,10 +168,9 @@ dom-module#d4l-issue
                           h1.title Response
                         .card-content
                           p [[item.response.description]]
-                          ul
+                          .layout.vertical
                             template(is="dom-repeat", items="[[item.response.links]]")
-                              li
-                                a(href="[[item]]" target="_blank") [[item]]
+                              d4l-link(db="{{db}}", link-id="{{item}}", on-link-updated="__linkUpdated")
 
         ltn-fab-menu(
           hidden$="[[!__isTopicEditor]]"
