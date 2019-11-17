@@ -13,6 +13,33 @@
 const Buttress = require('buttress-js-api');
 const Logging = require('./logging');
 const scrape = require('open-graph-scraper');
+const mime = require('mime-types');
+
+
+/**
+ * LinkError class
+ * @class
+ */
+class LinkError extends Error {
+  /**
+   * [constructor description]
+   * @param  {Number}    statusCode
+   * @param  {...[type]} params
+s   */
+  constructor(statusCode = 400, ...params) {
+    // Pass remaining arguments (including vendor specific ones) to parent constructor
+    super(...params);
+
+    // Maintains proper stack trace for where our error was thrown (only available on V8)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, LinkError);
+    }
+
+    // this.name = 'LinkError';
+    // Custom debugging information
+    this.statusCode = statusCode;
+  }
+}
 
 /**
  * Link class
