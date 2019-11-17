@@ -26,7 +26,7 @@ Polymer({
     },
     linkLoaded: {
     	type: Boolean,
-    	computed: '__computeLinkLoaded(link, link.type)'
+    	computed: '__computeLinkLoaded(link, link.type, link.updatedAt)'
     },
     linkTypeArticle: {
     	type: Boolean,
