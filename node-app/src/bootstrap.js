@@ -27,6 +27,7 @@ const Queue = require('./api-queue');
 const Cache = require('./cache');
 // const Uploads = require('./uploads');
 const Constituency = require('./constituency');
+const Link = require('./link-info');
 const Logging = require('./logging');
 
 const express = require('express');
@@ -101,6 +102,7 @@ const __initWorker = () => {
   Cache.Manager.create(Cache.Constants.Type.CONSTITUENCY);
   Cache.Manager.create(Cache.Constants.Type.TEAM);
   Constituency.init(app);
+  Link.init(app);
   // Uploads.init(app);
 
   const tasks = [

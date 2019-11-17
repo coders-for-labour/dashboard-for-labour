@@ -6,7 +6,7 @@
  * @file constituency.js
  * @description Constituency lookup using They Work for You API
  * @module System
- * @author Chris Bates-Keegan
+ * @author Coders for Labour
  *
  */
 

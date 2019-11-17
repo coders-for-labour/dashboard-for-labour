@@ -12,15 +12,17 @@ link(rel="import", href="/src/d4l-logging/d4l-logging.html")
 link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
-link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 link(rel="import", href="/src/ltn-ajax/ltn-ajax.html")
+link(rel="import", href="/src/ltn-dialog/ltn-dialog.html")
 link(rel="import", href="/src/ltn-fab-menu/ltn-fab-menu.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
+link(rel="import", href="/src/d4l-link/d4l-link.html")
 link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
 link(rel="import", href="/src/views/topic/d4l-topic-behaviour.html")
+
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
 
 dom-module#d4l-issue
@@ -155,11 +157,10 @@ dom-module#d4l-issue
                           h1.title.flex Statement
                         .card-content
                           p [[item.source.description]]
-                          ul
+                          .layout.vertical
                             template(is="dom-repeat", items="[[item.source.links]]")
-                              li
-                                a(href="[[item]]" target="_blank") [[item]]
-
+                              d4l-link(db="{{db}}", link-id="{{item}}", on-link-updated="__linkUpdated")
+                  
                     .item.card.layout.vertical(hidden$="[[!__computeHasResponce(item.response)]]")
                       .single-box.flex
                         .card-header.layout.horizontal.center

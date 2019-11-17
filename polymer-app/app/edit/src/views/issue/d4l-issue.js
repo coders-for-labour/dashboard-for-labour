@@ -9,6 +9,11 @@ Polymer({
     Polymer.D4LViewList
   ],
   properties: {
+    logLevel: {
+      type: Number,
+      value: 3
+    },
+
     db: {
       type: Object,
       notify: true
@@ -36,6 +41,26 @@ Polymer({
       value: false,
       computed: 'computeIsSet(__selectedItem)'
     }
+  },
+
+  __linkUpdated(ev) {
+    const link = ev.model.get('item');
+    const issueIdx = this.get('db.issue.data').findIndex(i => i.id === this.get('__selectedItem.id'));
+    const issue = this.get(`db.issue.data.${issueIdx}`);
+    this.__debug(`__linkUpdated`, ev, issue);
+
+    issue.events.forEach((e, idx) => {
+      const src = e.source.links.findIndex(l => l === link);
+      const res = e.response.links.findIndex(l => l === link);
+      if (src !== -1) {
+        this.__debug(`__linkUpdated: Source Link ${src} on Event ${idx}`, `db.issue.data.${issueIdx}.events.${idx}.source.${src}`);
+        this.set(`db.issue.data.${issueIdx}.events.${idx}.source.links.${src}`, ev.detail.linkId);
+      }
+      if (res !== -1) {
+        this.__debug(`__linkUpdated: Response Link ${res} on Event ${idx}`);
+        this.set(`db.issue.data.${issueIdx}.events.${idx}.response.links.${src}`, ev.detail.linkId);
+      }
+    })
   },
 
   __updateIssue: function() {

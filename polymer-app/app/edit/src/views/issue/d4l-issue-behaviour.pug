@@ -141,17 +141,28 @@ script.
           event.source.description = result.values.sourceDescription;
 
           if (result.values.sourceLinks) {
-            event.source.links = result.values.sourceLinks.split(/\r?\n/);
+            event.source.links = result.values.sourceLinks.split(/\r?\n/).map(url => this.__addLink(url));
           }
 
           event.response.description = result.values.responseDescription;
           if (result.values.responseLinks) {
-            event.response.links = result.values.responseLinks.split(/\r?\n/);
+            event.response.links = result.values.responseLinks.split(/\r?\n/).map(url => this.__addLink(url));
           }
 
-          this.push(`db.issue.data.${issueIdx}.events`, event);
+          window.setTimeout(() => { 
+            this.push(`db.issue.data.${issueIdx}.events`, event)
+          }, 250);
         });
+    },
+
+    __addLink(url) {
+      const dbFactory = this.get('db.Factory');
+      const link = dbFactory.create('link');
+      link.uri = url;
+      this.push(`db.link.data`, link);
+      return link.id
     }
+
     //- __addResource() {
     //-   const selectedItem = this.get('__selectedItem');
     //-   console.log(selectedItem);
