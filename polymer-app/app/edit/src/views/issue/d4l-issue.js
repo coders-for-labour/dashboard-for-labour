@@ -31,22 +31,64 @@ Polymer({
       computed: '__computeIsTopicEditor(topic, auth.token)'
     },
 
+    resources: {
+      type: Array
+    },
+    __resourcesQuery: {
+      type: Object,
+      computed: '__computeResourcesQuery(__selectedItem, db.resource.data.*)'
+    },
+
     __hasSelectedItem: {
       type: Boolean,
       value: false,
       computed: 'computeIsSet(__selectedItem)'
+    },
+
+    __hasResources: {
+      type: Boolean,
+      value: false,
+      computed: '__computeHasResources(resources, resources.*, resources.lenght)'
     }
   },
 
-  __updateIssue: function() {
+  __linkUpdated(ev) {
+    const link = ev.model.get('item');
+    const issueIdx = this.get('db.issue.data').findIndex(i => i.id === this.get('__selectedItem.id'));
+    const issue = this.get(`db.issue.data.${issueIdx}`);
+    this.__debug(`__linkUpdated`, ev, issue);
+
+    issue.events.forEach((e, idx) => {
+      const src = e.source.links.findIndex(l => l === link);
+      const res = e.response.links.findIndex(l => l === link);
+      if (src !== -1) {
+        this.__debug(`__linkUpdated: Source Link ${src} on Event ${idx}`, `db.issue.data.${issueIdx}.events.${idx}.source.${src}`);
+        this.set(`db.issue.data.${issueIdx}.events.${idx}.source.links.${src}`, ev.detail.linkId);
+      }
+      if (res !== -1) {
+        this.__debug(`__linkUpdated: Response Link ${res} on Event ${idx}`);
+        this.set(`db.issue.data.${issueIdx}.events.${idx}.response.links.${src}`, ev.detail.linkId);
+      }
+    })
+  },
+
+  __addResource() {
+    const issue = this.get('__selectedItem');
+    const resource = this.get('db.Factory').create('resource');
+    resource.issueId = issue.id;
+
+    this.addResource(resource);
+  },
+
+  __updateIssue() {
     this.updateIssue(this.get('__selectedItem'));
   },
 
   __formatEventDate(eventDate) {
-    return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{minutes}{tt}");
+    return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{mm}{tt}");
   },
 
-  __computeHasResponce(response) {
+  __computeHasResponse(response) {
     return (response.description !== '' || response.links.length > 0);
   },
 
@@ -62,6 +104,12 @@ Polymer({
         $eq: issue.topicId
       }
     };
+  },
+  __computeHasResources() {
+    const resources = this.get('resources');
+    this.__debug(`__computeHasResources`, resources);
+    if (!resources) return false;
+    return resources.length > 0;
   },
   __sortEvents(a, b) {
     const sA = Sugar.Date.create(a.createdAt);

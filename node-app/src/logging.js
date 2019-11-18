@@ -152,7 +152,7 @@ module.exports.logSilly = (log) => {
  * @param {string} warn - warning to log
  */
 module.exports.logWarn = (warn) => {
-  module.exports.log(warn, LogLevel.ERR);
+  module.exports.log(warn, LogLevel.WARN);
 };
 /**
  * @param {string} err - error object to log

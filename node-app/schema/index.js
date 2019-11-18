@@ -15,6 +15,7 @@ const Schema = [
   require('./topic.json'),
   require('./issue.json'),
   require('./resource.json'),
+  require('./link.json'),
 ];
 
 module.exports = Schema;

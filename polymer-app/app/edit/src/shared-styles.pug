@@ -135,13 +135,14 @@ dom-module(id="shared-layout-styles")
         height: 88%;
       }
 
-      .row-2, .row-4, .row-3 {
+      .row-2, .row-4, .row-3, .row-6 {
         margin: 10px -10px;
       }
 
       .row-2 > .item,
       .row-4 > .item, 
-      .row-3 > .item {
+      .row-3 > .item,
+      .row-6 > .item {
         padding: 10px;
         box-sizing: border-box;
       }
@@ -155,18 +156,23 @@ dom-module(id="shared-layout-styles")
       .row-4 > .item {
         flex: 0 1 25%;
       }
+      .row-6 > .item {
+        flex: 0 1 16.667%;
+      }
 
       @media (max-width: 768px) {
         .row-2 > .item,
         .row-4 > .item,
-        .row-3 > .item {
+        .row-3 > .item,
+        .row-6 > .item {
           flex-basis: 50%;
         }
       }
       @media (max-width: 576px) {
         .row-2 > .item,
         .row-4 > .item,
-        .row-3 > .item {
+        .row-3 > .item,
+        .row-6 > .item {
           flex-basis: 100%;
         }
       }
