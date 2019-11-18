@@ -79,7 +79,7 @@ Polymer({
     return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{mm}{tt}");
   },
 
-  __computeHasResponce(response) {
+  __computeHasResponse(response) {
     return (response.description !== '' || response.links.length > 0);
   },
 

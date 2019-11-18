@@ -162,7 +162,7 @@ dom-module#d4l-issue
                             template(is="dom-repeat", items="[[item.source.links]]")
                               d4l-link(db="{{db}}", link-id="{{item}}", on-link-updated="__linkUpdated")
                   
-                    .item.card.layout.vertical(hidden$="[[!__computeHasResponce(item.response)]]")
+                    .item.card.layout.vertical(hidden$="[[!__computeHasResponse(item.response)]]")
                       .single-box.flex
                         .card-header.layout.horizontal.center
                           iron-icon(icon="icons:star")
