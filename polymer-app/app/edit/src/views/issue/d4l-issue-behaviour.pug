@@ -64,6 +64,23 @@ script.
           default: issue.description
         }
       };
+    },
+
+    __presentResourceDialog(resource, meta) {
+      const dialog = this.$.dialog;
+
+      const inputSchema = {
+        name: {
+          label: 'Name',
+          type: 'TEXT',
+          default: resource.name
+        },
+        file: {
+          label: 'File',
+          type: 'FILE',
+          default: ''
+        }
+      };
 
       dialog.setMetadata(meta);
       return dialog.openDialog(this.parseInputSchema(inputSchema));
@@ -154,6 +171,74 @@ script.
           }, 250);
         });
     },
+
+    addResource(resource) {
+      const dialogMeta = {
+        'title': 'Resource',
+        'description': 'Add a new resource to this topic',
+        'action': 'Add',
+      }
+      
+      return this.__presentResourceDialog(resource, dialogMeta)
+      .then((result) => {
+        this.__debug(`addResource`, result);
+        if (!result.values.name) {
+          throw new Error('Resource requires a name');
+        }
+        if (!result.values.file) {
+          throw new Error('Resource requires a name');
+        }
+
+        // upload the file
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (ev) => { 
+            result.values.fileData = ev.target.result;
+            resolve(result);
+          };
+          const files = result.values.file;
+          let file = null;
+          for (let x=0; x<files.length; x++) {
+            const f = files[x];
+            this.__debug(f);
+            file = f;
+            break;
+          }
+
+          reader.readAsDataURL(file);
+        });
+      })
+      .then(result => {
+        this.__debug(`readAsDataUrl:`, result);
+        const ajax = this.$.ajax;
+        
+        return ajax.send({
+          url: '/api/v1/image/upload',
+          method: 'POST',
+          contentType: 'application/json',
+          body: {
+            file: result.values.fileData
+          }
+        })
+        .then((res) => {
+          const fileName = res.response;
+          this.__debug(`ajax.send:`, fileName);
+          const link = this.get('db.Factory').create('link');
+          link.uri = `%{D4L_APP_URL}%/uploads/${fileName}`;
+          link.type = `image`;
+          this.push('db.link.data', link);
+          result.values.linkId = link.id;
+          result.values.fileName = fileName;
+          return result;
+        });
+      })
+      .then((result) => {
+        resource.name = result.values.name;
+        resource.linkId = result.values.linkId;
+
+        this.push('db.resource.data', resource);
+      });
+    },    
 
     __addLink(url) {
       const dbFactory = this.get('db.Factory');

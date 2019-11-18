@@ -43,6 +43,35 @@ Polymer({
     }
   },
 
+  // listeners: {
+  //   'drop': '__onDrop',
+  //   'dragover': '__onDragOver'
+  // },
+
+  // __onDrop(ev) {
+  //   ev.preventDefault();
+
+  //   this.__debug(`__onDrop`);
+  //   let files = ev.dataTransfer.items ? ev.dataTransfer.items : false;
+
+  //   if (files !== false) {
+  //     for (let x=0; x<files.length; x++) {
+  //       const f = files[x];
+  //       if (f.kind !== 'file') continue;
+  //       const file = f.getAsFile();
+  //       this.__debug(file.name, file);
+  //     }
+  //   } else {
+  //     files = ev.dataTransfer.files ? ev.dataTransfer.files : false;
+
+  //   }
+
+  // },
+
+  // __onDragOver(ev) {
+  //   ev.preventDefault();
+  // },
+
   __linkUpdated(ev) {
     const link = ev.model.get('item');
     const issueIdx = this.get('db.issue.data').findIndex(i => i.id === this.get('__selectedItem.id'));
@@ -63,12 +92,20 @@ Polymer({
     })
   },
 
-  __updateIssue: function() {
+  __addResource() {
+    const issue = this.get('__selectedItem');
+    const resource = this.get('db.Factory').create('resource');
+    resource.issueId = issue.id;
+
+    this.addResource(resource);
+  },
+
+  __updateIssue() {
     this.updateIssue(this.get('__selectedItem'));
   },
 
   __formatEventDate(eventDate) {
-    return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{minutes}{tt}");
+    return Sugar.Date.format(Sugar.Date.create(eventDate), "{do} {Month}, {hours}:{mm}{tt}");
   },
 
   __computeHasResponce(response) {
