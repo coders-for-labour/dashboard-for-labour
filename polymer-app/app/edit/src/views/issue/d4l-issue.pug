@@ -1,6 +1,7 @@
 link(rel="import", href="/bower_components/polymer/polymer-element.html")
 link(rel="import" href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
+link(rel="import", href="/bower_components/polymer/lib/elements/dom-if.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
 link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
@@ -113,9 +114,14 @@ dom-module#d4l-issue
         margin: 10px;
       }
 
+      d4l-link.resource {
+        flex: 0 1 16.667%;
+      }
+
     ltn-dialog#dialog
     ltn-ajax#ajax
     buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{topic}}")
+    buttress-db-query(doc="[[db.resource]]", data-path="db.resource.data", query="[[__resourcesQuery]]", find-all="{{resources}}")
 
     iron-pages(
       selected='[[__loadMode]]',
@@ -144,6 +150,15 @@ dom-module#d4l-issue
                   paper-button(on-click="__updateIssue", hidden$="[[!__isTopicEditor]]") Edit
 
           .view-container.layout.vertical
+            h1 Resources
+            hr
+            template(is="dom-if", if="[[__hasResources]]")
+              .layout.horizontal.wrap.row-6
+                template(is="dom-repeat", items="[[resources]]")
+                  d4l-link.item(db="{{db}}", link-id="[[item.linkId]]")                            
+            template(is="dom-if", if="[[!__hasResources]]")
+              h2 Sorry, no resources yet.
+
             h1 Events
             hr
             .layout.vertical

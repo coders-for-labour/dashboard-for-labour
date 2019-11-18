@@ -246,6 +246,17 @@ script.
       link.uri = url;
       this.push(`db.link.data`, link);
       return link.id
+    },
+
+    __computeResourcesQuery(issue, cr) {
+      if (!issue) return null;
+      this.__debug(`__computeResourcesQuery`, issue);
+      return {
+        __crPath: cr.path,
+        issueId: {
+          $eq: issue.id
+        }
+      };
     }
 
     //- __addResource() {

@@ -11,7 +11,7 @@ Polymer({
   properties: {
     logLevel: {
       type: Number,
-      value: 3
+      value: 4
     },
 
     db: {
@@ -36,10 +36,24 @@ Polymer({
       computed: '__computeIsTopicEditor(topic, auth.token)'
     },
 
+    resources: {
+      type: Array
+    },
+    __resourcesQuery: {
+      type: Object,
+      computed: '__computeResourcesQuery(__selectedItem, db.resource.data.*)'
+    },
+
     __hasSelectedItem: {
       type: Boolean,
       value: false,
       computed: 'computeIsSet(__selectedItem)'
+    },
+
+    __hasResources: {
+      type: Boolean,
+      value: false,
+      computed: '__computeHasResources(resources, resources.*, resources.lenght)'
     }
   },
 
@@ -95,6 +109,12 @@ Polymer({
         $eq: issue.topicId
       }
     };
+  },
+  __computeHasResources() {
+    const resources = this.get('resources');
+    this.__debug(`__computeHasResources`, resources);
+    if (!resources) return false;
+    return resources.length > 0;
   },
   __sortEvents(a, b) {
     const sA = Sugar.Date.create(a.createdAt);

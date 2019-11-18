@@ -49,6 +49,11 @@ dom-module#d4l-link
 
       img {
         margin-right: 10px;
+        width: 100%;
+      }
+
+      img.article {
+        width: 200px;
       }
 
     ltn-ajax#ajax
@@ -60,16 +65,15 @@ dom-module#d4l-link
       template(is="dom-if", if="[[linkTypeArticle]]")
         a(href="[[link.uri]]", target="_blank")
           .layout.horizontal
-            img.flex(hidden$="[[!link.og.image.uri]]", src="[[link.og.image.uri]]", width="200")
-            .flex-4.layout.vertical
+            img.article(hidden$="[[!link.og.image.uri]]", src="[[link.og.image.uri]]")
+            .layout.vertical.flex
               h1 [[link.og.title]]
               p [[link.og.description]]
               .flex
               p.small [[link.og.site]]
       template(is="dom-if", if="[[linkTypeImage]]")
-        .layout.horizontal
-          a.flex(href="[[link.uri]]", target="_blank")
-            img(src="[[link.uri]]", width="400")
+        a.flex(href="[[link.uri]]", target="_blank")
+          img(src="[[link.uri]]")
       template(is="dom-if", if="[[linkTypeDocument]]")
         a(href="[[link.uri]]", target="_blank")
           p.small [[link.uri]]
