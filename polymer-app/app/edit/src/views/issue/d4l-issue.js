@@ -9,11 +9,6 @@ Polymer({
     Polymer.D4LViewList
   ],
   properties: {
-    logLevel: {
-      type: Number,
-      value: 4
-    },
-
     db: {
       type: Object,
       notify: true
