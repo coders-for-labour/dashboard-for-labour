@@ -116,6 +116,7 @@ dom-module#d4l-issue
 
       d4l-link.resource {
         flex: 0 1 16.667%;
+        margin-bottom: 0;
       }
 
     ltn-dialog#dialog
@@ -148,19 +149,14 @@ dom-module#d4l-issue
                 p [[__selectedItem.description]]
                 .layout.horizontal
                   paper-button(on-click="__updateIssue", hidden$="[[!__isTopicEditor]]") Edit
-
           .view-container.layout.vertical
-            h1 Resources
-            hr
             template(is="dom-if", if="[[__hasResources]]")
+              h1 Resources
               .layout.horizontal.wrap.row-6
                 template(is="dom-repeat", items="[[resources]]")
-                  d4l-link.item(db="{{db}}", link-id="[[item.linkId]]")                            
-            template(is="dom-if", if="[[!__hasResources]]")
-              h2 Sorry, no resources yet.
+                  d4l-link.resource.item(db="{{db}}", link-id="[[item.linkId]]")
 
             h1 Events
-            hr
             .layout.vertical
               template#events(is="dom-repeat", items="[[__selectedItem.events]]", sort="__sortEvents", observe="createdAt updatedAt")
                 div
