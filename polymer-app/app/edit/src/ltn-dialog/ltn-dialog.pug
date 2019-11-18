@@ -94,6 +94,10 @@ dom-module#ltn-dialog
                     .label.flex [[input.label]]
                     paper-toggle-button(class$="[[input.class]]", name="[[input.name]]", checked="{{input.value}}", auto-validate)
 
+                //- FILE
+                template(is="dom-if", if="[[__compareString(input.type, 'FILE', input.value)]]")
+                  input(id$="[[input.name]]", class$="[[input.class]]", name="[[input.name]]", type="file", label="[[input.label]]", files="{{input.value}}")
+
                 //- DATE
                 template(is="dom-if", if="[[__compareString(input.type, 'DATE', input.value)]]")
                   paper-input(class$="[[input.class]]", name="[[input.name]]", label="[[input.label]]", value="{{input.value}}", auto-validate)
@@ -282,6 +286,7 @@ dom-module#ltn-dialog
         const form = this.$.form || Polymer.dom(this.root).querySelector('#form');
 
         ev.preventDefault();
+
         if (this.__promiseResolve) {
           this.__promiseResolve(item);
         } else if (this.mode === 'add') {
@@ -385,8 +390,18 @@ dom-module#ltn-dialog
         const item = this.get('item');
         item.values = {};
 
+
         item.values = item.inputs.reduce((_values, input) => {
-          _values[input.name] = input.value;
+          if (input.type === 'FILE') {
+            const fel = Polymer.dom(this.root).querySelector(`#${input.name}`);
+            if (fel) {
+              _values[input.name] = fel.files;
+            } else {
+              _values[input.name] = [];
+            }
+          } else {
+            _values[input.name] = input.value;
+          }
           return _values;
         }, item.values);
 
