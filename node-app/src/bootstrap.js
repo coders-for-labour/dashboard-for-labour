@@ -25,7 +25,7 @@ const Thunderclap = require('./thunderclap');
 const Topic = require('./topic');
 const Queue = require('./api-queue');
 const Cache = require('./cache');
-// const Uploads = require('./uploads');
+const Uploads = require('./uploads');
 const Constituency = require('./constituency');
 const Link = require('./link-info');
 const Logging = require('./logging');
@@ -103,7 +103,7 @@ const __initWorker = () => {
   Cache.Manager.create(Cache.Constants.Type.TEAM);
   Constituency.init(app);
   Link.init(app);
-  // Uploads.init(app);
+  Uploads.init(app);
 
   const tasks = [
     Helpers.AppData.createFolder('/'),
