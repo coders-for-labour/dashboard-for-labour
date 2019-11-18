@@ -96,7 +96,7 @@ dom-module#ltn-dialog
 
                 //- FILE
                 template(is="dom-if", if="[[__compareString(input.type, 'FILE', input.value)]]")
-                  input(id$="[[input.name]]", class$="[[input.class]]", name="[[input.name]]", type="file", label="[[input.label]]", files="{{input.value}}")
+                  input(id$="[[input.name]]", class$="[[input.class]]", name="[[input.name]]", type="file", label="[[input.label]]", files="{{input.value}}", value="[[input.value]]")
 
                 //- DATE
                 template(is="dom-if", if="[[__compareString(input.type, 'DATE', input.value)]]")
