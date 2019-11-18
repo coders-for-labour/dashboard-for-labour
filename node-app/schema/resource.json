@@ -20,11 +20,15 @@
       "__required": true,
       "__allowUpdate": true
     },
-    "type": {
-      "__type": "string",
-      "__default": "image",
-      "__enum": ["image", "document"],
-      "__required": true
+    "linkId": {
+      "__type": "id",
+      "__required": true,
+      "__allowUpdate": true
+    },
+    "issueId": {
+      "__type": "id",
+      "__default": null,
+      "__allowUpdate": true
     }
   }
 }
