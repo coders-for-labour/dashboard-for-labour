@@ -14,7 +14,8 @@ const Config = require('node-env-obj')('../../');
 
 // const fs = require('fs');
 const crypto = require('crypto');
-const fs = require('fs');
+const fs = require('fs').promises;
+const fsConstants = require('fs').constants;
 const Logging = require('./logging');
 // const Helpers = require('./helpers');
 // const Storage = require('@google-cloud/storage');
@@ -32,7 +33,7 @@ const __initUploads = (app) => {
       return;
     }
 
-    Logging.log(`__initUploads`);
+    Logging.logSilly(`__initUploads`);
 
     const file = req.body.file;
     const rex = /^data:(\w+\/\w+);base64,(.+)$/;
@@ -56,9 +57,18 @@ const __initUploads = (app) => {
     const digest = hash.digest('hex');
 
     const fname = `${digest}.${fileType[1]}`;
-    fs.writeFile(`${Config.data.path}/uploads/${fname}`, buffer, (err) => {
-      res.json(`${digest}.${fileType[1]}`);
-    });
+    const path = `${Config.data.path}/uploads/${fname}`;
+
+    return fs.access(path, fsConstants.F_OK)
+      .then(
+        () => true,
+        () => fs.writeFile(path, buffer)
+      )
+      .then(() => res.json(`${digest}.${fileType[1]}`))
+      .catch(Logging.Promise.logError());
+    // fs.writeFile(`${Config.data.path}/uploads/${fname}`, buffer, (err) => {
+    //   res.json(`${digest}.${fileType[1]}`);
+    // });
     // const gfile = storage
     //   .bucket(Config.cdnBucket)
     //   .file(fname);

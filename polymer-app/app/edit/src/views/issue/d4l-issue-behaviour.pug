@@ -179,8 +179,10 @@ script.
         'action': 'Add',
       }
       
+      let result = null;
       return this.__presentResourceDialog(resource, dialogMeta)
-        .then((result) => {
+        .then((_result) => {
+          result = _result;
           this.__debug(`addResource`, result);
           if (!result.values.name) {
             throw new Error('Resource requires a name');
@@ -208,7 +210,7 @@ script.
             reader.readAsDataURL(file);
           });
         })
-        .then(result => {
+        .then(() => {
           this.__debug(`readAsDataUrl:`, result);
           const ajax = this.$.ajax;
           
@@ -219,22 +221,24 @@ script.
             body: {
               file: result.values.fileData
             }
-          })
-          .then((res) => {
-            const fileName = res.response;
-            this.__debug(`ajax.send:`, fileName);
-            const link = this.get('db.Factory').create('link');
-            link.uri = `%{D4L_APP_URL}%/uploads/${fileName}`;
-            link.type = `image`;
-            this.push('db.link.data', link);
-            result.values.linkId = link.id;
-            result.values.fileName = fileName;
-            return result;
           });
         })
-        .then((result) => {
+        .then((res) => {
+          const fileName = res.response;
+          const uri = `%{D4L_APP_URL}%/uploads/${fileName}`;
+          this.__debug(`ajax.send:`, fileName);
+
+          let link = this.get('db.link.data').find(l => l.uri === uri);
+
+          if (!link) {
+            link = this.get('db.Factory').create('link');
+            link.uri = uri;
+            link.type = `image`;
+            this.push('db.link.data', link);
+          }
+
           resource.name = result.values.name;
-          resource.linkId = result.values.linkId;
+          resource.linkId = link.id;
 
           this.push('db.resource.data', resource);
         });
