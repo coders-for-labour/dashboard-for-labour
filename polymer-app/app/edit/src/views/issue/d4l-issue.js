@@ -43,35 +43,6 @@ Polymer({
     }
   },
 
-  // listeners: {
-  //   'drop': '__onDrop',
-  //   'dragover': '__onDragOver'
-  // },
-
-  // __onDrop(ev) {
-  //   ev.preventDefault();
-
-  //   this.__debug(`__onDrop`);
-  //   let files = ev.dataTransfer.items ? ev.dataTransfer.items : false;
-
-  //   if (files !== false) {
-  //     for (let x=0; x<files.length; x++) {
-  //       const f = files[x];
-  //       if (f.kind !== 'file') continue;
-  //       const file = f.getAsFile();
-  //       this.__debug(file.name, file);
-  //     }
-  //   } else {
-  //     files = ev.dataTransfer.files ? ev.dataTransfer.files : false;
-
-  //   }
-
-  // },
-
-  // __onDragOver(ev) {
-  //   ev.preventDefault();
-  // },
-
   __linkUpdated(ev) {
     const link = ev.model.get('item');
     const issueIdx = this.get('db.issue.data').findIndex(i => i.id === this.get('__selectedItem.id'));
