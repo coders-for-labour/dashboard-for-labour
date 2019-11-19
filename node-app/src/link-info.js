@@ -128,30 +128,42 @@ class Link {
           ];
 
           if (meta.og) {
-            updates.push({
-              path: 'og.canonical',
-              value: meta.og.canonical,
-            });
-            updates.push({
-              path: 'og.site',
-              value: meta.og.site,
-            });
-            updates.push({
-              path: 'og.title',
-              value: meta.og.title,
-            });
-            updates.push({
-              path: 'og.description',
-              value: meta.og.description,
-            });
-            updates.push({
-              path: 'og.image.uri',
-              value: meta.og.image.uri,
-            });
-            updates.push({
-              path: 'og.image.mimeType',
-              value: meta.og.image.type,
-            });
+            if (meta.og.canonical) {
+              updates.push({
+                path: 'og.canonical',
+                value: meta.og.canonical,
+              });
+            }
+            if (meta.og.site) {
+              updates.push({
+                path: 'og.site',
+                value: meta.og.site,
+              });
+            }
+            if (meta.og.title) {
+              updates.push({
+                path: 'og.title',
+                value: meta.og.title,
+              });
+            }
+            if (meta.og.description) {
+              updates.push({
+                path: 'og.description',
+                value: meta.og.description,
+              });
+            }
+            if (meta.og.image.uri) {
+              updates.push({
+                path: 'og.image.uri',
+                value: meta.og.image.uri,
+              });
+            }
+            if (meta.og.image.type) {
+              updates.push({
+                path: 'og.image.mimeType',
+                value: meta.og.image.type,
+              });
+            }
           }
           return Buttress.getCollection('link').update(linkId, updates);
         })
