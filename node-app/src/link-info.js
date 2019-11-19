@@ -92,7 +92,8 @@ class Link {
           if (!results.data) {
             return results;
           }
-          const url = new URL(results.data.ogUrl);
+          const urlString = (results.data.ogUrl) ? results.data.ogUrl : results.requestUrl;
+          const url = new URL(urlString);
 
           let imgUrl = null;
           let imgMime = null;
