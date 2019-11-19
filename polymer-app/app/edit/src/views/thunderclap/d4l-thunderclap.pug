@@ -46,15 +46,6 @@ dom-module#d4l-thunderclap
 
     buttress-db-query(doc="[[db.thunderclap]]", data-path="db.thunderclap.data", query="[[__thunderclapQuery]]", find-all="{{__thunderclap}}", sort-path="scheduledExecution", sort-type="date", sort-order="ASC")
 
-    iron-ajax#ajaxTweet(
-      handleAs="json",
-      content-type="application/json",
-      url="/api/v1/twitter",
-      method="POST",
-      body="[[__tweetBody]]",
-      on-response="__sharedTw",
-      on-error="__sharedTwErr")
-
     ltn-ajax#ajax
     ltn-dialog#dialog
 
@@ -87,7 +78,7 @@ dom-module#d4l-thunderclap
                 template(is="dom-if", if="[[!__hasTwitterAuth]]")
                   .callout
                     .title What is a thunderclap?
-                    .subtitle A thunderclap is an organised mass tweet sent via twitter at an aranged time.
+                    .subtitle A thunderclap is an organised mass tweet sent via twitter at an arranged time.
                     p To join forces with the labour community you'll need to sign in via twitter first. For the many, not the few.
                     .layout.horizontal.center
                       .flex
@@ -98,7 +89,7 @@ dom-module#d4l-thunderclap
                 template(is="dom-if", if="[[__hasTwitterAuth]]")
                   .callout
                     .title What is a thunderclap?
-                    .subtitle A thunderclap is an organised mass tweet sent via twitter at an aranged time.
+                    .subtitle A thunderclap is an organised mass tweet sent via twitter at an arranged time.
                     p To join forces with the labour community you'll need to sign in via Twitter first. For the many, not the few.
                     b You're signed in using Twitter, get subscribing to boost the message together!
 
@@ -126,7 +117,7 @@ dom-module#d4l-thunderclap
             d4l-thunderclap-detail(
               auth="{{auth}}",
               db="{{db}}",
-              campaign="[[__selectedItem]]"
+              thunderclap="[[__selectedItem]]"
             )
 
   script(src="d4l-thunderclap.js")

@@ -63,15 +63,6 @@ dom-module#d4l-meme-detail
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    iron-ajax#ajaxTweet(
-      handleAs="json",
-      content-type="application/json",
-      url="/api/v1/twitter",
-      method="POST",
-      body="[[__tweetBody]]"
-      on-response="__saveTwResponse",
-      on-error="__ajaxError")
-
     .page-sidebar.flex.layout.vertical.wrap.card-group(mobile$="[[isMobile]]")
       h1 Images
       .layout.horizontal.center-center

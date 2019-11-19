@@ -22,11 +22,11 @@ script.
 
     subscribeThunderclap: function(ev) {
       const hasTwitterAuth = this.get('__hasTwitterAuth');
-      const dialog       = this.$.dialog;
-      const ajax         = this.$.ajax;
-      const campaignId   = ev.detail.id;
-      const campaignText = ev.detail.text;
-      const suffix       = ev.detail.suffix;
+      const dialog         = this.$.dialog;
+      const ajax           = this.$.ajax;
+      const campaignId     = ev.detail.id;
+      const campaignText   = ev.detail.text;
+      const suffix         = ev.detail.suffix;
 
       if (hasTwitterAuth) {
         this.__debug(`subscribeThunderclap`, ev.detail);
@@ -57,10 +57,7 @@ script.
             }
           });
         })
-        .then(res => {
-          console.log(res.response);
-          //- TODO: Handle error & responce
-        })
+        .then(res => res.response)
         .catch(err => this.__err(err))
       } else {
         dialog.setMetadata({
@@ -69,7 +66,7 @@ script.
           'action': 'Cancel',
         });
 
-        return dialog.openDialog(this.parseInputSchema({})).then(res => console.log(res));
+        return dialog.openDialog();
       }
     },
 

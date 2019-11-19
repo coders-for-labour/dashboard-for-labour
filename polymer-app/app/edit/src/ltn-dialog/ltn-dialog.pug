@@ -388,22 +388,24 @@ dom-module#ltn-dialog
 
       __validate(){
         const item = this.get('item');
-        item.values = {};
 
+        if (item) {
+          item.values = {};
 
-        item.values = item.inputs.reduce((_values, input) => {
-          if (input.type === 'FILE') {
-            const fel = Polymer.dom(this.root).querySelector(`#${input.name}`);
-            if (fel) {
-              _values[input.name] = fel.files;
+          item.values = item.inputs.reduce((_values, input) => {
+            if (input.type === 'FILE') {
+              const fel = Polymer.dom(this.root).querySelector(`#${input.name}`);
+              if (fel) {
+                _values[input.name] = fel.files;
+              } else {
+                _values[input.name] = [];
+              }
             } else {
-              _values[input.name] = [];
+              _values[input.name] = input.value;
             }
-          } else {
-            _values[input.name] = input.value;
-          }
-          return _values;
-        }, item.values);
+            return _values;
+          }, item.values);
+        }
 
         this.formBeginSubmit();
       }
