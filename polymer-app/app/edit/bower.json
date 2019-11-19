@@ -41,7 +41,8 @@
     "paper-tooltip": "PolymerElements/paper-tooltip#^2.0.0",
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
     "sugar": "^2.0.4",
-    "buttress-js-db": "^2.1.0"
+    "buttress-js-db": "^2.1.0",
+    "paper-progress": "PolymerElements/paper-progress#^2.0.0"
   },
   "overrides": {
     "pdfjs-dist": {
