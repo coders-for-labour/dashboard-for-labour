@@ -45,21 +45,18 @@ dom-module#d4l-topic
         color: #444;
       }
 
-      .volunteer-callout {
-        background: #e4073b;
+      .placeholder.thunderclap {
+        max-width: 350px;
+        border: 1px dashed #FFF;
+        margin: 0;
         color: #FFF;
-        padding: 16px;
-        border-radius: 5px;
+        font-size: 12px;
+        padding: 10px;
+        word-break: break-word;
+        text-align: center;
       }
-      .volunteer-callout .title {
-        font-size: 1.75rem;
-        line-height: 2rem;
-        font-weight: 500;
-        letter-spacing: .0125em;
+      .placeholder.thunderclap .desc {
         margin-bottom: 10px;
-      }
-      .volunteer-callout .desc {
-        
       }
 
       paper-button {
@@ -109,13 +106,21 @@ dom-module#d4l-topic
                     paper-button(on-click="__updateTopic", hidden$="[[!__isTopicEditor]]") Edit
 
                 .thunderclap(hidden$="[[!computeIsSet(__thunderclap)]]")
-                  h1 Next Thunderclap
-                  d4l-thunderclap-card(
-                    db="{{db}}",
-                    auth="[[auth]]",
-                    thunderclap="[[__thunderclap]]",
-                    on-subscribe="subscribeThunderclap"
-                  )
+                  h1 Thunderclap
+                  template(is="dom-if", if="[[__hasTwitterAuth]]")
+                    d4l-thunderclap-card(
+                      db="{{db}}",
+                      auth="[[auth]]",
+                      thunderclap="[[__thunderclap]]",
+                      on-subscribe="subscribeThunderclap"
+                    )
+
+                  template(is="dom-if", if="[[!__hasTwitterAuth]]")
+                    .placeholder.thunderclap
+                      .desc Sign in with twitter to make sure you don't miss out on the latest thunderclap. For the many, not the few.
+                      paper-button(on-click="authTwitter")
+                        iron-icon(icon="d4l-social-icons:twitter")
+                        span Sign in using Twitter
 
           .view-container
             .page-content.layout.vertical
@@ -129,7 +134,7 @@ dom-module#d4l-topic
                     )
 
               div(hidden$="[[!__hasSelectedItem]]")
-                .volunteer-callout(hidden$="[[__hasTopicEditor]]")
+                .callout(hidden$="[[__hasTopicEditor]]")
                   .title We need your help!
                   .desc We're looking for volunteers to manage the content within this topic. Please email d4l@codersforlabour.com if you would like to help.
 
