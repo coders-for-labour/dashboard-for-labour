@@ -19,7 +19,11 @@ Polymer({
     },
     link: {
     	type: Object
-    },
+		},
+		linkChangeUpdate: {
+			type: Boolean,
+			value: false
+		},
     __linkQuery: {
     	type: Object,
     	computed: '__computeLinkQuery(linkId, db.link.data.*)'
@@ -42,7 +46,7 @@ Polymer({
     }
   },
   observers: [
-  	'__linkChanged(link)'
+  	'__linkChanged(link, linkChangeUpdate)'
   ],
 
   __computeLinkLoaded(link) {
@@ -65,6 +69,7 @@ Polymer({
   },
 
   __linkChanged(link) {
+		if (!this.get('linkChangeUpdate') || !link) return;
   	const loaded = this.get('db.link.loaded');
   	this.__debug(`__linkChanged`, loaded, link);
   	if (!loaded) return;
