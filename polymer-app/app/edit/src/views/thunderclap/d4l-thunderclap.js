@@ -4,9 +4,7 @@ Polymer({
     D4L.Logging,
     D4L.Helpers,
     D4L.Thunderclap.Helpers,
-    Polymer.D4LViewList,
-    Polymer.D4LFacebook,
-    Polymer.D4LShare,
+    Polymer.D4LViewList
   ],
   properties: {
     logLevel: {
