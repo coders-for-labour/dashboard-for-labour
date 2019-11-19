@@ -16,6 +16,12 @@ Polymer({
     db: {
       type: Object,
       notify: true
+    },
+    __hasUserTwitter: {
+      type: Boolean,
+      notify: true,
+      value: false,
+      computed: 'hasTwitterAuth(auth.user, auth.user.auth.*)'
     }
   },
   observers: [

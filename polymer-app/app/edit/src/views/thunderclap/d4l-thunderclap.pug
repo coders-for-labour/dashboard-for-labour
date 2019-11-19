@@ -80,20 +80,42 @@ dom-module#d4l-thunderclap
                   .layout.horizontal.center
                     iron-icon(icon="d4l-social-icons:storm")
                     h1 Thunderclap
-                  p Rally together with other supporters by using Twitter to tweet our most important messages, so everyone knows.
-              //- .share-buttons
-              //-   paper-button(disabled$="[[__disableShareTw]]", on-tap="__shareTwitter") [[__shareTwButton]]
+
+                  h2 Join forces with the Labour community and boost Labour's message together!
 
             .view-container
               .page-content.layout.vertical
-                .layout.horizontal.row-3.wrap
-                  template(is="dom-repeat" items="[[__thunderclap]]")
-                    d4l-thunderclap-card.item(
-                      db="{{db}}",
-                      auth="[[auth]]",
-                      thunderclap="[[item]]",
-                      on-subscribe="subscribeThunderclap"
-                    )
+                template(is="dom-if", if="[[!__hasTwitterAuth]]")
+                  .callout
+                    .title What is a thunderclap?
+                    .subtitle A thunderclap is an organised mass tweet sent via twitter at an aranged time.
+                    p To join forces with the labour community you'll need to sign in via twitter first. For the many, not the few.
+                    .layout.horizontal.center
+                      .flex
+                      paper-button(on-click="authTwitter")
+                        iron-icon(icon="d4l-social-icons:twitter")
+                        span Sign in using Twitter
+
+                template(is="dom-if", if="[[__hasTwitterAuth]]")
+                  .callout
+                    .title What is a thunderclap?
+                    .subtitle A thunderclap is an organised mass tweet sent via twitter at an aranged time.
+                    p To join forces with the labour community you'll need to sign in via Twitter first. For the many, not the few.
+                    b You're signed in using Twitter, get subscribing to boost the message together!
+
+                template(is="dom-if", if="[[__thunderclap]]")
+                  .layout.horizontal.row-3.wrap
+                    template(is="dom-repeat" items="[[__thunderclap]]")
+                      d4l-thunderclap-card.item(
+                        db="{{db}}",
+                        auth="[[auth]]",
+                        thunderclap="[[item]]",
+                        on-subscribe="subscribeThunderclap"
+                      )
+  
+                template(is="dom-if", if="[[!__thunderclap]]")
+                  h1 The calm before the storm...
+                  p It's all quiet right now, try again later
 
             paper-fab(
               icon="add"

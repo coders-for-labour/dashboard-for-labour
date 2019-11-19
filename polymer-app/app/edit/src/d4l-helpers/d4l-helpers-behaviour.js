@@ -17,6 +17,19 @@ D4L.Helpers = {
     return token.role.indexOf(match) === 0;
   },
 
+  hasTwitterAuth: function(){
+    const authUser = this.get('auth.user');
+    if (!authUser) return;
+
+    return authUser.auth.reduce((outcome, profile) => {
+      if (profile.app === 'twitter') {
+        return true;
+      }
+
+      return outcome;
+    }, false);
+  },
+
   parseInputSchema(inputSchema) {
     const inputs = [];
     Object.keys(inputSchema).forEach(key => {

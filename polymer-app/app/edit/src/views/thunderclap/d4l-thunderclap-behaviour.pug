@@ -9,33 +9,41 @@ script.
   */
   D4L.Thunderclap.Helpers = {
     properties: {
-      
+      auth: {
+        type: Object
+      },
+
+      __hasTwitterAuth: {
+        type: Boolean,
+        value: false,
+        computed: 'hasTwitterAuth(auth.user, auth.user.auth.*)'
+      }
     },
 
     subscribeThunderclap: function(ev) {
+      const hasTwitterAuth = this.get('__hasTwitterAuth');
       const dialog       = this.$.dialog;
       const ajax         = this.$.ajax;
       const campaignId   = ev.detail.id;
       const campaignText = ev.detail.text;
       const suffix       = ev.detail.suffix;
 
-      this.__debug(`subscribeThunderclap`, ev.detail);
-
-      dialog.setMetadata({
-        'title': 'Add Your Voice',
-        'description': `Personalising your message helps make sure eveyone's voice is heard. '${suffix}' will be included in every tweet.`,
-        'action': 'Subscribe',
-      });
-
-      //- TODO: Check to see if they are signed in using twitter first
-
-      return dialog.openDialog(this.parseInputSchema({
-        text: {
-          label: 'Tweet',
-          type: 'TEXTAREA',
-          default: campaignText
-        }
-      }))
+      if (hasTwitterAuth) {
+        this.__debug(`subscribeThunderclap`, ev.detail);
+  
+        dialog.setMetadata({
+          'description': `Personalising your message helps make sure eveyone's voice is heard. '${suffix}' will be included in every tweet.`,
+          'title': 'Add Your Voice',
+          'action': 'Subscribe',
+        });
+        
+        return dialog.openDialog(this.parseInputSchema({
+          text: {
+            label: 'Tweet',
+            type: 'TEXTAREA',
+            default: campaignText
+          }
+        }))
         .then(res => {
           const message = res.values.text;
 
@@ -53,7 +61,16 @@ script.
           console.log(res.response);
           //- TODO: Handle error & responce
         })
-        .catch(err => this.__err(err));
+        .catch(err => this.__err(err))
+      } else {
+        dialog.setMetadata({
+          'title': 'Login to Twitter',
+          'description': 'You must be logged in with a Twitter account in order to subscribe.',
+          'action': 'Cancel',
+        });
+
+        return dialog.openDialog(this.parseInputSchema({})).then(res => console.log(res));
+      }
     },
 
     __presentThunderclapDialog(thunderclap, meta) {
