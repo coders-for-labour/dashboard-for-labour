@@ -32,10 +32,10 @@ html(lang="en")
     meta(name="twitter:title", content="%{D4L_APP_TITLE}%")
     meta(name="twitter:description", content="Digital campaigning dashboard for Labour activists #GE2019")
     meta(name="twitter:creator", content="@CodersForLabour")
-    //-Twitter summary card with large image must be at least 280x150px -->
+    //- Twitter summary card with large image must be at least 280x150px -->
     meta(name="twitter:image:src", content="%{D4L_BUTTRESS_URL}%/images/dashboard-promo.png")
 
-    <!-- Open Graph data -->
+    //- Open Graph data
     meta(property="fb:app_id", content="%{D4L_FACEBOOK_APP_ID}%")
     meta(property="og:title", content="%{D4L_APP_TITLE}%")
     meta(property="og:type", content="website")
@@ -71,7 +71,7 @@ html(lang="en")
 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('service-worker.js', {
+          navigator.serviceWorker.register('/service-worker.js', {
             scope: Polymer.rootPath,
           });
         });
