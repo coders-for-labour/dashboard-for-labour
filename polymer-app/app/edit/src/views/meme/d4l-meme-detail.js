@@ -1,8 +1,7 @@
 Polymer({
   is: 'd4l-meme-detail',
   behaviors: [
-    D4L.Logging,
-    Polymer.D4LFacebook
+    D4L.Logging
   ],
   properties: {
     logLevel: {
