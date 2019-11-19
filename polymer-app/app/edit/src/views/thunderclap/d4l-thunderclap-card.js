@@ -34,7 +34,8 @@ Polymer({
 
     this.fire('subscribe', {
       id: thunderclap.id,
-      text: thunderclap.description
+      text: thunderclap.description,
+      suffix: thunderclap.suffix ? thunderclap.suffix : '#d4l #ge2019'
     });
   },
 
