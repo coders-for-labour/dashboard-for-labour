@@ -141,8 +141,7 @@ dom-module#d4l-thunderclap-detail
                 p Thank you for helping spread the message, a tweet will be sent out from your account:
                 h3 [[computeDateFormatRelative(thunderclap.scheduledExecution)]].
                 p You can subscribe to more Thunderclaps on Dashboard For Labour.
-              paper-button View More
-
+              paper-button(on-tap="__viewTunderclap") View More
 
         template(is="dom-if", if="[[!__hasTwitterAuth]]")
           .notAuthed.layout.vertical.center

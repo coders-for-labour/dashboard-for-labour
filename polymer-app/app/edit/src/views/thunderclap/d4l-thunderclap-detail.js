@@ -43,6 +43,10 @@ Polymer({
     this.set('__subscribed', false);
   },
 
+  __viewTunderclap() {
+    this.fire('view-entity', '/thunderclap');
+  },
+
   __subscribeThunderclap: function(){
     const thunderclap = this.get('thunderclap');
 
