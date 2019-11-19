@@ -2,6 +2,10 @@ link(rel="import", href="/bower_components/polymer/polymer.html")
 link(rel="import", href="/bower_components/polymer/lib/elements/dom-repeat.html")
 link(rel="import", href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html")
 link(rel="import", href="/bower_components/buttress-js-db/buttress-db-query.html")
+link(rel="import", href="/bower_components/iron-image/iron-image.html")
+link(rel="import", href="/bower_components/iron-icon/iron-icon.html")
+link(rel="import", href="/bower_components/iron-icons/iron-icons.html")
+link(rel="import", href="/bower_components/paper-progress/paper-progress.html")
 
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
@@ -52,31 +56,74 @@ dom-module#d4l-link
         width: 100%;
       }
 
-      img.article {
+      .loading paper-progress {
+        width: 100%;
+        --paper-progress-active-color: var(--text-tertiary-color);
+      }
+      .loading p {
+        padding: 5px;
+      }
+
+      .document {
+        padding: 5px;
+        color: var(--text-tertiary-color);
+      }
+      .document .icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 5px;
+      }
+      .document .desc {
+        word-break: break-word;
+        font-size: 11px;
+        font-style: italic;
+      }
+      
+      .article .image{
         width: 200px;
+      }
+      .article .desc {
+        padding: 10px;
+      }
+      @media (max-width: 576px) {
+        .article.layout.horizontal {
+          flex-direction: column;
+        }
+        .article .image {
+          width: 100%;
+          height: 125px;
+        }
       }
 
     ltn-ajax#ajax
     buttress-db-query(doc="[[db.link]]", data-path="db.link.data", query="[[__linkQuery]]", find-one="{{link}}")
 
     template(is="dom-if", if="[[!linkLoaded]]")
-      h1 Loading link data...
+      .loading.layout.vertical.center
+        paper-progress.blue(indeterminate)
+        p Generating link...
     template(is="dom-if", if="[[linkLoaded]]")
       template(is="dom-if", if="[[linkTypeArticle]]")
         a(href="[[link.uri]]", target="_blank")
-          .layout.horizontal
-            img.article(hidden$="[[!link.og.image.uri]]", src="[[link.og.image.uri]]")
-            .layout.vertical.flex
-              h1 [[link.og.title]]
-              p [[link.og.description]]
-              .flex
-              p.small [[link.og.site]]
+          .article.layout.horizontal
+            iron-image.image(hidden$="[[!link.og.image.uri]]", src="[[link.og.image.uri]]", sizing="cover")
+            .desc.flex
+              .layout.vertical
+                h1 [[link.og.title]]
+                p [[link.og.description]]
+                .flex
+                p.small [[link.og.site]]
+
       template(is="dom-if", if="[[linkTypeImage]]")
         a.flex(href="[[link.uri]]", target="_blank")
           img(src="[[link.uri]]")
+
       template(is="dom-if", if="[[linkTypeDocument]]")
         a(href="[[link.uri]]", target="_blank")
-          p.small [[link.uri]]
+          .document.layout.horizontal.center
+            iron-icon.icon(icon="icons:file-download")
+            .desc.flex
+              p.small [[link.uri]]
   
 
   script(src="./d4l-link.js") 
