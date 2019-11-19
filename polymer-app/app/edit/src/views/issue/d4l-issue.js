@@ -67,7 +67,7 @@ Polymer({
       }
       if (res !== -1) {
         this.__debug(`__linkUpdated: Response Link ${res} on Event ${idx}`);
-        this.set(`db.issue.data.${issueIdx}.events.${idx}.response.links.${src}`, ev.detail.linkId);
+        this.set(`db.issue.data.${issueIdx}.events.${idx}.response.links.${res}`, ev.detail.linkId);
       }
     })
   },
