@@ -21,7 +21,7 @@ Polymer({
       type: Boolean,
       notify: true,
       value: false,
-      computed: '__computeHasUserTwitter(auth.user, auth.user.auth.*)'
+      computed: 'hasTwitterAuth(auth.user, auth.user.auth.*)'
     }
   },
   observers: [
@@ -48,19 +48,6 @@ Polymer({
     const count = this.get('thunderclap.supporters.length');
     if (!count) return 0;
     return count;
-  },
-
-  __computeHasUserTwitter: function(){
-    const authUser = this.get('auth.user');
-    if (!authUser) return;
-
-    return authUser.auth.reduce((outcome, profile) => {
-      if (profile.app === 'twitter') {
-        return true;
-      }
-
-      return outcome;
-    }, false);
   }
 
 });

@@ -15,33 +15,22 @@ script.
       auth: {
         type: Object
       },
-      __hasUserTwitter: {
-          type: Boolean,
-          notify: true,
-          value: false,
-          computed: '__computeHasUserTwitter(auth.user, auth.user.auth.*)'
+
+      __hasTwitterAuth: {
+        type: Boolean,
+        value: false,
+        computed: 'hasTwitterAuth(auth.user, auth.user.auth.*)'
       }
-    },
-    __computeHasUserTwitter: function(){
-      const authUser = this.get('auth.user');
-      if (!authUser) return;
-
-      return authUser.auth.reduce((outcome, profile) => {
-        if (profile.app === 'twitter') {
-          return true;
-        }
-
-        return outcome;
-      }, false);
     },
 
     subscribeThunderclap: function(ev) {
+      const hasTwitterAuth = this.get('__hasTwitterAuth');
       const dialog       = this.$.dialog;
       const ajax         = this.$.ajax;
       const campaignId   = ev.detail.id;
       const campaignText = ev.detail.text;
 
-      if(this.__hasUserTwitter){
+      if (hasTwitterAuth) {
         dialog.setMetadata({
           'title': 'Subscribe to thunderclap',
           'description': 'Personalise the message that will be sent out as part of this Thunderclap',
@@ -73,7 +62,7 @@ script.
           //- TODO: Handle error & responce
         })
         .catch(err => this.__err(err))
-      } else{
+      } else {
         dialog.setMetadata({
           'title': 'Login to Twitter',
           'description': 'You must be logged in with a Twitter account in order to subscribe.',
