@@ -89,7 +89,7 @@ class Link {
           return scrape(options);
         })
         .then((results) => {
-          if (!results.data) {
+          if (!results.data || !results.success) {
             return results;
           }
           const urlString = (results.data.ogUrl) ? results.data.ogUrl : results.requestUrl;
