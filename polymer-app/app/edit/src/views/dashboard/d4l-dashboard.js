@@ -68,7 +68,7 @@ Polymer({
     return {
       __crPath: cr.path,
       parentId: {
-        $eq: null
+        $not: null
       },
       published: {
         $eq: true

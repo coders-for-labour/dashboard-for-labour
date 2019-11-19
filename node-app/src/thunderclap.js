@@ -58,6 +58,8 @@ const _subscribeThunderclap = (req, res) => {
         throw new Error('campaign_elapsed');
       }
 
+      const suffix = thunderclap.suffix ? `\n\n${thunderclap.suffix}` : `\n\n#d4l #ge2019`;
+
       // Update supporters
       Buttress.getCollection('thunderclap').update(id, {
         path: 'supporters',
@@ -75,7 +77,7 @@ const _subscribeThunderclap = (req, res) => {
         api: 'statuses/update.json',
         processAfter: thunderclap.scheduledExecution,
         params: {
-          status: `${message}`,
+          status: `${message}${suffix}`,
           include_entities: false, // eslint-disable-line camelcase
           skip_statuses: true, // eslint-disable-line camelcase
         },

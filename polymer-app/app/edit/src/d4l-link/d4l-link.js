@@ -77,7 +77,7 @@ Polymer({
   	let linkId = this.get('linkId');
   	if (!link && /^https?:\/\//.test(linkId)) {
   		this.__debug(linkId);
-  		linkId = this.__addLink(linkId);
+  		linkId = this.addLink(linkId);
   		this.fire('link-updated', {linkId: linkId});
   		return;
   	}
@@ -95,16 +95,6 @@ Polymer({
 				$eq: linkId
   	  }
   	}
-  },
-
-  __addLink(url) {
-  	this.__debug(`__addLink`, url);
-
-    const dbFactory = this.get('db.Factory');
-    const link = dbFactory.create('link');
-    link.uri = url;
-    this.push(`db.link.data`, link);
-    return link.id
   },
 
   __refreshLinkData(linkId) {

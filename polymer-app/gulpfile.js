@@ -41,6 +41,7 @@ const buildDate = new Date().toLocaleString('en-GB');
 const EnvReplacments = [
   { key: 'D4L_APP_TITLE', value: Config.app.title },
   { key: 'D4L_APP_URL', value: Config.app.url },
+  { key: 'D4L_APP_OG_IMAGE', value: Config.app.og.image },
   { key: 'D4L_CDN_URL', value: Config.cdn.url },
   { key: 'D4L_BUTTRESS_URL', value: Config.buttress.url },
   { key: 'D4L_BUTTRESS_PUBLIC_ID', value: Config.buttress.publicId },

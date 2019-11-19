@@ -1,62 +1,72 @@
 Polymer({
   is: 'd4l-thunderclap-detail',
   behaviors: [
-    D4L.Logging
+    D4L.Logging,
+    D4L.Helpers,
+    D4L.Thunderclap.Helpers
   ],
   properties: {
     logLevel: {
       type: Number,
-      value: 3
+      value: 4
     },
     auth: {
-      type: Object,
-      notify: true
+      type: Object
     },
     db: {
       type: Object,
       notify: true
     },
-    metadata: {
-      type: Object,
-      notify: true
+    thunderclap: {
+      type: Object
     },
-    campaign: {
-      type: Object,
-      observer: '__campaignChanged'
-    },
-    __selectedPlatform: {
-      type: String,
-      value: '',
-      observer: '__selectedPlatformChanged'
-    },
-  },
 
-  __campaignChanged: function(){
-    const campaignId = this.get('campaign.id');
+    __topic: {
+      type: Object
+    },
+    __topicQuery: {
+      type: Object,
+      computed: '__computeTopicQuery(thunderclap.topicId, db.topic.data.*)'
+    },
 
-    if (!campaignId) {
-      this.__silly('__campaignChanged', 'Trying to link paths with no campaign id');
-      return;
+    __subscribed: {
+      type: Boolean,
+      value: false
     }
 
-    let metaData = this.get(['db.campaign.metadata', campaignId]);
-    if (!metaData) {
-      this.__silly('__campaignChanged', 'Init default metadata for', campaignId);
-      const metaDefault = Object.assign({}, {
-        __populate__: true,
-        images: []
-      });
-      this.set(['db.campaign.metadata', campaignId], metaDefault);
-    }
+  },
+  observers: [
+    '__thunderclapChanged(thunderclap)'
+  ],
 
-    this.set('metadata', this.get(['db.campaign.metadata', campaignId]));
-    this.__silly('__campaignChanged', 'metadata linking path for', campaignId);
-    this.linkPaths('metadata', `db.campaign.metadata.${campaignId}`);
+  __thunderclapChanged: function() {
+    this.set('__subscribed', false);
   },
 
-  __selectedPlatformChanged: function() {
-    // this.$.fbPost.inputElement.selectionEnd = 0;
-    // this.$.twPost.inputElement.selectionEnd = 0;
+  __viewTunderclap() {
+    this.fire('view-entity', '/thunderclap');
   },
+
+  __subscribeThunderclap: function(){
+    const thunderclap = this.get('thunderclap');
+
+    return this.subscribeThunderclap({
+      detail: {
+        id: thunderclap.id,
+        text: thunderclap.description,
+        suffix: thunderclap.suffix ? thunderclap.suffix : '#d4l #ge2019'
+      }
+    })
+    .then(() => this.set('__subscribed', true));
+  },
+
+  __computeTopicQuery(topicId, cr) {
+    return {
+      __crPath: cr.path,
+      id: {
+        $eq: topicId
+      }
+    };
+  }
 
 });

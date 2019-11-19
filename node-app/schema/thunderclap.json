@@ -25,6 +25,12 @@
       "__required": true,
       "__allowUpdate": true
     },
+    "suffix": {
+      "__type": "string",
+      "__default": "#d4l #ge2019",
+      "__required": "",
+      "__allowUpdate": ""
+    },
     "scheduledExecution": {
       "__type": "date",
       "__required": true,

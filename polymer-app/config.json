@@ -4,6 +4,7 @@
 
     "D4L_APP_PROTOCOL": "https",
     "D4L_APP_HOST": "dashboard.forlabour.com",
+    "D4L_APP_OG_IMAGE": "/images/dashboard-promo.png",
 
     "D4L_CDN_URL": "http://cdn.forlabour.com",
 
@@ -22,11 +23,14 @@
       "title": "Dashboard For Labour",
       "description": "Application server for Dashboard for Labour.",
       "code": "d4l",
-      "version": "2.0.5",
+      "version": "2.1.0",
       "protocol": "%D4L_APP_PROTOCOL%",
       "host": "%D4L_APP_HOST%",
       "port": "%D4L_APP_PORT%",
-      "url": "%D4L_APP_PROTOCOL%://%D4L_APP_HOST%"
+      "url": "%D4L_APP_PROTOCOL%://%D4L_APP_HOST%",
+      "og": {
+        "image": "%D4L_APP_OG_IMAGE%"
+      }
     },
     "buttress": {
       "url": "%D4L_BUTTRESS_PROTOCOL%://%D4L_BUTTRESS_HOST%",

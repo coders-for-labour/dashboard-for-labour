@@ -20,6 +20,7 @@ link(rel="import", href="/src/shared-styles.html")
 link(rel="import", href="./d4l-dashboard-card.html")
 link(rel="import", href="./d4l-dashboard-constituency-card.html")
 link(rel="import", href="/src/views/issue/d4l-issue-behaviour.html")
+link(rel="import", href="/src/views/issue/d4l-issue-card.html")
 link(rel="import", href="/src/views/topic/d4l-topic-card.html")
 
 dom-module#d4l-dashboard
@@ -44,12 +45,20 @@ dom-module#d4l-dashboard
 
     iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
 
-    buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="4")
-    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
+    //- buttress-db-query(db="[[db]]", doc="[[db.issue]]", query="[[__latestIssuesQuery]]", find-all="{{__latestIssues}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="3")
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__latestTopicsQuery]]", find-all="{{__latestTopics}}", sort-path="updatedAt", sort-type="date", sort-order="DESC", limit="6")
 
     .view-container
       .page-content.layout.vertical
-        h1 Latest
+        //- h1 Issues
+        //- .layout.horizontal.row-3.wrap
+          template(is="dom-repeat" items="[[__latestIssues]]")
+            d4l-issue-card.item(
+              auth="[[auth]]"
+              db="{{db}}",
+              topic="[[item]]"
+            )
+        h1 Latest Topics
         .layout.horizontal.row-3.wrap
           template(is="dom-repeat" items="[[__latestTopics]]")
             d4l-topic-card.item(
@@ -57,14 +66,14 @@ dom-module#d4l-dashboard
               db="{{db}}",
               topic="[[item]]"
             )
-        paper-button(on-tap="__viewTopics") See All Topics
+        paper-button(on-tap="__viewTopics") Browse Topics
         
         .layout.horizontal.row-3.wrap
           d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="thunderclap")
             .layout.horizontal.center
               iron-icon(icon="d4l-social-icons:storm")
               h1 Thunderclap
-            p Sign up to tweet our important messages.
+            p Add your voice and make some noise!
             paper-button(on-tap="__viewThunderclap") Get Started
 
           //- d4l-dashboard-card.item.flex(mobile$="[[isMobile]]", background="meme", disabled)

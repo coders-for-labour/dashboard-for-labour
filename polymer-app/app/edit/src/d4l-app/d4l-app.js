@@ -6,8 +6,7 @@ Polymer({
   ],
   properties: {
     logLevel: {
-      type: Number,
-      value: 3
+      type: Number
     },
 
     app: {
@@ -81,6 +80,12 @@ Polymer({
     pageFirstLoad: {
       type: Boolean,
       value: true
+    },
+
+    __hideHeader: {
+      type: Boolean,
+      value: false,
+      computed: '__computeHideHeader(routes.*)'
     },
 
     __hideMenuButton: {
@@ -211,6 +216,19 @@ Polymer({
     }
 
     this.__viewEntity('/');
+  },
+
+  __computeHideHeader() {
+    const routes = this.get('routes');
+
+    let hide = false;
+
+    if (routes.route === 'thunderclap' && routes.subroute) {
+      hide = true;
+    };
+
+    this.__debug(`__computeHideHeader`, hide);
+    return hide;
   },
 
   __computeHideMenuButton: function() {

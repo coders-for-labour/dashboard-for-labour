@@ -9,30 +9,41 @@ script.
   */
   D4L.Thunderclap.Helpers = {
     properties: {
-      
+      auth: {
+        type: Object
+      },
+
+      __hasTwitterAuth: {
+        type: Boolean,
+        value: false,
+        computed: 'hasTwitterAuth(auth.user, auth.user.auth.*)'
+      }
     },
 
     subscribeThunderclap: function(ev) {
-      const dialog       = this.$.dialog;
-      const ajax         = this.$.ajax;
-      const campaignId   = ev.detail.id;
-      const campaignText = ev.detail.text;
+      const hasTwitterAuth = this.get('__hasTwitterAuth');
+      const dialog         = this.$.dialog;
+      const ajax           = this.$.ajax;
+      const campaignId     = ev.detail.id;
+      const campaignText   = ev.detail.text;
+      const suffix         = ev.detail.suffix;
 
-      dialog.setMetadata({
-        'title': 'Subscribe to thunderclap',
-        'description': 'Personalise the message that will be sent out as part of this Thunderclap',
-        'action': 'Subscribe',
-      });
-
-      //- TODO: Check to see if they are signed in using twitter first
-
-      return dialog.openDialog(this.parseInputSchema({
-        text: {
-          label: 'Tweet',
-          type: 'TEXTAREA',
-          default: campaignText
-        }
-      }))
+      if (hasTwitterAuth) {
+        this.__debug(`subscribeThunderclap`, ev.detail);
+  
+        dialog.setMetadata({
+          'description': `Personalising your message helps make sure eveyone's voice is heard. '${suffix}' will be included in every tweet.`,
+          'title': 'Add Your Voice',
+          'action': 'Subscribe',
+        });
+        
+        return dialog.openDialog(this.parseInputSchema({
+          text: {
+            label: 'Tweet',
+            type: 'TEXTAREA',
+            default: campaignText
+          }
+        }))
         .then(res => {
           const message = res.values.text;
 
@@ -46,14 +57,20 @@ script.
             }
           });
         })
-        .then(res => {
-          console.log(res.response);
-          //- TODO: Handle error & responce
-        })
-        .catch(err => this.__err(err));
+        .then(res => res.response)
+        .catch(err => this.__err(err))
+      } else {
+        dialog.setMetadata({
+          'title': 'Login to Twitter',
+          'description': 'You must be logged in with a Twitter account in order to subscribe.',
+          'action': 'Cancel',
+        });
+
+        return dialog.openDialog();
+      }
     },
 
-    __presentIssueDialog(thunderclap, meta) {
+    __presentThunderclapDialog(thunderclap, meta) {
       const dialog = this.$.dialog;
 
       const inputSchema = { 
@@ -63,9 +80,14 @@ script.
           default: thunderclap.name
         },
         description: {
-          label: 'Description',
+          label: 'Tweet Text',
           type: 'TEXT',
           default: thunderclap.description
+        },
+        suffix: {
+          label: 'Tweet Suffix',
+          type: 'TEXT',
+          default: thunderclap.suffix
         },
         topicId: {
           label: 'Topic ID',
@@ -97,17 +119,22 @@ script.
 
       const dialogMeta = {
         'title': 'Thunderclap',
-        'description': 'Add a new thundeclap to the system',
+        'description': 'Add a Thunderclap',
         'action': 'Save',
       };
+
+      this.__debug(`addThunderclap`, thunderclap);
       
-      return this.__presentIssueDialog(thunderclap, dialogMeta)
+      return this.__presentThunderclapDialog(thunderclap, dialogMeta)
         .then((result) => {
           if (!result.values.name) {
             throw new Error('Thunderclap requires a name');
           }
           if (!result.values.description) {
             throw new Error('Thunderclap requires a description');
+          }
+          if (!result.values.suffix) {
+            throw new Error('Thunderclap requires a suffix');
           }
           if (!result.values.date) {
             throw new Error('Thunderclap requires a date');
@@ -123,7 +150,10 @@ script.
 
           thunderclap.name = result.values.name;
           thunderclap.description = result.values.description;
+          thunderclap.suffix = result.values.suffix;
           thunderclap.scheduledExecution = `${date}`;
+
+          this.__debug(`addThunderclap`, thunderclap);
 
           if (result.values.topicId) {
             thunderclap.topicId = result.values.topicId;

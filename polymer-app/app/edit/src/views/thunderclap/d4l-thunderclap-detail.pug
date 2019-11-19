@@ -12,12 +12,13 @@ link(rel="import", href="/bower_components/iron-ajax/iron-ajax.html")
 link(rel="import", href="/bower_components/iron-selector/iron-selector.html")
 
 link(rel="import", href="/src/d4l-logging/d4l-logging.html")
+link(rel="import", href="/src/d4l-helpers/d4l-helpers.html")
 link(rel="import", href="/src/d4l-view/d4l-view-behaviors.html")
 
 link(rel="import", href="/src/d4l-theme.html")
 link(rel="import", href="/src/shared-styles.html")
 
-link(rel="import", href="/src/views/dashboard/d4l-dashboard-card.html")
+link(rel="import", href="/src/views/thunderclap/d4l-thunderclap-behaviour.html")
 
 dom-module#d4l-thunderclap-detail
   template
@@ -27,6 +28,7 @@ dom-module#d4l-thunderclap-detail
     style(include="shared-layout-styles").
       :host {
         display: block;
+        margin-top: -64px;
       }
 
       h1, h2 {
@@ -37,30 +39,118 @@ dom-module#d4l-thunderclap-detail
         text-decoration: none;
       }
 
+      .callout {
+        max-width: 550px;
+        margin-bottom: 16px;
+      }
+
+      .logo {
+        width: 100%;
+        max-width: 150px;
+        margin-bottom: 16px;
+        margin-top: 16px;
+      }
+
       .card {
         position: relative;
         -webkit-background-size: cover;
         background-size: cover;
-        padding: 10px 20px 10px;
         background: var(--text-light-primary-color);
+        max-width: 550px;
+        margin-bottom: 50px;
       }
       .card.iron-selected {
         background: #e0e0e0;
+      }
+
+      .topic {
+        position: relative;
+        background: #000;
+        padding: 15px 20px;
+        box-sizing: border-box;
+      }
+      .topic .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: url('/images/cards/card-thunderclap.jpg');
+        opacity: 0.3;
+        z-index: 1;
+      }
+      .topic .content {
+        position: relative;
+        z-index: 1;
+        color: #FFF;
+      }
+      .topic .title {
+        font-size: 1.75rem;
+        line-height: 2rem;
+        font-weight: 500;
+        letter-spacing: .0125em;
+        margin-bottom: 10px;
+      }
+
+      .notAuthed, .thankyou {
+        padding: 15px 20px;
+        text-align: center;
       }
 
       paper-button {
         @apply --d4l-button-primary;
       }
 
-      paper-textarea {
-        width: 100%;
-        margin-top: 10px;
-      }
+    buttress-db-query(doc="[[db.topic]]", data-path="db.topic.data", query="[[__topicQuery]]", find-one="{{__topic}}")
 
-    iron-media-query(query="(max-width: 600px)", query-matches="{{isMobile}}")
+    ltn-ajax#ajax
+    ltn-dialog#dialog
 
     .flex.layout.vertical.center(mobile$="[[isMobile]]")
-      h1 TODO: Thunderclap share page
+      img.logo(src="/images/c4l-logo-red.svg")
+      template(is="dom-if", if="[[!__hasTwitterAuth]]")
+        .callout
+          .title What is a Thunderclap?
+          .subtitle A thunderclap is an organised mass tweet sent via twitter at an arranged time.
+          div To join forces with the labour community you'll need to sign in via twitter first. For the many, not the few.
 
+      .card
+        template(is="dom-if", if="[[computeIsSet(__topic)]]")
+          .topic
+            .background()
+            .content
+              .title [[__topic.name]]
+              .desc [[__topic.description]]
+
+        template(is="dom-if", if="[[__hasTwitterAuth]]")
+          template(is="dom-if", if="[[!__subscribed]]")
+            .layout.vertical
+              d4l-thunderclap-card(
+                db="{{db}}",
+                auth="[[auth]]",
+                thunderclap="[[thunderclap]]",
+                on-subscribe="__subscribeThunderclap"
+              )
+
+              paper-button(on-click="__subscribeThunderclap") Subscribe
+          template(is="dom-if", if="[[__subscribed]]")
+            .layout.vertical
+              .thankyou
+                h1 Thank you
+                p Thank you for helping spread the message, a tweet will be sent out from your account:
+                h3 [[computeDateFormatRelative(thunderclap.scheduledExecution)]].
+                p You can subscribe to more Thunderclaps on Dashboard For Labour.
+              paper-button(on-tap="__viewTunderclap") View More
+
+        template(is="dom-if", if="[[!__hasTwitterAuth]]")
+          .notAuthed.layout.vertical.center
+            h1 Help spread the message
+            p To join forces with the labour community you'll need to sign in via twitter first. For the many, not the few.
+            .layout.horizontal.center
+              .flex
+              paper-button(on-click="authTwitter")
+                iron-icon(icon="d4l-social-icons:twitter")
+                span Sign in using Twitter
 
   script(src="d4l-thunderclap-detail.js")

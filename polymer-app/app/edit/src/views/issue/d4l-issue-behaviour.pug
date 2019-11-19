@@ -64,6 +64,9 @@ script.
           default: issue.description
         }
       };
+
+      dialog.setMetadata(meta);
+      return dialog.openDialog(this.parseInputSchema(inputSchema));
     },
 
     __presentResourceDialog(resource, meta) {
@@ -158,12 +161,12 @@ script.
           event.source.description = result.values.sourceDescription;
 
           if (result.values.sourceLinks) {
-            event.source.links = result.values.sourceLinks.split(/\r?\n/).map(url => this.__addLink(url));
+            event.source.links = result.values.sourceLinks.split(/\r?\n/).map(url => this.addLink(url));
           }
 
           event.response.description = result.values.responseDescription;
           if (result.values.responseLinks) {
-            event.response.links = result.values.responseLinks.split(/\r?\n/).map(url => this.__addLink(url));
+            event.response.links = result.values.responseLinks.split(/\r?\n/).map(url => this.addLink(url));
           }
 
           window.setTimeout(() => { 
@@ -244,7 +247,7 @@ script.
         });
     },
 
-    __addLink(url) {
+    addLink(url) {
       const dbFactory = this.get('db.Factory');
       const link = dbFactory.create('link');
       link.uri = url;
