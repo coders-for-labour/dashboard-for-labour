@@ -32,7 +32,7 @@ Polymer({
   },
 
   __subscribeThunderclap: function(ev){
-    ev.preventDefault();
+    ev.stopPropagation();
     const thunderclap = this.get('thunderclap');
 
     this.fire('subscribe', {
