@@ -27,7 +27,7 @@ Polymer({
   observers: [
   ],
 
-  __tap: function(){
+  tap: function(){
     this.__subscribeThunderclap();
   },
 
