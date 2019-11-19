@@ -27,15 +27,12 @@ Polymer({
   observers: [
   ],
 
-  tap: function(){
-    this.__subscribeThunderclap();
-  },
-
   __viewThunderclap: function(){
     this.fire('view-entity', `/thunderclap/${this.get('thunderclap.id')}`);
   },
 
-  __subscribeThunderclap: function(){
+  __subscribeThunderclap: function(ev){
+    ev.preventDefault();
     const thunderclap = this.get('thunderclap');
 
     this.fire('subscribe', {

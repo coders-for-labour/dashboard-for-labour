@@ -10,8 +10,7 @@ Polymer.D4LCardBehavior = {
   },
   listeners: {
     'mouseenter': '__mouseEnter',
-    'mouseleave': '__mouseLeave',
-    'tap': 'tap'
+    'mouseleave': '__mouseLeave'
   },
 
   __mouseEnter: function() {
@@ -19,11 +18,5 @@ Polymer.D4LCardBehavior = {
   },
   __mouseLeave: function() {
     this.__showButtons = false;
-  },
-  tap: function() {
-    // this.__showButtons = !this.__showButtons;
-    this.fire('view-entity', `/${this.type}/${this.get('campaign').id}`);
-
   }
-
 };
