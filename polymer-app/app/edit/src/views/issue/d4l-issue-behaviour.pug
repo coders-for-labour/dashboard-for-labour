@@ -64,6 +64,9 @@ script.
           default: issue.description
         }
       };
+
+      dialog.setMetadata(meta);
+      return dialog.openDialog(this.parseInputSchema(inputSchema));
     },
 
     __presentResourceDialog(resource, meta) {
